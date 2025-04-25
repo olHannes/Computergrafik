@@ -1,0 +1,43 @@
+﻿  GLSLProgram.cpp
+  main.cpp
+  Code wird generiert...
+libglew32d.lib(glew.obj) : warning LNK4099: PDB "" wurde nicht mit "libglew32d.lib(glew.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_init.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_init.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_main.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_main.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_window.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_window.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_display.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_display.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_callbacks.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_callbacks.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_init_mswin.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_init_mswin.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_window_mswin.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_window_mswin.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_gamemode.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_gamemode.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_structure.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_structure.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_joystick.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_joystick.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_input_devices.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_input_devices.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(xparsegeometry_repl.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(xparsegeometry_repl.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_misc.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_misc.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_main_mswin.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_main_mswin.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_state.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_state.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_gl2.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_gl2.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_display_mswin.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_display_mswin.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_spaceball.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_spaceball.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_gamemode_mswin.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_gamemode_mswin.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_menu.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_menu.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_structure_mswin.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_structure_mswin.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_joystick_mswin.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_joystick_mswin.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_input_devices_mswin.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_input_devices_mswin.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_cursor.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_cursor.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_menu_mswin.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_menu_mswin.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_state_mswin.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_state_mswin.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_ext.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_ext.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_spaceball_mswin.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_spaceball_mswin.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_font.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_font.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_cursor_mswin.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_cursor_mswin.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_overlay.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_overlay.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_geometry.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_geometry.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_teapot.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_teapot.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_videoresize.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_videoresize.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_ext_mswin.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_ext_mswin.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_font_data.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_font_data.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_stroke_roman.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_stroke_roman.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+freeglut_staticd.lib(fg_stroke_mono_roman.obj) : warning LNK4099: PDB "" wurde nicht mit "freeglut_staticd.lib(fg_stroke_mono_roman.obj)" oder an "" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+  Blatt01.vcxproj -> C:\Users\Hannes\Documents\Duales Studium\HSBI\4. Semester\Computergrafik\Praktika\Praktikum 1\Computergrafik\x64\Debug\Blatt01.exe

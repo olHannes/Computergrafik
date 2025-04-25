@@ -12,6 +12,8 @@
 #include "GLSLProgram.h"
 #include "GLTools.h"
 
+#include "Umrechnung_01.h"
+
 // Standard window width
 const int WINDOW_WIDTH  = 640;
 // Standard window height
@@ -136,11 +138,12 @@ void initTriangle()
   triangle.model = glm::translate(glm::mat4(1.0f), glm::vec3(-1.25f, 0.0f, 0.0f));
 }
 
+std::vector<glm::vec3> QuadColors = { { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0, 1.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } };
 void initQuad()
 {
   // Construct triangle. These vectors can go out of scope after we have send all data to the graphics card.
   const std::vector<glm::vec3> vertices = { { -1.0f, 1.0f, 0.0f }, { -1.0, -1.0, 0.0 }, { 1.0f, -1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f } };
-  const std::vector<glm::vec3> colors   = { { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0, 1.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } };
+  //const std::vector<glm::vec3> colors   = { { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0, 1.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } };
   const std::vector<GLushort>  indices  = { 0, 1, 2, 0, 2, 3 };
 
   GLuint programId = program.getHandle();
@@ -163,7 +166,7 @@ void initQuad()
   // Step 2: Create vertex buffer object for color attribute and bind it to...
   glGenBuffers(1, &quad.colorBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, quad.colorBuffer);
-  glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), colors.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, QuadColors.size() * sizeof(glm::vec3), QuadColors.data(), GL_STATIC_DRAW);
   
   // Bind it to color.
   pos = glGetAttribLocation(programId, "color");
@@ -282,6 +285,30 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 
 int main(int argc, char** argv)
 {
+
+  TranslateColorValues translator;
+  CMY cmy;
+  cmy.Cyan = 0.7;
+  cmy.Magenta = 0.1;
+  cmy.Yellow = 0.3;
+
+  HSV hsv;
+  hsv.Hue = 100;
+  hsv.Saturation = 0.5;
+  hsv.Value = 0.5;
+  
+  
+  //Aufgabe 1
+  translator.handleInputTask01();
+  std::cout << "\n\n\n";
+
+  //Aufgabe 2
+   
+  RGB rgb = translator.handleInputTask02();
+  QuadColors = { {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue} };
+
+
+
   // GLUT: Initialize freeglut library (window toolkit).
   glutInitWindowSize    (WINDOW_WIDTH, WINDOW_HEIGHT);
   glutInitWindowPosition(40,40);

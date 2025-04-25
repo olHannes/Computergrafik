@@ -165,10 +165,12 @@
   <ItemGroup>
     <ClCompile Include="GLSLProgram.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Umrechnung_01.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLSLProgram.h" />
     <ClInclude Include="GLTools.h" />
+    <ClInclude Include="Umrechnung_01.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\simple.frag" />

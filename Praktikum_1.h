@@ -39,4 +39,9 @@ public:
 
     void handleInputTask01();
     RGB handleInputTask02();
+
+
+private:
+    bool checkValuesForChoice(float v1, float v2, float v3, int choice);
+    bool checkValues(float value);
 };

@@ -285,27 +285,14 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 
 int main(int argc, char** argv)
 {
+    TranslateColorValues translator;
 
-  TranslateColorValues translator;
-  CMY cmy;
-  cmy.Cyan = 0.7;
-  cmy.Magenta = 0.1;
-  cmy.Yellow = 0.3;
+    //Aufgabe 1
+    translator.handleInputTask01();
 
-  HSV hsv;
-  hsv.Hue = 100;
-  hsv.Saturation = 0.5;
-  hsv.Value = 0.5;
-  
-  
-  //Aufgabe 1
-  translator.handleInputTask01();
-  std::cout << "\n\n\n";
-
-  //Aufgabe 2
-   
-  RGB rgb = translator.handleInputTask02();
-  QuadColors = { {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue} };
+    //Aufgabe 2
+    RGB rgb = translator.handleInputTask02();
+    QuadColors = { {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue} };
 
 
 
@@ -319,6 +306,8 @@ int main(int argc, char** argv)
   glutInitContextFlags  (GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
   glutInitDisplayMode   (GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
   
+
+
   glutCreateWindow("Aufgabenblatt 01");
   glutID = glutGetWindow();
   
@@ -327,6 +316,8 @@ int main(int argc, char** argv)
   if (glewInit() != GLEW_OK) {
     return -1;
   }
+
+
 #if _DEBUG
   if (glDebugMessageCallback) {
     std::cout << "Register OpenGL debug callback " << std::endl;

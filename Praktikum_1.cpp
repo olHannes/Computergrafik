@@ -154,57 +154,82 @@ void TranslateColorValues::printRGB(const RGB& rgb) {
 }
 
 
+bool TranslateColorValues::checkValues(float value) {
+	if (value < 0 || value>1) return false;
+	return true;
+}
+bool TranslateColorValues::checkValuesForChoice(float v1, float v2, float v3, int choice) {
+	if (choice == 3 || choice == 4) {
+		if (v1 < 0.0f || v1 > 360.0f) return false;
+		if (!checkValues(v2)) return false;
+		if (!checkValues(v3)) return false;
+	}
+	else {
+		if (!checkValues(v1) || !checkValues(v2) || !checkValues(v3)) return false;
+	}
+	return true;
+}
+
 
 
 
 void TranslateColorValues::handleInputTask01() {
-	int choice = 0;
-	std::cout << "Welche Konvertierung soll angewendet werden?\n0. skip\n1. CMY -> RGB\n2. CMY -> HSV\n3. HSV -> RGB\n4. HSV -> CMY\n";
-	std::cin >> choice;
-	if (choice == 0) return;
+	while (true)
+	{
+		int choice = 0;
+		std::cout << "Welche Konvertierung soll angewendet werden?\n0. skip\n1. CMY -> RGB\n2. CMY -> HSV\n3. HSV -> RGB\n4. HSV -> CMY\n";
 
-	std::cout << "Gib nun die 3 Werte ein:\n";
-	float v1 = 0.0f;
-	float v2 = 0.0f;
-	float v3 = 0.0f;
+		std::cin >> choice;
+		if (choice == 0) return;
 
-	std::cin >> v1 >> v2 >> v3;
+		std::cout << "Gib nun die 3 Werte ein:\n";
+		float v1 = 0.0f;
+		float v2 = 0.0f;
+		float v3 = 0.0f;
 
-	switch (choice)
-	{
-	case 1:
-	{
-		CMY cmy = { v1, v2, v3 };
-		printRGB(CMYtoRGB(cmy));
-		break;
-	}
-	case 2:
-	{
-		CMY cmy = { v1, v2, v3 };
-		printHSV(CMYtoHSV(cmy));
-		break;
-	}
-	case 3:
-	{
-		HSV hsv = { v1, v2, v3 };
-		printRGB(HSVtoRGB(hsv));
-		break;
-	}
-	case 4:
-	{
-		HSV hsv = { v1, v2, v3 };
-		printCMY(HSVtoCMY(hsv));
-		break;
-	}
-	default:
-		break;
+		std::cin >> v1 >> v2 >> v3;
+		if (!checkValuesForChoice(v1, v2, v3, choice)) {
+			std::cout << "Ungueltige Werte\n";
+			continue;
+		}
+
+		switch (choice)
+		{
+		case 1:
+		{
+			CMY cmy = { v1, v2, v3 };
+			printRGB(CMYtoRGB(cmy));
+			break;
+		}
+		case 2:
+		{
+			CMY cmy = { v1, v2, v3 };
+			printHSV(CMYtoHSV(cmy));
+			break;
+		}
+		case 3:
+		{
+			HSV hsv = { v1, v2, v3 };
+			printRGB(HSVtoRGB(hsv));
+			break;
+		}
+		case 4:
+		{
+			HSV hsv = { v1, v2, v3 };
+			printCMY(HSVtoCMY(hsv));
+			break;
+		}
+		default:
+			break;
+		}
+		std::cout << std::endl;
 	}
 }
 RGB TranslateColorValues::handleInputTask02() {
 	int choice = 0;
 	RGB rgb = {0,0,0};
 
-	std::cout << "Welcher Farbraum soll für das Quadrat genutzt werden?\n0. skip\n1. RGB\n2. CMY\n3. HSV\n";
+	std::cout << "Welcher Farbraum soll fuer das Quadrat genutzt werden?\n0. skip\n1. RGB\n2. CMY\n3. HSV\n";
 	std::cin >> choice;
 	if (choice == 0) return rgb;
 
@@ -213,6 +238,11 @@ RGB TranslateColorValues::handleInputTask02() {
 	float v2 = 0.0f;
 	float v3 = 0.0f;
 	std::cin >> v1 >> v2 >> v3;
+
+	if (!checkValuesForChoice(v1, v2, v3, choice)) {
+		std::cout << "Ungueltige Werte\n";
+		return rgb;
+	}
 
 	switch (choice)
 	{

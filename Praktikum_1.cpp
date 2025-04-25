@@ -1,4 +1,4 @@
-#include "Umrechnung_01.h"
+#include "Praktikum_1.h"
 
 RGB TranslateColorValues::CMYtoRGB(const CMY& cmy) {
 	RGB rgb;

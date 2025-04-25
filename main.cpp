@@ -12,7 +12,7 @@
 #include "GLSLProgram.h"
 #include "GLTools.h"
 
-#include "Umrechnung_01.h"
+#include "Praktikum_1.h"
 
 // Standard window width
 const int WINDOW_WIDTH  = 640;

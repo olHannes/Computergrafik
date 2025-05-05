@@ -1,5 +1,7 @@
 #include "Praktikum_1.h"
 
+
+//##########################################################################################
 RGB TranslateColorValues::CMYtoRGB(const CMY& cmy) {
 	RGB rgb;
 	rgb.Red = 1 - cmy.Cyan;
@@ -7,6 +9,9 @@ RGB TranslateColorValues::CMYtoRGB(const CMY& cmy) {
 	rgb.Blue = 1 - cmy.Yellow;
 	return rgb;
 }
+
+
+//##########################################################################################
 HSV TranslateColorValues::CMYtoHSV(const CMY& cmy) {
 	RGB rgb;
 	rgb.Red = 1.0f - cmy.Cyan;
@@ -56,6 +61,9 @@ HSV TranslateColorValues::CMYtoHSV(const CMY& cmy) {
 
 	return hsv;
 }
+
+
+//##########################################################################################
 RGB TranslateColorValues::HSVtoRGB(const HSV& hsv) {
 	RGB rgb;
 	if (hsv.Saturation == 0.0f) {
@@ -98,6 +106,9 @@ RGB TranslateColorValues::HSVtoRGB(const HSV& hsv) {
 	}
 	return rgb;
 }
+
+
+//##########################################################################################
 CMY TranslateColorValues::HSVtoCMY(const HSV& hsv) {
 	CMY cmy;
 
@@ -143,21 +154,26 @@ CMY TranslateColorValues::HSVtoCMY(const HSV& hsv) {
 }
 
 
+//########################################################################################## Print Functions
 void TranslateColorValues::printCMY(const CMY& cmy) {
 	std::cout << "CMY-Color: " << cmy.Cyan << "; " << cmy.Magenta << "; " << cmy.Yellow << std::endl;
 }
+
 void TranslateColorValues::printHSV(const HSV& hsv) {
 	std::cout << "HSV-Color: " << hsv.Hue << "; " << hsv.Saturation << "; " << hsv.Value << std::endl;
 }
+
 void TranslateColorValues::printRGB(const RGB& rgb) {
 	std::cout << "RGB-Color: " << rgb.Red << "; " << rgb.Green << "; " << rgb.Blue << std::endl;
 }
 
 
+//########################################################################################## Validate Input
 bool TranslateColorValues::checkValues(float value) {
 	if (value < 0 || value>1) return false;
 	return true;
 }
+
 bool TranslateColorValues::checkValuesForChoice(float v1, float v2, float v3, int choice) {
 	if (choice == 3 || choice == 4) {
 		if (v1 < 0.0f || v1 > 360.0f) return false;
@@ -171,8 +187,7 @@ bool TranslateColorValues::checkValuesForChoice(float v1, float v2, float v3, in
 }
 
 
-
-
+//########################################################################################## Aufgabe 2
 void TranslateColorValues::handleInputTask01() {
 	while (true)
 	{
@@ -225,6 +240,9 @@ void TranslateColorValues::handleInputTask01() {
 		std::cout << std::endl;
 	}
 }
+
+
+//##########################################################################################
 RGB TranslateColorValues::handleInputTask02() {
 	int choice = 0;
 	RGB rgb = {0,0,0};

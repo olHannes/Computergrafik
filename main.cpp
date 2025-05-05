@@ -13,6 +13,7 @@
 #include "GLTools.h"
 
 #include "Praktikum_1.h"
+#include "Praktikum_2.h"
 
 // Standard window width
 const int WINDOW_WIDTH  = 640;
@@ -285,6 +286,8 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 
 int main(int argc, char** argv)
 {
+    
+#if PRAKTIKUM_1 == 1
     TranslateColorValues translator;
 
     //Aufgabe 1
@@ -293,6 +296,23 @@ int main(int argc, char** argv)
     //Aufgabe 2
     RGB rgb = translator.handleInputTask02();
     QuadColors = { {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue} };
+#endif // PRAKTIKUM_1
+
+
+
+#if PRAKTIKUM_2 == 1
+
+
+
+
+
+
+#endif // PRAKTIKUM_2
+
+
+
+
+
 
 
 

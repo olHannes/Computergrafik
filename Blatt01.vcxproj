@@ -166,11 +166,13 @@
     <ClCompile Include="GLSLProgram.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Praktikum_1.cpp" />
+    <ClCompile Include="Praktikum_2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLSLProgram.h" />
     <ClInclude Include="GLTools.h" />
     <ClInclude Include="Praktikum_1.h" />
+    <ClInclude Include="Praktikum_2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\simple.frag" />

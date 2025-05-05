@@ -3,6 +3,9 @@
 #include <tuple>
 #include <cmath>
 
+
+#define PRAKTIKUM_1 0;
+
 struct RGB {
     float Red = 0.0f;
     float Green = 0.0f;

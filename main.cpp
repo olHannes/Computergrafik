@@ -60,8 +60,16 @@ public:
   glm::mat4x4 model; // model matrix
 };
 
+
+
+
+
 Object triangle;
 Object quad;
+
+SphereTransformations sphere = SphereTransformations();
+Object sphereObject;
+
 
 void renderTriangle()
 {
@@ -92,6 +100,26 @@ void renderQuad()
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
   glBindVertexArray(0);
 }
+
+void renderSphere() {
+    // Wireframe aktivieren
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    glm::mat4x4 mvp = projection * view * sphereObject.model;
+    program.use();
+    program.setUniform("mvp", mvp);
+
+    glBindVertexArray(sphereObject.vao);
+    glDrawElements(GL_TRIANGLES, sphere.renderSphere().size() * 3, GL_UNSIGNED_SHORT, 0);
+    glBindVertexArray(0);
+
+    // Wieder zurücksetzen (optional, falls du andere Objekte zeichnen willst)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+
+
+
 
 void initTriangle()
 {
@@ -186,6 +214,62 @@ void initQuad()
   quad.model = glm::translate(glm::mat4(1.0f), glm::vec3(1.25f, 0.0f, 0.0f));
 }
 
+void initSphere() {
+    const auto& tris = sphere.renderSphere();
+
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> colors;
+    std::vector<GLushort> indices;
+
+    GLushort index = 0;
+    for (const auto& tri : tris) {
+        vertices.push_back(tri.v0);
+        vertices.push_back(tri.v1);
+        vertices.push_back(tri.v2);
+
+        colors.push_back({ 1.0f, 1.0f, 0.0f });  // Gelb
+        colors.push_back({ 1.0f, 1.0f, 0.0f });  // Gelb
+        colors.push_back({ 1.0f, 1.0f, 0.0f });  // Gelb
+
+        indices.push_back(index++);
+        indices.push_back(index++);
+        indices.push_back(index++);
+    }
+
+    GLuint programId = program.getHandle();
+    GLuint pos;
+
+    glGenVertexArrays(1, &sphereObject.vao);
+    glBindVertexArray(sphereObject.vao);
+
+    glGenBuffers(1, &sphereObject.positionBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, sphereObject.positionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
+    pos = glGetAttribLocation(programId, "position");
+    glEnableVertexAttribArray(pos);
+    glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glGenBuffers(1, &sphereObject.colorBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, sphereObject.colorBuffer);
+    glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), colors.data(), GL_STATIC_DRAW);
+    pos = glGetAttribLocation(programId, "color");
+    glEnableVertexAttribArray(pos);
+    glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glGenBuffers(1, &sphereObject.indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sphereObject.indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
+
+    glBindVertexArray(0);
+
+    sphereObject.model = glm::mat4(1.0f);
+}
+
+
+
+
+
+
 /*
  Initialization. Should return true if everything is ok and false if something went wrong.
  */
@@ -219,8 +303,9 @@ bool init()
   }
 
   // Create all objects.
-  initTriangle();
-  initQuad();
+  //initTriangle();
+  //initQuad();
+  initSphere();
   
   return true;
 }
@@ -232,8 +317,9 @@ void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	renderTriangle();
-	renderQuad();
+	//renderTriangle();
+	//renderQuad();
+    renderSphere();
 }
 
 void glutDisplay ()
@@ -267,9 +353,18 @@ void glutKeyboard (unsigned char keycode, int x, int y)
     
   case '+':
     // do something
+#ifdef PRAKTIKUM_2
+      sphere.increaseN();
+      initSphere(); // Neu generieren
+#endif
     break;
+
   case '-':
     // do something
+#ifdef PRAKTIKUM_2
+      sphere.decreaseN();
+      initSphere();
+#endif
     break;
   case 'x':
     // do something
@@ -297,20 +392,6 @@ int main(int argc, char** argv)
     RGB rgb = translator.handleInputTask02();
     QuadColors = { {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue}, {rgb.Red, rgb.Green, rgb.Blue} };
 #endif // PRAKTIKUM_1
-
-
-
-#if PRAKTIKUM_2 == 1
-
-
-
-
-
-
-#endif // PRAKTIKUM_2
-
-
-
 
 
 

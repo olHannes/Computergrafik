@@ -2,16 +2,13 @@
 
 SphereTransformations::SphereTransformations(){
 	n = 0;
-	radius = 3.0f;
-	//generate(n);
-	createInitialSphere();
+	radius = 1.0f;
+	renderSphere();
 }
 
 
 std::vector<Triangle> SphereTransformations::renderSphere() {
-	if (triangles.empty()) {
-		generate(n);
-	}
+	generate(n);
 	return triangles;
 }
 
@@ -19,6 +16,7 @@ std::vector<Triangle> SphereTransformations::renderSphere() {
 
 void SphereTransformations::generate(int n) {
 	triangles.clear();
+	createInitialSphere();
 
 	for (int i = 0; i < n; ++i) {
 		subdivide();
@@ -26,19 +24,19 @@ void SphereTransformations::generate(int n) {
 }
 
 void SphereTransformations::increaseN() {
-	n = (n <= 4) ? 4 : n += 1;
+	if (n < 4) n += 1;
 }
 
 void SphereTransformations::decreaseN() {
-	n = (n >= 0) ? 0 : n -= 1;
+	if (n > 0) n -= 1;
 }
 
 void SphereTransformations::increaseRadius() {
-
+	if (radius < 2) radius += 0.2f;
 }
 
 void SphereTransformations::decreaseRadius() {
-
+	if (radius > 0.5f)radius -= 0.2f;
 }
 
 
@@ -60,10 +58,16 @@ void SphereTransformations::createInitialSphere() {
 		{bottom, left, back},
 		{bottom, front, left},
 	};
+
+	for (auto& tri : triangles) {
+		tri.v0 = normalize(tri.v0) * radius;
+		tri.v1 = normalize(tri.v1) * radius;
+		tri.v2 = normalize(tri.v2) * radius;
+	}
 }
 
 glm::vec3 SphereTransformations::midpoint(const glm::vec3& pointA, const glm::vec3& pointB) {
-	return glm::normalize((pointA + pointB) * 0.5f);
+	return normalize((pointA + pointB) * 0.5f);
 }
 
 void SphereTransformations::subdivide() {

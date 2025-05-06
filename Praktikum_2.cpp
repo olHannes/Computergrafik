@@ -82,7 +82,7 @@ void SphereTransformations::subdivide() {
 		m2 *= radius;
 
 		newTriangles.push_back({currentTriangle.v0, m0, m2});
-		newTriangles.push_back({m0, currentTriangle.v1});
+		newTriangles.push_back({m0, currentTriangle.v1, m1});
 		newTriangles.push_back({m0, m1, m2});
 		newTriangles.push_back({m2, m1, currentTriangle.v2});
 	}

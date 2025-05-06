@@ -120,6 +120,7 @@ void renderSphere() {
     glDrawElements(GL_TRIANGLES, sphere.renderSphere().size() * 3, GL_UNSIGNED_SHORT, 0);
     glBindVertexArray(0);
 
+    //reset Polygon Mode
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 #endif

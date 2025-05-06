@@ -15,6 +15,8 @@
 #include "Praktikum_1.h"
 #include "Praktikum_2.h"
 
+#define DEFAULT 0; //Flag to show Triangle and Quad (default project)
+
 // Standard window width
 const int WINDOW_WIDTH = 640;
 // Standard window height
@@ -64,16 +66,17 @@ public:
 
 
 
-
-Object triangle;
-Object quad;
+#if DEFAULT == 1
+    Object triangle;
+    Object quad;
+#endif
 
 #if PRAKTIKUM_2 == 1
     SphereTransformations sphere = SphereTransformations();
     Object sphereObject;
 #endif
 
-
+#if DEFAULT == 1
 void renderTriangle()
 {
     // Create mvp.
@@ -103,6 +106,7 @@ void renderQuad()
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
     glBindVertexArray(0);
 }
+#endif
 
 #if PRAKTIKUM_2 == 1
 void renderSphere() {
@@ -115,12 +119,14 @@ void renderSphere() {
     glBindVertexArray(sphereObject.vao);
     glDrawElements(GL_TRIANGLES, sphere.renderSphere().size() * 3, GL_UNSIGNED_SHORT, 0);
     glBindVertexArray(0);
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 #endif
 
 
 
-
+#if DEFAULT == 1
 void initTriangle()
 {
     // Construct triangle. These vectors can go out of scope after we have send all data to the graphics card.
@@ -213,6 +219,8 @@ void initQuad()
     // Modify model matrix.
     quad.model = glm::translate(glm::mat4(1.0f), glm::vec3(1.25f, 0.0f, 0.0f));
 }
+#endif
+
 
 #if PRAKTIKUM_2 == 1
 void initSphere() {
@@ -246,6 +254,7 @@ void initSphere() {
     glGenBuffers(1, &sphereObject.positionBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, sphereObject.positionBuffer);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
+
     pos = glGetAttribLocation(programId, "position");
     glEnableVertexAttribArray(pos);
     glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -304,8 +313,10 @@ bool init()
     }
 
     // Create all objects.
-    //initTriangle();
-    //initQuad();
+#if DEFAULT == 1
+    initTriangle();
+    initQuad();
+#endif
 
 #if PRAKTIKUM_2 == 1
     initSphere();
@@ -321,8 +332,10 @@ void render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //renderTriangle();
-    //renderQuad();
+#if DEFAULT == 1
+    renderTriangle();
+    renderQuad();
+#endif
 
 #if PRAKTIKUM_2 == 1
     renderSphere();

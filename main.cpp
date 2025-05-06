@@ -273,7 +273,9 @@ void initSphere() {
 
     glBindVertexArray(0);
 
-    sphereObject.model = glm::mat4(1.0f);
+    //sphereObject.model = glm::mat4(1.0f);
+    sphereObject.model = glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
+
 }
 #endif
 

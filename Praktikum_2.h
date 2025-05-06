@@ -27,7 +27,7 @@ public:
 
 private:
 	void createInitialSphere();
-	void subdivide();
+	void subdivideGrid(int level);
 	glm::vec3 midpoint(const glm::vec3& pointA, const glm::vec3& pointB);
 
 	std::vector<Triangle> triangles;

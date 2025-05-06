@@ -18,13 +18,12 @@ void SphereTransformations::generate(int n) {
 	triangles.clear();
 	createInitialSphere();
 
-	for (int i = 0; i < n; ++i) {
-		subdivide();
-	}
+	if (n > 0)
+		subdivideGrid(n);
 }
 
 void SphereTransformations::increaseN() {
-	if (n < 4) n += 1;
+	if (n <= 4) n += 1;
 }
 
 void SphereTransformations::decreaseN() {
@@ -70,21 +69,36 @@ glm::vec3 SphereTransformations::midpoint(const glm::vec3& pointA, const glm::ve
 	return normalize((pointA + pointB) * 0.5f);
 }
 
-void SphereTransformations::subdivide() {
+void SphereTransformations::subdivideGrid(int level) {
 	std::vector<Triangle> newTriangles;
-	for (const auto& currentTriangle : triangles) {
-		vec3 m0 = midpoint(currentTriangle.v0, currentTriangle.v1);
-		vec3 m1 = midpoint(currentTriangle.v1, currentTriangle.v2);
-		vec3 m2 = midpoint(currentTriangle.v2, currentTriangle.v0);
 
-		m0 *= radius;
-		m1 *= radius;
-		m2 *= radius;
+	//iterate over all triangles
+	for (const Triangle& tri : triangles) {
+		const glm::vec3& v0 = tri.v0;
+		const glm::vec3& v1 = tri.v1;
+		const glm::vec3& v2 = tri.v2;
 
-		newTriangles.push_back({currentTriangle.v0, m0, m2});
-		newTriangles.push_back({m0, currentTriangle.v1, m1});
-		newTriangles.push_back({m0, m1, m2});
-		newTriangles.push_back({m2, m1, currentTriangle.v2});
+		std::vector<std::vector<glm::vec3>> grid(level + 1);
+
+		for (int i = 0; i <= level; ++i) {
+			for (int j = 0; j <= i; ++j) {
+				float a = 1.0f - ((float)i / level);
+				float b = ((float)(j)) / level;
+				float c = 1.0f - a - b;
+
+				glm::vec3 p = normalize(a * v0 + b * v1 + c * v2) * radius;
+				grid[i].push_back(p);
+			}
+		}
+
+		for (int i = 0; i < level; ++i) {
+			for (int j = 0; j < i; ++j) {
+				newTriangles.push_back({ grid[i][j], grid[i + 1][j], grid[i + 1][j + 1] });
+				newTriangles.push_back({ grid[i][j], grid[i + 1][j + 1], grid[i][j + 1] });
+			}
+			newTriangles.push_back({ grid[i][i], grid[i + 1][i], grid[i + 1][i + 1] });
+		}
 	}
+
 	triangles = std::move(newTriangles);
 }

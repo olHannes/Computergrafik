@@ -24,10 +24,14 @@ public:
 	void decreaseN();
 	void increaseRadius();
 	void decreaseRadius();
+	
+	void zoomIn();
+	void zoomOut();
 
-	void showAdditions(bool show);
+	std::vector<glm::vec3> generateNormalLines();
+	std::vector<glm::vec3> getCoords();
 
-	bool showAddition;
+	float zIndex;
 
 private:
 	void createInitialSphere();

@@ -2,8 +2,7 @@
 
 SphereTransformations::SphereTransformations()
 :n(0),
-radius(1.0f),
-showAddition(0)
+radius(1.0f)
 {
 	renderSphere();
 }
@@ -20,12 +19,13 @@ void SphereTransformations::generate(int n) {
 	triangles.clear();
 	createInitialSphere();
 
-	if (n > 0)
+	if (n > 0) {
 		subdivideGrid(n);
+	}
 }
 
 void SphereTransformations::increaseN() {
-	if (n <= 4) n += 1;
+	if (n < 4) n += 1;
 }
 
 void SphereTransformations::decreaseN() {
@@ -39,6 +39,15 @@ void SphereTransformations::increaseRadius() {
 void SphereTransformations::decreaseRadius() {
 	if (radius > 0.5f)radius -= 0.2f;
 }
+
+
+void SphereTransformations::zoomIn() {
+	zIndex += 0.1f;
+}
+void SphereTransformations::zoomOut() {
+	zIndex -= 0.1f;
+}
+
 
 
 void SphereTransformations::createInitialSphere() {
@@ -73,6 +82,7 @@ glm::vec3 SphereTransformations::midpoint(const glm::vec3& pointA, const glm::ve
 
 void SphereTransformations::subdivideGrid(int level) {
 	std::vector<Triangle> newTriangles;
+	level = level + 1;
 
 	//iterate over all triangles
 	for (const Triangle& tri : triangles) {
@@ -108,7 +118,32 @@ void SphereTransformations::subdivideGrid(int level) {
 
 
 
-void SphereTransformations::showAdditions(bool show) {
-	this->showAddition = show;
+std::vector<glm::vec3> SphereTransformations::generateNormalLines() {
+	std::vector<glm::vec3> lines;
+	float scale = 0.2f;
+
+	for (const auto& tri : triangles) {
+		glm::vec3 centroid = (tri.v0 + tri.v1 + tri.v2) / 3.0f;
+		
+		glm::vec3 edge1 = tri.v1 - tri.v0;
+		glm::vec3 edge2 = tri.v2 - tri.v0;
+		glm::vec3 normal = glm::normalize(glm::cross(edge1, edge2));
+
+		lines.push_back(centroid);
+		lines.push_back(centroid + normal * scale);
+	}
+	
+	return lines;
 }
 
+std::vector<glm::vec3> SphereTransformations::getCoords() {
+	std::vector<glm::vec3> lines;
+	lines.push_back({ 0,0,0 });
+	lines.push_back({ 1,0,0 });
+	lines.push_back({ 0,0,0 });
+	lines.push_back({ 0,1,0 });
+	lines.push_back({ 0,0,0 });
+	lines.push_back({ 0,0,1 });
+
+	return lines;
+}

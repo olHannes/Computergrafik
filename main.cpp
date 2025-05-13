@@ -74,6 +74,11 @@ public:
 #if PRAKTIKUM_2 == 1
     SphereTransformations sphere = SphereTransformations();
     Object sphereObject;
+
+    Object sphereNormalsObject;
+    Object sphereCoordsObject;
+    bool showCoords = true;
+    bool showNormals = true;
 #endif
 
 #if DEFAULT == 1
@@ -123,6 +128,26 @@ void renderSphere() {
     //reset Polygon Mode
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
+
+void renderNormals() {
+    glm::mat4x4 mvp = projection * view * sphereNormalsObject.model;
+    program.use();
+    program.setUniform("mvp", mvp);
+
+    glBindVertexArray(sphereNormalsObject.vao);
+    glDrawArrays(GL_LINES, 0, sphere.generateNormalLines().size());
+    glBindVertexArray(0);
+}
+void renderCoords() {
+    glm::mat4x4 mvp = projection * view * sphereNormalsObject.model;
+    program.use();
+    program.setUniform("mvp", mvp);
+
+    glBindVertexArray(sphereCoordsObject.vao);
+    glDrawArrays(GL_LINES, 0, sphere.getCoords().size());
+    glBindVertexArray(0);
+}
+
 #endif
 
 
@@ -274,9 +299,67 @@ void initSphere() {
     glBindVertexArray(0);
 
     //sphereObject.model = glm::mat4(1.0f);
-    sphereObject.model = glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
-
+    sphereObject.model = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, -0.5f, sphere.zIndex));
 }
+
+void initNormals() {
+    std::vector<glm::vec3> lines = sphere.generateNormalLines();
+    GLuint programId = program.getHandle();
+    GLuint pos;
+
+    // Standardfarbe
+    std::vector<glm::vec3> colors(lines.size(), glm::vec3(0.65f, 0.19f, 0.57f));
+
+    glGenVertexArrays(1, &sphereNormalsObject.vao);
+    glBindVertexArray(sphereNormalsObject.vao);
+
+    glGenBuffers(1, &sphereNormalsObject.positionBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, sphereNormalsObject.positionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, lines.size() * sizeof(glm::vec3), lines.data(), GL_STATIC_DRAW);
+    pos = glGetAttribLocation(programId, "position");
+    glEnableVertexAttribArray(pos);
+    glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glGenBuffers(1, &sphereNormalsObject.colorBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, sphereNormalsObject.colorBuffer);
+    glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), colors.data(), GL_STATIC_DRAW);
+    pos = glGetAttribLocation(programId, "color");
+    glEnableVertexAttribArray(pos);
+    glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindVertexArray(0);
+
+    sphereNormalsObject.model = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, -0.5f, sphere.zIndex));
+}
+void initCoords() {
+    std::vector<glm::vec3> lines = sphere.getCoords();
+    GLuint programId = program.getHandle();
+    GLuint pos;
+
+    std::vector<glm::vec3> colors(lines.size(), glm::vec3(0.0f, 0.0f, 1.0f));
+
+    glGenVertexArrays(1, &sphereCoordsObject.vao);
+    glBindVertexArray(sphereCoordsObject.vao);
+
+    glGenBuffers(1, &sphereCoordsObject.positionBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, sphereCoordsObject.positionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, lines.size() * sizeof(glm::vec3), lines.data(), GL_STATIC_DRAW);
+    pos = glGetAttribLocation(programId, "position");
+    glEnableVertexAttribArray(pos);
+    glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glGenBuffers(1, &sphereCoordsObject.colorBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, sphereCoordsObject.colorBuffer);
+    glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), colors.data(), GL_STATIC_DRAW);
+    pos = glGetAttribLocation(programId, "color");
+    glEnableVertexAttribArray(pos);
+    glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindVertexArray(0);
+
+    sphereCoordsObject.model = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, -0.5f, sphere.zIndex));
+}
+
 #endif
 
 
@@ -323,6 +406,8 @@ bool init()
 
 #if PRAKTIKUM_2 == 1
     initSphere();
+    initNormals();
+    initCoords();
 #endif
 
     return true;
@@ -342,6 +427,11 @@ void render()
 
 #if PRAKTIKUM_2 == 1
     renderSphere();
+    if(showNormals)
+        renderNormals();
+    
+    if(showCoords)
+        renderCoords();
 #endif
 }
 
@@ -378,27 +468,33 @@ void glutKeyboard(unsigned char keycode, int x, int y)
     //tessellierung 
     case '+':
         sphere.increaseN();
-        initSphere();
         break;
     case '-':
         sphere.decreaseN();
-        initSphere();
         break;
 
     //Radius
     case 'r':
         sphere.decreaseRadius();
-        initSphere();
         break;
     case 'R':
         sphere.increaseRadius();
-        initSphere();
+        break;
+
+    //show Addons
+    case 'c':
+        showCoords = !showCoords;
+        break;
+    case 'v':
+        showNormals = !showNormals;
         break;
 
     //Screne Zoom
     case 'a':
+        sphere.zoomIn();
         break;
     case 's':
+        sphere.zoomOut();
         break;
 
     //Object Rotation
@@ -411,6 +507,10 @@ void glutKeyboard(unsigned char keycode, int x, int y)
     case 'z':
         break;
     }
+
+    initSphere();
+    initNormals();
+    initCoords();
 #endif //PRAKTIKUM_2
 
     glutPostRedisplay();

@@ -25,6 +25,10 @@ public:
 	void increaseRadius();
 	void decreaseRadius();
 
+	void showAdditions(bool show);
+
+	bool showAddition;
+
 private:
 	void createInitialSphere();
 	void subdivideGrid(int level);

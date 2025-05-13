@@ -1,8 +1,10 @@
 #include "Praktikum_2.h"
 
-SphereTransformations::SphereTransformations(){
-	n = 0;
-	radius = 1.0f;
+SphereTransformations::SphereTransformations()
+:n(0),
+radius(1.0f),
+showAddition(0)
+{
 	renderSphere();
 }
 
@@ -102,3 +104,11 @@ void SphereTransformations::subdivideGrid(int level) {
 
 	triangles = std::move(newTriangles);
 }
+
+
+
+
+void SphereTransformations::showAdditions(bool show) {
+	this->showAddition = show;
+}
+

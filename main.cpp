@@ -374,43 +374,45 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         glutDestroyWindow(glutID);
         return;
 
-    case '+':
-        // do something
 #if PRAKTIKUM_2 == 1
+    //tessellierung 
+    case '+':
         sphere.increaseN();
         initSphere();
-#endif
         break;
-
     case '-':
-        // do something
-#if PRAKTIKUM_2 == 1
         sphere.decreaseN();
         initSphere();
-#endif
         break;
+
+    //Radius
     case 'r':
-#if PRAKTIKUM_2 == 1
         sphere.decreaseRadius();
         initSphere();
-#endif
         break;
     case 'R':
-#if PRAKTIKUM_2 == 1
         sphere.increaseRadius();
         initSphere();
-#endif
+        break;
+
+    //Screne Zoom
+    case 'a':
+        break;
+    case 's':
+        break;
+
+    //Object Rotation
+    case 'n':
         break;
     case 'x':
-        // do something
         break;
     case 'y':
-        // do something
         break;
     case 'z':
-        // do something
         break;
     }
+#endif //PRAKTIKUM_2
+
     glutPostRedisplay();
 }
 

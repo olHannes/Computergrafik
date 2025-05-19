@@ -1,29 +1,45 @@
 #include "Praktikum_2.h"
 
+//########################################################################### Constructor call (init params)
 SphereTransformations::SphereTransformations()
 :n(0),
-radius(1.0f)
+radius(1.0f),
+xRotation(0.0f),
+yRotation(0.0f),
+zRotation(0.0f),
+rotationMatrix(mat4(1.0f))
 {
 	renderSphere();
 }
 
 
+//########################################################################### render Sphere -> create Triangles and return them
 std::vector<Triangle> SphereTransformations::renderSphere() {
 	generate(n);
 	return triangles;
 }
 
 
+//########################################################################### return the coordinate system
+std::vector<glm::vec3> SphereTransformations::getCoords() {
+	return coords;
+}
 
+
+//########################################################################### generate Sphere
 void SphereTransformations::generate(int n) {
 	triangles.clear();
 	createInitialSphere();
+	createInitialCoords();
 
 	if (n > 0) {
 		subdivideGrid(n);
 	}
+	transformRotation();
 }
 
+
+//########################################################################### handle User-Input
 void SphereTransformations::increaseN() {
 	if (n < 4) n += 1;
 }
@@ -31,6 +47,7 @@ void SphereTransformations::increaseN() {
 void SphereTransformations::decreaseN() {
 	if (n > 0) n -= 1;
 }
+
 
 void SphereTransformations::increaseRadius() {
 	if (radius < 2) radius += 0.2f;
@@ -50,6 +67,34 @@ void SphereTransformations::zoomOut() {
 
 
 
+void SphereTransformations::calcRotationMatrix(float rotValue, vec3 axis) {
+	rotationMatrix = glm::rotate(rotationMatrix, rotValue, axis);
+}
+
+void SphereTransformations::setXRotation() {
+	this->xRotation += 0.1;
+	calcRotationMatrix(xRotation, { 1,0,0 });
+}
+
+void SphereTransformations::setYRotation() {
+	this->yRotation += 0.1;
+	calcRotationMatrix(yRotation, { 0,1,0 });
+}
+
+void SphereTransformations::setZRotation() {
+	this->zRotation += 0.1;
+	calcRotationMatrix(zRotation, { 0,0,1 });
+}
+
+void SphereTransformations::resetRotation() {
+	this->xRotation = 0;
+	this->yRotation = 0;
+	this->zRotation = 0;
+	rotationMatrix = mat4(1.0f);
+}
+
+
+//########################################################################### Create the initial Sphere
 void SphereTransformations::createInitialSphere() {
 	vec3 top(0, 1, 0);
 	vec3 bottom(0, -1, 0);
@@ -76,15 +121,31 @@ void SphereTransformations::createInitialSphere() {
 	}
 }
 
+
+//########################################################################### Create the initial coordinate system
+void SphereTransformations::createInitialCoords() {
+	coords = {
+		{ 0,0,0 },
+		{ 1,0,0 },
+		{ 0,0,0 },
+		{ 0,1,0 },
+		{ 0,0,0 },
+		{ 0,0,1 }
+	};
+}
+
+
+//########################################################################### Get the midpoint between two points
 glm::vec3 SphereTransformations::midpoint(const glm::vec3& pointA, const glm::vec3& pointB) {
 	return normalize((pointA + pointB) * 0.5f);
 }
 
+
+//########################################################################### calc Tessellation
 void SphereTransformations::subdivideGrid(int level) {
 	std::vector<Triangle> newTriangles;
 	level = level + 1;
 
-	//iterate over all triangles
 	for (const Triangle& tri : triangles) {
 		const glm::vec3& v0 = tri.v0;
 		const glm::vec3& v1 = tri.v1;
@@ -116,8 +177,35 @@ void SphereTransformations::subdivideGrid(int level) {
 }
 
 
+//########################################################################### Transform the Sphere and coordinate system
+void SphereTransformations::transformRotation() {
+	std::vector<Triangle> newTriangles;
+	
+	for (const auto& triangle : triangles) {
+		glm::vec3 v0_rotated = glm::vec3(rotationMatrix * glm::vec4(triangle.v0, 1.0f));
+		glm::vec3 v1_rotated = glm::vec3(rotationMatrix * glm::vec4(triangle.v1, 1.0f));
+		glm::vec3 v2_rotated = glm::vec3(rotationMatrix * glm::vec4(triangle.v2, 1.0f));
+
+		Triangle tNew;
+		tNew.v0 = v0_rotated;
+		tNew.v1 = v1_rotated;
+		tNew.v2 = v2_rotated;
+		newTriangles.push_back(tNew);
+	}
+
+	triangles = std::move(newTriangles);
 
 
+	std::vector<glm::vec3> tempCoords;
+	for (const auto& point : coords) {
+		glm::vec3 point_rotated = glm::vec3(rotationMatrix * glm::vec4(point, 1.0f));
+		tempCoords.push_back(point_rotated);
+	}
+	coords = std::move(tempCoords);
+}
+
+
+//########################################################################### calc the normal lines and return them
 std::vector<glm::vec3> SphereTransformations::generateNormalLines() {
 	std::vector<glm::vec3> lines;
 	float scale = 0.2f;
@@ -133,17 +221,5 @@ std::vector<glm::vec3> SphereTransformations::generateNormalLines() {
 		lines.push_back(centroid + normal * scale);
 	}
 	
-	return lines;
-}
-
-std::vector<glm::vec3> SphereTransformations::getCoords() {
-	std::vector<glm::vec3> lines;
-	lines.push_back({ 0,0,0 });
-	lines.push_back({ 1,0,0 });
-	lines.push_back({ 0,0,0 });
-	lines.push_back({ 0,1,0 });
-	lines.push_back({ 0,0,0 });
-	lines.push_back({ 0,0,1 });
-
 	return lines;
 }

@@ -15,7 +15,7 @@
 #include "Praktikum_1.h"
 #include "Praktikum_2.h"
 
-#define DEFAULT 0; //Flag to show Triangle and Quad (default project)
+#define DEFAULT 0 //Flag to show Triangle and Quad (default project)
 
 // Standard window width
 const int WINDOW_WIDTH = 640;
@@ -39,29 +39,34 @@ class Object
 {
 public:
     inline Object()
-        : vao(0),
-        positionBuffer(0),
-        colorBuffer(0),
-        indexBuffer(0)
+        : vao(0), positionBuffer(0), colorBuffer(0), indexBuffer(0),
+        coordsVAO(0), coordsPositionBuffer(0), coordsColorBuffer(0)
     {
     }
-
-    inline ~Object() { // GL context must exist on destruction
+    inline ~Object() {
         glDeleteVertexArrays(1, &vao);
         glDeleteBuffers(1, &indexBuffer);
         glDeleteBuffers(1, &colorBuffer);
         glDeleteBuffers(1, &positionBuffer);
+
+        glDeleteVertexArrays(1, &coordsVAO);
+        glDeleteBuffers(1, &coordsPositionBuffer);
+        glDeleteBuffers(1, &coordsColorBuffer);
     }
 
-    GLuint vao;        // vertex-array-object ID
+    // Hauptobjekt
+    GLuint vao;
+    GLuint positionBuffer;
+    GLuint colorBuffer;
+    GLuint indexBuffer;
+    glm::mat4x4 model;
 
-    GLuint positionBuffer; // ID of vertex-buffer: position
-    GLuint colorBuffer;    // ID of vertex-buffer: color
-
-    GLuint indexBuffer;    // ID of index-buffer
-
-    glm::mat4x4 model; // model matrix
+    // Koordinatensystem
+    GLuint coordsVAO;
+    GLuint coordsPositionBuffer;
+    GLuint coordsColorBuffer;
 };
+
 
 
 
@@ -76,7 +81,6 @@ public:
     Object sphereObject;
 
     Object sphereNormalsObject;
-    Object sphereCoordsObject;
     bool showCoords = true;
     bool showNormals = true;
 #endif
@@ -118,6 +122,7 @@ void renderSphere() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     glm::mat4x4 mvp = projection * view * sphereObject.model;
+
     program.use();
     program.setUniform("mvp", mvp);
 
@@ -125,9 +130,15 @@ void renderSphere() {
     glDrawElements(GL_TRIANGLES, sphere.renderSphere().size() * 3, GL_UNSIGNED_SHORT, 0);
     glBindVertexArray(0);
 
-    //reset Polygon Mode
+    if (showCoords) {
+        glBindVertexArray(sphereObject.coordsVAO);
+        glDrawArrays(GL_LINES, 0, 6);
+        glBindVertexArray(0);
+    }
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
+
 
 void renderNormals() {
     glm::mat4x4 mvp = projection * view * sphereNormalsObject.model;
@@ -136,15 +147,6 @@ void renderNormals() {
 
     glBindVertexArray(sphereNormalsObject.vao);
     glDrawArrays(GL_LINES, 0, sphere.generateNormalLines().size());
-    glBindVertexArray(0);
-}
-void renderCoords() {
-    glm::mat4x4 mvp = projection * view * sphereNormalsObject.model;
-    program.use();
-    program.setUniform("mvp", mvp);
-
-    glBindVertexArray(sphereCoordsObject.vao);
-    glDrawArrays(GL_LINES, 0, sphere.getCoords().size());
     glBindVertexArray(0);
 }
 
@@ -298,16 +300,43 @@ void initSphere() {
 
     glBindVertexArray(0);
 
-    //sphereObject.model = glm::mat4(1.0f);
+
+    std::vector<glm::vec3> coordLines = sphere.getCoords();
+    std::vector<glm::vec3> coordColors = {
+        {1,0,0}, {1,0,0}, // X-Achse (rot)
+        {0,1,0}, {0,1,0}, // Y-Achse (grün)
+        {0,0,1}, {0,0,1}  // Z-Achse (blau)
+    };
+
+    glGenVertexArrays(1, &sphereObject.coordsVAO);
+    glBindVertexArray(sphereObject.coordsVAO);
+
+    glGenBuffers(1, &sphereObject.coordsPositionBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, sphereObject.coordsPositionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, coordLines.size() * sizeof(glm::vec3), coordLines.data(), GL_STATIC_DRAW);
+    pos = glGetAttribLocation(programId, "position");
+    glEnableVertexAttribArray(pos);
+    glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    // Farbpuffer
+    glGenBuffers(1, &sphereObject.coordsColorBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, sphereObject.coordsColorBuffer);
+    glBufferData(GL_ARRAY_BUFFER, coordColors.size() * sizeof(glm::vec3), coordColors.data(), GL_STATIC_DRAW);
+    pos = glGetAttribLocation(programId, "color");
+    glEnableVertexAttribArray(pos);
+    glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindVertexArray(0);
+
     sphereObject.model = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, -0.5f, sphere.zIndex));
 }
+
 
 void initNormals() {
     std::vector<glm::vec3> lines = sphere.generateNormalLines();
     GLuint programId = program.getHandle();
     GLuint pos;
 
-    // Standardfarbe
     std::vector<glm::vec3> colors(lines.size(), glm::vec3(0.65f, 0.19f, 0.57f));
 
     glGenVertexArrays(1, &sphereNormalsObject.vao);
@@ -331,35 +360,6 @@ void initNormals() {
 
     sphereNormalsObject.model = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, -0.5f, sphere.zIndex));
 }
-void initCoords() {
-    std::vector<glm::vec3> lines = sphere.getCoords();
-    GLuint programId = program.getHandle();
-    GLuint pos;
-
-    std::vector<glm::vec3> colors(lines.size(), glm::vec3(0.0f, 0.0f, 1.0f));
-
-    glGenVertexArrays(1, &sphereCoordsObject.vao);
-    glBindVertexArray(sphereCoordsObject.vao);
-
-    glGenBuffers(1, &sphereCoordsObject.positionBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, sphereCoordsObject.positionBuffer);
-    glBufferData(GL_ARRAY_BUFFER, lines.size() * sizeof(glm::vec3), lines.data(), GL_STATIC_DRAW);
-    pos = glGetAttribLocation(programId, "position");
-    glEnableVertexAttribArray(pos);
-    glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-    glGenBuffers(1, &sphereCoordsObject.colorBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, sphereCoordsObject.colorBuffer);
-    glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), colors.data(), GL_STATIC_DRAW);
-    pos = glGetAttribLocation(programId, "color");
-    glEnableVertexAttribArray(pos);
-    glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-    glBindVertexArray(0);
-
-    sphereCoordsObject.model = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, -0.5f, sphere.zIndex));
-}
-
 #endif
 
 
@@ -407,7 +407,6 @@ bool init()
 #if PRAKTIKUM_2 == 1
     initSphere();
     initNormals();
-    initCoords();
 #endif
 
     return true;
@@ -430,8 +429,6 @@ void render()
     if(showNormals)
         renderNormals();
     
-    if(showCoords)
-        renderCoords();
 #endif
 }
 
@@ -499,18 +496,21 @@ void glutKeyboard(unsigned char keycode, int x, int y)
 
     //Object Rotation
     case 'n':
+        sphere.resetRotation();
         break;
     case 'x':
+        sphere.setXRotation();
         break;
     case 'y':
+        sphere.setYRotation();
         break;
     case 'z':
+        sphere.setZRotation();
         break;
     }
 
     initSphere();
     initNormals();
-    initCoords();
 #endif //PRAKTIKUM_2
 
     glutPostRedisplay();

@@ -5,6 +5,7 @@
 #include <GL/glut.h>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtx/norm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #define PRAKTIKUM_2 1;
 
@@ -28,17 +29,36 @@ public:
 	void zoomIn();
 	void zoomOut();
 
+	void setXRotation();
+	void setYRotation();
+	void setZRotation();
+	void resetRotation();
+
+
 	std::vector<glm::vec3> generateNormalLines();
 	std::vector<glm::vec3> getCoords();
 
 	float zIndex;
 
+
 private:
 	void createInitialSphere();
+	void createInitialCoords();
+
 	void subdivideGrid(int level);
 	glm::vec3 midpoint(const glm::vec3& pointA, const glm::vec3& pointB);
 
+	void transformRotation();
+	void calcRotationMatrix(float rotValue, vec3 axis);
+	glm::mat4 rotationMatrix;
+
 	std::vector<Triangle> triangles;
+	std::vector<glm::vec3> coords;
+
 	int n;
 	float radius;
+	
+	float xRotation;
+	float yRotation;
+	float zRotation;
 };

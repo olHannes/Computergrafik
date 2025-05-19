@@ -49,9 +49,11 @@ public:
         glDeleteBuffers(1, &colorBuffer);
         glDeleteBuffers(1, &positionBuffer);
 
+#if PRAKTIKUM_2 == 1
         glDeleteVertexArrays(1, &coordsVAO);
         glDeleteBuffers(1, &coordsPositionBuffer);
         glDeleteBuffers(1, &coordsColorBuffer);
+#endif //Praktikum_2
     }
 
     // Hauptobjekt
@@ -61,10 +63,12 @@ public:
     GLuint indexBuffer;
     glm::mat4x4 model;
 
+#if PRAKTIKUM_2 == 1
     // Koordinatensystem
     GLuint coordsVAO;
     GLuint coordsPositionBuffer;
     GLuint coordsColorBuffer;
+#endif //Praktikum_2
 };
 
 

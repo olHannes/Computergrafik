@@ -72,17 +72,17 @@ void SphereTransformations::calcRotationMatrix(float rotValue, vec3 axis) {
 }
 
 void SphereTransformations::setXRotation() {
-	this->xRotation += 0.1;
+	this->xRotation += 0.01;
 	calcRotationMatrix(xRotation, { 1,0,0 });
 }
 
 void SphereTransformations::setYRotation() {
-	this->yRotation += 0.1;
+	this->yRotation += 0.01;
 	calcRotationMatrix(yRotation, { 0,1,0 });
 }
 
 void SphereTransformations::setZRotation() {
-	this->zRotation += 0.1;
+	this->zRotation += 0.01;
 	calcRotationMatrix(zRotation, { 0,0,1 });
 }
 
@@ -211,14 +211,14 @@ std::vector<glm::vec3> SphereTransformations::generateNormalLines() {
 	float scale = 0.2f;
 
 	for (const auto& tri : triangles) {
-		glm::vec3 centroid = (tri.v0 + tri.v1 + tri.v2) / 3.0f;
-		
-		glm::vec3 edge1 = tri.v1 - tri.v0;
-		glm::vec3 edge2 = tri.v2 - tri.v0;
-		glm::vec3 normal = glm::normalize(glm::cross(edge1, edge2));
+		lines.push_back(tri.v0);
+		lines.push_back(tri.v0 + scale * tri.v0);
 
-		lines.push_back(centroid);
-		lines.push_back(centroid + normal * scale);
+		lines.push_back(tri.v1);
+		lines.push_back(tri.v1 + scale * tri.v1);
+
+		lines.push_back(tri.v2);
+		lines.push_back(tri.v2 + scale * tri.v2);
 	}
 	
 	return lines;

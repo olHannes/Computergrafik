@@ -9,6 +9,9 @@
     <ClCompile Include="Praktikum_2.cpp">
       <Filter>Praktikum 2</Filter>
     </ClCompile>
+    <ClCompile Include="Praktikum_3.cpp">
+      <Filter>Praktikum 3</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLSLProgram.h" />
@@ -18,6 +21,9 @@
     </ClInclude>
     <ClInclude Include="Praktikum_2.h">
       <Filter>Praktikum 2</Filter>
+    </ClInclude>
+    <ClInclude Include="Praktikum_3.h">
+      <Filter>Praktikum 3</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -30,6 +36,9 @@
     </Filter>
     <Filter Include="Praktikum 2">
       <UniqueIdentifier>{b840a4d0-3036-488f-b7a7-1cc8fcb2b780}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Praktikum 3">
+      <UniqueIdentifier>{cac5edff-0b28-4bb6-988d-868c0dacc8f5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

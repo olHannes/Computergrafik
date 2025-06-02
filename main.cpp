@@ -39,8 +39,10 @@ class Object
 {
 public:
     inline Object()
-        : vao(0), positionBuffer(0), colorBuffer(0), indexBuffer(0),
-        coordsVAO(0), coordsPositionBuffer(0), coordsColorBuffer(0)
+        : vao(0), positionBuffer(0), colorBuffer(0), indexBuffer(0)
+#if PRAKTIKUM_2 == 1
+        ,coordsVAO(0), coordsPositionBuffer(0), coordsColorBuffer(0)
+#endif //Praktikum_2
     {
     }
     inline ~Object() {
@@ -466,7 +468,7 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         return;
 
 #if PRAKTIKUM_2 == 1
-    //tessellierung 
+        //tessellierung 
     case '+':
         sphere.increaseN();
         break;
@@ -474,7 +476,7 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         sphere.decreaseN();
         break;
 
-    //Radius
+        //Radius
     case 'r':
         sphere.decreaseRadius();
         break;
@@ -482,7 +484,7 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         sphere.increaseRadius();
         break;
 
-    //show Addons
+        //show Addons
     case 'c':
         showCoords = !showCoords;
         break;
@@ -490,7 +492,7 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         showNormals = !showNormals;
         break;
 
-    //Screne Zoom
+        //Screne Zoom
     case 'a':
         sphere.zoomIn();
         break;
@@ -498,7 +500,7 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         sphere.zoomOut();
         break;
 
-    //Object Rotation
+        //Object Rotation
     case 'n':
         sphere.resetRotation();
         break;
@@ -511,12 +513,14 @@ void glutKeyboard(unsigned char keycode, int x, int y)
     case 'z':
         sphere.setZRotation();
         break;
-    }
 
+#endif //PRAKTIKUM_2
+    }
+#if PRAKTIKUM_2 == 1
     initSphere();
     initNormals();
 #endif //PRAKTIKUM_2
-
+    
     glutPostRedisplay();
 }
 

@@ -1,13 +1,25 @@
 #include "Praktikum_2.h"
 
 //########################################################################### Constructor call (init params)
+SphereTransformations::SphereTransformations(glm::vec3 pos)
+	:n(4),
+	radius(1.0f),
+	xRotation(0.0f),
+	yRotation(0.1f),
+	zRotation(0.0f),
+	rotationMatrix(mat4(1.0f)),
+	absolutePosition(pos)
+{
+	renderSphere();
+}
+
 SphereTransformations::SphereTransformations()
-:n(0),
-radius(1.0f),
-xRotation(0.0f),
-yRotation(0.0f),
-zRotation(0.0f),
-rotationMatrix(mat4(1.0f))
+	:n(4),
+	radius(1.0f),
+	xRotation(0.0f),
+	yRotation(0.1f),
+	zRotation(0.0f),
+	rotationMatrix(mat4(1.0f))
 {
 	renderSphere();
 }
@@ -35,7 +47,7 @@ void SphereTransformations::generate(int n) {
 	if (n > 0) {
 		subdivideGrid(n);
 	}
-	transformRotation();
+	//transformRotation();
 }
 
 
@@ -202,6 +214,13 @@ void SphereTransformations::transformRotation() {
 		tempCoords.push_back(point_rotated);
 	}
 	coords = std::move(tempCoords);
+}
+
+
+glm::vec3 SphereTransformations::rotateTranslationVector(glm::vec3 vec) {
+	glm::vec3 rotated = glm::vec3(rotationMatrix * glm::vec4(vec, 1.0f));
+
+	return rotated;
 }
 
 

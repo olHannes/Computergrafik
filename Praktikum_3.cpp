@@ -4,11 +4,52 @@
 using namespace std;
 ObjectBodyHandler::ObjectBodyHandler()
 {
-    this->sphere = SphereTransformations(glm::vec3(0.0f, 0.0f,0.0f));
+    this->sphere = SphereTransformations();
     sphere.renderSphere();
 }
 
 
+
+/*
+Getter / Setter for Line Visibility and local rotation
+*/
+void ObjectBodyHandler::setLineVisible(bool pVisible) {
+    this->lineVisible = pVisible;
+}
+bool ObjectBodyHandler::getLineVisible() {
+    return this->lineVisible;
+}
+
+void ObjectBodyHandler::setBodyRotation(bool pRotation) {
+    this->bodyRotation = pRotation;
+}
+bool ObjectBodyHandler::getBodyRotation() {
+    return this->bodyRotation;
+}
+
+
+/*
+Getter / Setter for Color
+*/
+void ObjectBodyHandler::setSphereColor(const glm::vec3& color) {
+    this->sphereColor = color;
+}
+vec3 ObjectBodyHandler::getSphereColor() {
+    return this->sphereColor;
+}
+
+void ObjectBodyHandler::setLineColor(const vec3& color) {
+    this->lineColor = color;
+}
+vec3 ObjectBodyHandler::getLineColor() {
+    return this->lineColor;
+}
+
+
+
+/*
+Helper Function: Translation of all Triangles
+*/
 void ObjectBodyHandler::transformTranslation(glm::vec3 vec) {
     std::vector<Triangle> tris = sphere.getTriangles();
     for (auto& tri : tris) {
@@ -19,6 +60,10 @@ void ObjectBodyHandler::transformTranslation(glm::vec3 vec) {
     sphere.setTriangles(tris);
 }
 
+
+/*
+Recursive render-call
+*/
 void ObjectBodyHandler::render() {
     this->renderObject();
     for (auto& obj : childrenObjects) {
@@ -26,16 +71,18 @@ void ObjectBodyHandler::render() {
     }
 }
 
+
+/*
+Render the current sphere 
+*/
 void ObjectBodyHandler::renderObject() {
-    //step 1: sphere tesselieren mit n=4
+    //step 1: sphere creation
     if (bodyRotation) {
         sphere.setYRotationValue(0.1f);
     }
 
-    //Erstellung und lokale Drehung
     sphere.renderSphere();
     sphere.transformRotation();
-
 
 
     // step 2: sphere (und alle children) global um den parent rotieren

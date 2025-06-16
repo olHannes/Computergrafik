@@ -20,17 +20,17 @@ float const globalZ = 0;
 
 class ObjectBodyHandler {
 public:
+
     ObjectBodyHandler();
 
     bool lineVisible;
     bool bodyRotation;
 
-    void setLineVisible(bool pVisible) {
-        this->lineVisible = pVisible;
-    }
-    void setBodyRotation(bool pRotation) {
-        this->bodyRotation = pRotation;
-    }
+    void setLineVisible(bool pVisible);
+    bool getLineVisible();
+
+    void setBodyRotation(bool pRotation);
+    bool getBodyRotation();
 
     /*
     float parentDistance;
@@ -39,22 +39,21 @@ public:
     }
     */
     
-    glm::mat4 globalRotationMatrix; //rotation um die Sonne
+    mat4 globalRotationMatrix; //rotation um die Sonne
     
 
     SphereTransformations sphere; //Sphere Objekt
     std::vector<glm::vec3> line; //Linie
 
 
-    void setSphereColor(const glm::vec3& color) {
-        this->sphereColor = color;
-    }
-    vec3 getSphereColor() {
-        return this->sphereColor;
-    }
+    void setSphereColor(const glm::vec3& color);
+    vec3 getSphereColor();
 
-    glm::vec3 sphereColor = glm::vec3(1.0f);
-    const glm::vec3 lineColor = glm::vec3(0.0f);
+    void setLineColor(const vec3& color);
+    vec3 getLineColor();
+
+    vec3 sphereColor = vec3(1.0f);
+    vec3 lineColor = vec3(0.0f);
 
 
     std::vector<ObjectBodyHandler> childrenObjects; //Liste an Kindern

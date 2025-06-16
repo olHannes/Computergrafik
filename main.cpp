@@ -229,44 +229,44 @@ public:
 #if PRAKTIKUM_3 == 1
     void initSystem() {
 
-        sun.setBodyRotation(true);
-        sun.sphere.setN(4);
-        sun.lineVisible = true;
-        sun.sphere.setRadius(1.5f);
+        sun.sphere.setN(3);
+        sun.sphere.setRadius(0.4f);
         sun.setSphereColor(vec3(0.9f, 0.6f, 0.1f));
+        sun.setBodyRotation(true);
+        sun.lineVisible = true;
         //sun.sphere.renderSphere();
 
-        planet1.setBodyRotation(true);
         planet1.sphere.setN(3);
-        planet1.sphere.absolutePosition = (vec3(-3.0f, 0.0f, 0.0f));
-        planet1.lineVisible = true;
+        planet1.sphere.setRadius(0.2f);
+        planet1.sphere.absolutePosition = (vec3(-2.0f, 0.0f, 0.0f));
         planet1.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
+        planet1.setBodyRotation(true);
+        planet1.lineVisible = true;
         //planet1.setParentDistance(3.0f);
-        planet1.sphere.setRadius(0.5f);
 
-        moon1.setBodyRotation(true);
         moon1.sphere.setN(2);
-        moon1.lineVisible = false;
-        moon1.sphere.absolutePosition = (vec3(-4.5f, 0.0f, 0.0f));
+        moon1.sphere.setRadius(0.05f);
+        moon1.sphere.absolutePosition = (vec3(-2.5f, 0.0f, 0.0f));
         moon1.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
+        moon1.setBodyRotation(true);
+        moon1.lineVisible = false;
         //moon1.setParentDistance(1.0f);
-        moon1.sphere.setRadius(0.1f);
 
-        planet2.setBodyRotation(true);
         planet2.sphere.setN(3);
-        planet2.lineVisible = true;
-        planet2.sphere.absolutePosition = (vec3(3.0f, 0.0f, 0.0f));
+        planet2.sphere.setRadius(0.2f);
+        planet2.sphere.absolutePosition = (vec3(2.0f, 0.0f, 0.0f));
         planet2.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
+        planet2.setBodyRotation(true);
+        planet2.lineVisible = true;
         //planet2.setParentDistance(3.0f);
-        planet2.sphere.setRadius(0.5f);
 
-        moon2.setBodyRotation(true);
         moon2.sphere.setN(2);
-        moon2.lineVisible = false;
-        moon2.sphere.absolutePosition = (vec3(4.5f, 0.0f, 0.0f));
+        moon2.sphere.setRadius(0.05f);
+        moon2.sphere.absolutePosition = (vec3(2.5f, 0.0f, 0.0f));
         moon2.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
+        moon2.setBodyRotation(true);
+        moon2.lineVisible = false;
         //moon2.setParentDistance(1.0f);
-        moon2.sphere.setRadius(0.002f);
 
 
         planet1.childrenObjects.push_back(moon1);
@@ -609,6 +609,10 @@ bool init()
 
 #if PRAKTIKUM_3 == 1
     sun.render();
+    planet1.render();
+    moon1.render();
+    planet2.render();
+    moon2.render();
 
     glmInit(sun.sphere.getTriangles(), sunBody, sun.sphere, sun);
     glmInit(planet1.sphere.getTriangles(), planet1Body, planet1.sphere, planet1);

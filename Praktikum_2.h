@@ -18,6 +18,7 @@ struct Triangle {
 
 class SphereTransformations {
 public:
+
 	SphereTransformations(glm::vec3 pos);
 	SphereTransformations();
 

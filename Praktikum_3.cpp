@@ -66,8 +66,8 @@ Recursive render-call
 */
 void ObjectBodyHandler::render() {
     this->renderObject();
-    for (auto& obj : childrenObjects) {
-        obj.render();
+    for (auto* obj : childrenObjects) {
+        obj->render();
     }
 }
 

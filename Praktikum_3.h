@@ -56,7 +56,7 @@ public:
     vec3 lineColor = vec3(0.0f);
 
 
-    std::vector<ObjectBodyHandler> childrenObjects; //Liste an Kindern
+    std::vector<ObjectBodyHandler*> childrenObjects; //Liste an Kindern
     ObjectBodyHandler* parentObject = nullptr;  // Eltern Objekt
 
 

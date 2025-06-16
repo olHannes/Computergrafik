@@ -230,11 +230,11 @@ public:
     void initSystem() {
 
         sun.sphere.setN(3);
-        sun.sphere.setRadius(0.4f);
+        sun.sphere.setRadius(1.0f);
         sun.setSphereColor(vec3(0.9f, 0.6f, 0.1f));
         sun.setBodyRotation(true);
         sun.lineVisible = true;
-        //sun.sphere.renderSphere();
+        sun.sphere.renderSphere();
 
         planet1.sphere.setN(3);
         planet1.sphere.setRadius(0.2f);
@@ -243,6 +243,7 @@ public:
         planet1.setBodyRotation(true);
         planet1.lineVisible = true;
         //planet1.setParentDistance(3.0f);
+        planet1.sphere.renderSphere();
 
         moon1.sphere.setN(2);
         moon1.sphere.setRadius(0.05f);
@@ -251,6 +252,7 @@ public:
         moon1.setBodyRotation(true);
         moon1.lineVisible = false;
         //moon1.setParentDistance(1.0f);
+        moon1.sphere.renderSphere();
 
         planet2.sphere.setN(3);
         planet2.sphere.setRadius(0.2f);
@@ -259,6 +261,7 @@ public:
         planet2.setBodyRotation(true);
         planet2.lineVisible = true;
         //planet2.setParentDistance(3.0f);
+        planet2.sphere.renderSphere();
 
         moon2.sphere.setN(2);
         moon2.sphere.setRadius(0.05f);
@@ -267,13 +270,14 @@ public:
         moon2.setBodyRotation(true);
         moon2.lineVisible = false;
         //moon2.setParentDistance(1.0f);
+        moon2.sphere.renderSphere();
 
 
-        planet1.childrenObjects.push_back(moon1);
-        planet2.childrenObjects.push_back(moon2);
+        planet1.childrenObjects.push_back(&moon1);
+        planet2.childrenObjects.push_back(&moon2);
 
-        sun.childrenObjects.push_back(planet1);
-        sun.childrenObjects.push_back(planet2);
+        sun.childrenObjects.push_back(&planet1);
+        sun.childrenObjects.push_back(&planet2);
 
     }
 #endif
@@ -608,11 +612,8 @@ bool init()
 #endif
 
 #if PRAKTIKUM_3 == 1
+    
     sun.render();
-    planet1.render();
-    moon1.render();
-    planet2.render();
-    moon2.render();
 
     glmInit(sun.sphere.getTriangles(), sunBody, sun.sphere, sun);
     glmInit(planet1.sphere.getTriangles(), planet1Body, planet1.sphere, planet1);
@@ -727,6 +728,27 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         break;
 
 #endif //PRAKTIKUM_2
+#if PRAKTIKUM_3 == 1
+    case '+':
+        sun.sphere.increaseN();
+        planet1.sphere.increaseN();
+        moon1.sphere.increaseN();
+        planet2.sphere.increaseN();
+        moon2.sphere.increaseN();
+        init();
+        break;
+
+    case '-':
+        sun.sphere.decreaseN();
+        planet1.sphere.decreaseN();
+        moon1.sphere.decreaseN();
+        planet2.sphere.decreaseN();
+        moon2.sphere.decreaseN();
+        init();
+        break;
+
+#endif
+
     }
 #if PRAKTIKUM_2 == 1
     initSphere();

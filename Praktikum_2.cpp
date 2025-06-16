@@ -66,6 +66,9 @@ void SphereTransformations::setN(int pN) {
 	if (pN > 0 && pN < 4) this->n = pN;
 	renderSphere();
 }
+int SphereTransformations::getN() {
+	return this->n;
+}
 
 
 void SphereTransformations::increaseRadius() {

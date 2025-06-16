@@ -28,6 +28,7 @@ public:
 	void increaseN();
 	void decreaseN();
 	void setN(int pN);
+	int getN();
 	
 	void increaseRadius();
 	void decreaseRadius();

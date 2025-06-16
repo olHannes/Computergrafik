@@ -643,6 +643,15 @@ void render()
         renderNormals();
 #endif
 #if PRAKTIKUM_3 == 1
+    sun.render();
+
+    glmInit(sun.sphere.getTriangles(), sunBody, sun.sphere, sun);
+    glmInit(planet1.sphere.getTriangles(), planet1Body, planet1.sphere, planet1);
+    glmInit(moon1.sphere.getTriangles(), moon1Body, moon1.sphere, moon1);
+    glmInit(planet2.sphere.getTriangles(), planet2Body, planet2.sphere, planet2);
+    glmInit(moon2.sphere.getTriangles(), moon2Body, moon2.sphere, moon2);
+    
+
     glmRender(sunBody, sun.sphere);
     glmRender(planet1Body, planet1.sphere);
     glmRender(moon1Body, moon1.sphere);

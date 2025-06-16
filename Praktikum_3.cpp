@@ -22,6 +22,8 @@ bool ObjectBodyHandler::getLineVisible() {
 
 void ObjectBodyHandler::setBodyRotation(bool pRotation) {
     this->bodyRotation = pRotation;
+    if(pRotation)
+        this->sphere.setYRotationValue(0.2f);
 }
 bool ObjectBodyHandler::getBodyRotation() {
     return this->bodyRotation;
@@ -77,9 +79,6 @@ Render the current sphere
 */
 void ObjectBodyHandler::renderObject() {
     //step 1: sphere creation
-    if (bodyRotation) {
-        sphere.setYRotationValue(0.1f);
-    }
 
     sphere.renderSphere();
     sphere.transformRotation();

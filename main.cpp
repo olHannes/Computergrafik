@@ -42,7 +42,7 @@ public:
     inline Object()
         : vao(0), positionBuffer(0), colorBuffer(0), indexBuffer(0)
 #if PRAKTIKUM_2 == 1 || PRAKTIKUM_3 == 1
-        ,coordsVAO(0), coordsPositionBuffer(0), coordsColorBuffer(0)
+        ,linesVAO(0), linesPositionBuffer(0), linesColorBuffer(0)
 #endif //Praktikum_2 / Praktikum_3
     {
     }
@@ -53,9 +53,9 @@ public:
         glDeleteBuffers(1, &positionBuffer);
 
 #if PRAKTIKUM_2 == 1 || PRAKTIKUM_3 == 1
-        glDeleteVertexArrays(1, &coordsVAO);
-        glDeleteBuffers(1, &coordsPositionBuffer);
-        glDeleteBuffers(1, &coordsColorBuffer);
+        glDeleteVertexArrays(1, &linesVAO);
+        glDeleteBuffers(1, &linesPositionBuffer);
+        glDeleteBuffers(1, &linesColorBuffer);
 #endif //Praktikum_2 / Praktikum_3
     }
 
@@ -68,9 +68,9 @@ public:
 
 #if PRAKTIKUM_2 == 1 || PRAKTIKUM_3 == 1
     // Koordinatensystem
-    GLuint coordsVAO;
-    GLuint coordsPositionBuffer;
-    GLuint coordsColorBuffer;
+    GLuint linesVAO;
+    GLuint linesPositionBuffer;
+    GLuint linesColorBuffer;
 #endif //Praktikum_2 / Praktikum_3
 };
 
@@ -85,8 +85,8 @@ public:
 
 #if PRAKTIKUM_2 == 1
     //SphereTransformations sphere = SphereTransformations(glm::vec3(-0.5f, -0.5f, sphere.zIndex));
-    //SphereTransformations sphere = SphereTransformations(glm::vec3(-0.5f, -0.5f, 0));
-    SphereTransformations sphere = SphereTransformations();
+    SphereTransformations sphere = SphereTransformations(glm::vec3(-0.5f, 0, 0));
+    //SphereTransformations sphere = SphereTransformations();
     Object sphereObject;
 
     Object sphereNormalsObject;
@@ -101,6 +101,7 @@ public:
     ObjectBodyHandler planet2;
     ObjectBodyHandler moon2;
 
+    std::vector<Object> bodyList;
     Object sunBody;
     Object planet1Body;
     Object planet2Body;
@@ -109,7 +110,8 @@ public:
 
 #endif
 
-    void glmInit(const std::vector<Triangle>& tris, Object& body, SphereTransformations& sphere) {
+#if PRAKTIKUM_3 == 1
+    void glmInit(const std::vector<Triangle>& tris, Object& body, SphereTransformations& sphere, ObjectBodyHandler obj, bool drawYAxisOnly = false) {
         std::vector<glm::vec3> vertices;
         std::vector<glm::vec3> colors;
         std::vector<GLushort> indices;
@@ -120,9 +122,9 @@ public:
             vertices.push_back(tri.v1);
             vertices.push_back(tri.v2);
 
-            colors.push_back({ 1.0f, 1.0f, 0.0f });
-            colors.push_back({ 1.0f, 1.0f, 0.0f });
-            colors.push_back({ 1.0f, 1.0f, 0.0f });
+            colors.push_back(obj.getSphereColor());
+            colors.push_back(obj.getSphereColor());
+            colors.push_back(obj.getSphereColor());
 
             indices.push_back(vertexIndex++);
             indices.push_back(vertexIndex++);
@@ -132,6 +134,8 @@ public:
         GLuint programId = program.getHandle();
         GLuint pos;
 
+
+        // === VAO für Hauptobjekt ===
         glGenVertexArrays(1, &body.vao);
         glBindVertexArray(body.vao);
 
@@ -156,53 +160,123 @@ public:
 
         glBindVertexArray(0);
 
+
+        // === Optional: Nur Y-Achse anzeigen ===
+        if (drawYAxisOnly) {
+            std::vector<glm::vec3> coordLines = sphere.getCoords();
+            if (coordLines.size() >= 4) {
+                std::vector<glm::vec3> yAxisLine = {
+                    coordLines[2], coordLines[3]
+                };
+
+                std::vector<glm::vec3> yAxisColor = {
+                    obj.lineColor,
+                    obj.lineColor
+                };
+
+
+                glGenVertexArrays(1, &body.linesVAO);
+                glBindVertexArray(body.linesVAO);
+
+                glGenBuffers(1, &body.linesPositionBuffer);
+                glBindBuffer(GL_ARRAY_BUFFER, body.linesPositionBuffer);
+                glBufferData(GL_ARRAY_BUFFER, yAxisLine.size() * sizeof(glm::vec3), yAxisLine.data(), GL_STATIC_DRAW);
+                pos = glGetAttribLocation(programId, "position");
+                glEnableVertexAttribArray(pos);
+                glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+                glGenBuffers(1, &body.linesColorBuffer);
+                glBindBuffer(GL_ARRAY_BUFFER, body.linesColorBuffer);
+                glBufferData(GL_ARRAY_BUFFER, yAxisColor.size() * sizeof(glm::vec3), yAxisColor.data(), GL_STATIC_DRAW);
+                pos = glGetAttribLocation(programId, "color");
+                glEnableVertexAttribArray(pos);
+                glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+                glBindVertexArray(0);
+            }
+        }
+
+        // === Modellmatrix setzen ===
         body.model = glm::translate(glm::mat4(1.0f), sphere.absolutePosition);
     }
 
-    void glmRender(Object body, SphereTransformations sphere) {
+
+    void glmRender(const Object& body, SphereTransformations& sphere, bool showYAxisOnly = false) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-        glm::mat4x4 mvp = projection * view * body.model;
+        glm::mat4 mvp = projection * view * body.model;
 
         program.use();
         program.setUniform("mvp", mvp);
 
+        // === Hauptobjekt zeichnen ===
         glBindVertexArray(body.vao);
         glDrawElements(GL_TRIANGLES, sphere.renderSphere().size() * 3, GL_UNSIGNED_SHORT, 0);
         glBindVertexArray(0);
 
+        // === Optional Y-Achse zeichnen ===
+        if (showYAxisOnly) {
+            glBindVertexArray(body.linesVAO);
+            glDrawArrays(GL_LINES, 0, 2); // Nur ein Linienpaar (Y-Achse)
+            glBindVertexArray(0);
+        }
+
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
+#endif
 
+#if PRAKTIKUM_3 == 1
     void initSystem() {
+
         sun.setBodyRotation(true);
+        sun.sphere.setN(4);
         sun.lineVisible = true;
+        sun.sphere.setRadius(1.5f);
+        sun.setSphereColor(vec3(0.9f, 0.6f, 0.1f));
+        //sun.sphere.renderSphere();
 
         planet1.setBodyRotation(true);
+        planet1.sphere.setN(3);
+        planet1.sphere.absolutePosition = (vec3(-3.0f, 0.0f, 0.0f));
         planet1.lineVisible = true;
-        planet1.setParentDistance(3.0f);
+        planet1.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
+        //planet1.setParentDistance(3.0f);
+        planet1.sphere.setRadius(0.5f);
 
         moon1.setBodyRotation(true);
+        moon1.sphere.setN(2);
         moon1.lineVisible = false;
-        moon1.setParentDistance(1.0f);
-
-        planet1.childrenObjects.push_back(moon1);
+        moon1.sphere.absolutePosition = (vec3(-4.5f, 0.0f, 0.0f));
+        moon1.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
+        //moon1.setParentDistance(1.0f);
+        moon1.sphere.setRadius(0.1f);
 
         planet2.setBodyRotation(true);
+        planet2.sphere.setN(3);
         planet2.lineVisible = true;
-        planet2.setParentDistance(3.0f);
+        planet2.sphere.absolutePosition = (vec3(3.0f, 0.0f, 0.0f));
+        planet2.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
+        //planet2.setParentDistance(3.0f);
+        planet2.sphere.setRadius(0.5f);
 
         moon2.setBodyRotation(true);
-        planet1.lineVisible = false;
-        moon2.setParentDistance(1.0f);
+        moon2.sphere.setN(2);
+        moon2.lineVisible = false;
+        moon2.sphere.absolutePosition = (vec3(4.5f, 0.0f, 0.0f));
+        moon2.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
+        //moon2.setParentDistance(1.0f);
+        moon2.sphere.setRadius(0.002f);
 
+
+        planet1.childrenObjects.push_back(moon1);
         planet2.childrenObjects.push_back(moon2);
 
         sun.childrenObjects.push_back(planet1);
         sun.childrenObjects.push_back(planet2);
 
     }
+#endif
 
 
 #if DEFAULT == 1
@@ -251,7 +325,7 @@ void renderSphere() {
     glBindVertexArray(0);
 
     if (showCoords) {
-        glBindVertexArray(sphereObject.coordsVAO);
+        glBindVertexArray(sphereObject.linesVAO);
         glDrawArrays(GL_LINES, 0, 6);
         glBindVertexArray(0);
     }
@@ -372,7 +446,9 @@ void initQuad()
 
 #if PRAKTIKUM_2 == 1
 void initSphere() {
-    const auto& tris = sphere.renderSphere();
+    auto& tris = sphere.renderSphere();
+    sphere.transformRotation();
+    tris = sphere.getTriangles();
 
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> colors;
@@ -428,19 +504,19 @@ void initSphere() {
         {0,0,1}, {0,0,1}  // Z-Achse (blau)
     };
 
-    glGenVertexArrays(1, &sphereObject.coordsVAO);
-    glBindVertexArray(sphereObject.coordsVAO);
+    glGenVertexArrays(1, &sphereObject.linesVAO);
+    glBindVertexArray(sphereObject.linesVAO);
 
-    glGenBuffers(1, &sphereObject.coordsPositionBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, sphereObject.coordsPositionBuffer);
+    glGenBuffers(1, &sphereObject.linesPositionBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, sphereObject.linesPositionBuffer);
     glBufferData(GL_ARRAY_BUFFER, coordLines.size() * sizeof(glm::vec3), coordLines.data(), GL_STATIC_DRAW);
     pos = glGetAttribLocation(programId, "position");
     glEnableVertexAttribArray(pos);
     glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
     // Farbpuffer
-    glGenBuffers(1, &sphereObject.coordsColorBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, sphereObject.coordsColorBuffer);
+    glGenBuffers(1, &sphereObject.linesColorBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, sphereObject.linesColorBuffer);
     glBufferData(GL_ARRAY_BUFFER, coordColors.size() * sizeof(glm::vec3), coordColors.data(), GL_STATIC_DRAW);
     pos = glGetAttribLocation(programId, "color");
     glEnableVertexAttribArray(pos);
@@ -478,7 +554,9 @@ void initNormals() {
 
     glBindVertexArray(0);
 
-    sphereNormalsObject.model = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, -0.5f, sphere.zIndex));
+    //sphereNormalsObject.model = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, -0.5f, sphere.zIndex));
+    sphereObject.model = glm::translate(glm::mat4(1.0f), sphere.absolutePosition);
+
 }
 #endif
 
@@ -531,11 +609,12 @@ bool init()
 
 #if PRAKTIKUM_3 == 1
     sun.render();
-    glmInit(sun.sphere.getTriangles(), sunBody, sun.sphere);
-    glmInit(planet1.sphere.getTriangles(), planet1Body, planet1.sphere);
-    glmInit(moon1.sphere.getTriangles(), moon1Body, moon1.sphere);
-    glmInit(planet2.sphere.getTriangles(), planet2Body, planet2.sphere);
-    glmInit(moon2.sphere.getTriangles(), moon2Body, moon2.sphere);
+
+    glmInit(sun.sphere.getTriangles(), sunBody, sun.sphere, sun);
+    glmInit(planet1.sphere.getTriangles(), planet1Body, planet1.sphere, planet1);
+    glmInit(moon1.sphere.getTriangles(), moon1Body, moon1.sphere, moon1);
+    glmInit(planet2.sphere.getTriangles(), planet2Body, planet2.sphere, planet2);
+    glmInit(moon2.sphere.getTriangles(), moon2Body, moon2.sphere, moon2);
 
 #endif //Praktikum_3
     return true;
@@ -694,8 +773,9 @@ int main(int argc, char** argv)
         return -1;
     }
 
+#if PRAKTIKUM_3 == 1
     initSystem();
-
+#endif
 
 
 #if _DEBUG

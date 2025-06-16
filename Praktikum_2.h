@@ -7,7 +7,7 @@
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#define PRAKTIKUM_2 0;
+#define PRAKTIKUM_2 0
 
 using namespace glm;
 
@@ -23,8 +23,11 @@ public:
 
 	void generate(int n);
 	std::vector<Triangle> renderSphere();
+	
 	void increaseN();
 	void decreaseN();
+	void setN(int pN);
+	
 	void increaseRadius();
 	void decreaseRadius();
 
@@ -40,19 +43,25 @@ public:
 	void setZRotation();
 	void resetRotation();
 
+	void setXRotationValue(float pValue) {
+		this->xRotation = pValue;
+	}
 	void setYRotationValue(float pValue) {
 		this->yRotation = pValue;
+	}
+	void setZRotationValue(float pValue) {
+		this->zRotation = pValue;
 	}
 
 	std::vector<glm::vec3> generateNormalLines();
 	std::vector<glm::vec3> getCoords();
 
 	float zIndex;
-
 		
 	std::vector<Triangle> getTriangles() {
 		return this->triangles;
 	}
+
 	void setTriangles(std::vector<Triangle> tri) {
 		this->triangles = tri;
 	}

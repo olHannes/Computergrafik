@@ -2,10 +2,10 @@
 
 //########################################################################### Constructor call (init params)
 SphereTransformations::SphereTransformations(glm::vec3 pos)
-	:n(4),
+	:n(0),
 	radius(1.0f),
 	xRotation(0.0f),
-	yRotation(0.1f),
+	yRotation(0.0f),
 	zRotation(0.0f),
 	rotationMatrix(mat4(1.0f)),
 	absolutePosition(pos)
@@ -17,7 +17,7 @@ SphereTransformations::SphereTransformations()
 	:n(4),
 	radius(1.0f),
 	xRotation(0.0f),
-	yRotation(0.1f),
+	yRotation(0.0f),
 	zRotation(0.0f),
 	rotationMatrix(mat4(1.0f))
 {
@@ -58,6 +58,10 @@ void SphereTransformations::increaseN() {
 
 void SphereTransformations::decreaseN() {
 	if (n > 0) n -= 1;
+}
+
+void SphereTransformations::setN(int pN) {
+	if (pN > 0 && pN < 4) this->n = pN;
 }
 
 

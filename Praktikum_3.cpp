@@ -93,6 +93,8 @@ void ObjectBodyHandler::renderObject() {
     sphere.renderSphere();
     sphere.transformRotation(sphere.getRotationMatrix());
 
+    calcRotationMatrix();
+
     // step 2: sphere (und alle children) global um den parent rotieren
     if (this->getParentObject() != nullptr) {
         //globale Rotation (alles außer die Sonne)
@@ -102,16 +104,18 @@ void ObjectBodyHandler::renderObject() {
         2. Rotation um die y-Achse
         3. Translation zurück
         */
-        calcRotationMatrix();
 
-        glm::vec3 translationVector = sphere.absolutePosition;
-        transformTranslation(translationVector);
+
+        glm::vec3 originalPos = sphere.absolutePosition;
+
+        transformTranslation(originalPos);
 
         sphere.transformRotation(this->globalRotationMatrix);
 
-        translationVector = sphere.rotateTranslationVector(translationVector, this->globalRotationMatrix);
-        sphere.absolutePosition = sphere.rotateTranslationVector(sphere.absolutePosition, this->globalRotationMatrix);
-        transformTranslation(-translationVector);
+        glm::vec3 rotatedPos = sphere.rotateTranslationVector(originalPos, this->globalRotationMatrix);
+        //sphere.absolutePosition = rotatedPos;
+        transformTranslation(-rotatedPos);
+
 
         if (this->getParentObject()->getParentObject() != nullptr) {
             //Rotation um den this->getParentObject()
@@ -135,9 +139,6 @@ void ObjectBodyHandler::renderObject() {
 
             transformTranslation(-toOrigin);
             sphere.absolutePosition -= toOrigin;
-
-
         }
     }
-
 }

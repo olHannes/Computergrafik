@@ -768,6 +768,17 @@ void glutKeyboard(unsigned char keycode, int x, int y)
 
 
 
+void animate(int value){
+#if PRAKTIKUM_3 == 1:
+    planet1.sphere.setYRotation();
+    planet2.sphere.setYRotation();
+    moon1.sphere.setYRotation();
+    moon2.sphere.setYRotation();
+#endif
+    sun.render();
+    glutPostRedisplay();
+    glutTimerFunc(16, animate, 0);
+}
 
 
 int main(int argc, char** argv)
@@ -833,6 +844,8 @@ int main(int argc, char** argv)
     glutReshapeFunc(glutResize);
     glutDisplayFunc(glutDisplay);
     //glutIdleFunc   (glutDisplay); // redisplay when idle
+
+    glutTimerFunc(16, animate, 0);
 
     glutKeyboardFunc(glutKeyboard);
 

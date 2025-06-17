@@ -88,7 +88,7 @@ private:
 
 	int n;
 	float radius;
-	
+public:
 	float xRotation;
 	float yRotation;
 	float zRotation;

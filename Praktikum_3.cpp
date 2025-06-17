@@ -83,7 +83,7 @@ void ObjectBodyHandler::renderObject() {
     sphere.renderSphere();
     sphere.transformRotation();
 
-
+    return;
     // step 2: sphere (und alle children) global um den parent rotieren
     if (this->getParentObject() != nullptr) {
         //globale Rotation (alles außer die Sonne)
@@ -95,6 +95,7 @@ void ObjectBodyHandler::renderObject() {
         */
         glm::vec3 translationVector = sphere.absolutePosition;
         transformTranslation(translationVector);
+
         sphere.transformRotation();
 
         translationVector = sphere.rotateTranslationVector(translationVector);
@@ -103,6 +104,7 @@ void ObjectBodyHandler::renderObject() {
 
 
         if (this->getParentObject()->getParentObject() != nullptr) {
+            return;
             //Rotation um den this->getParentObject()
             //nur Monde
             /*

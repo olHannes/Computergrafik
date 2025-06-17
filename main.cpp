@@ -226,6 +226,15 @@ public:
 
 #endif
 
+
+#if PRAKTIKUM_3 == 1
+    float speedAmplifier = 0.0f;
+    float moonRotationSpeed = 0.05f;
+    float planetRotationSpeed = 0.02f;
+    
+#endif
+
+
 #if PRAKTIKUM_3 == 1
     void initSystem() {
 
@@ -242,7 +251,6 @@ public:
         planet1.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
         planet1.setBodyRotation(true);
         planet1.lineVisible = true;
-        //planet1.setParentDistance(3.0f);
         planet1.sphere.renderSphere();
 
         moon1.sphere.setN(2);
@@ -251,7 +259,6 @@ public:
         moon1.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
         moon1.setBodyRotation(true);
         moon1.lineVisible = false;
-        //moon1.setParentDistance(1.0f);
         moon1.sphere.renderSphere();
 
         planet2.sphere.setN(3);
@@ -260,7 +267,6 @@ public:
         planet2.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
         planet2.setBodyRotation(true);
         planet2.lineVisible = true;
-        //planet2.setParentDistance(3.0f);
         planet2.sphere.renderSphere();
 
         moon2.sphere.setN(2);
@@ -269,12 +275,15 @@ public:
         moon2.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
         moon2.setBodyRotation(true);
         moon2.lineVisible = false;
-        //moon2.setParentDistance(1.0f);
         moon2.sphere.renderSphere();
 
-
+        moon1.setParentObject(&planet1);
+        moon2.setParentObject(&planet2);
+        
         planet1.childrenObjects.push_back(&moon1);
+        planet1.setParentObject(&sun);
         planet2.childrenObjects.push_back(&moon2);
+        planet2.setParentObject(&sun);
 
         sun.childrenObjects.push_back(&planet1);
         sun.childrenObjects.push_back(&planet2);
@@ -755,6 +764,14 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         init();
         break;
 
+    case 'g':
+        break;
+    case 'f':
+        speedAmplifier += 0.1;
+        break;
+    case 'd':
+        speedAmplifier -= 0.1;
+        break;
 #endif
 
     }
@@ -770,10 +787,10 @@ void glutKeyboard(unsigned char keycode, int x, int y)
 
 void animate(int value){
 #if PRAKTIKUM_3 == 1:
-    planet1.sphere.setYRotation(0.02f);
-    planet2.sphere.setYRotation(0.02f);
-    moon1.sphere.setYRotation(0.05f);
-    moon2.sphere.setYRotation(0.05f);
+    planet1.sphere.setYRotation(planetRotationSpeed * speedAmplifier);
+    planet2.sphere.setYRotation(planetRotationSpeed * speedAmplifier);
+    moon1.sphere.setYRotation(moonRotationSpeed * speedAmplifier);
+    moon2.sphere.setYRotation(moonRotationSpeed * speedAmplifier);
 #endif
     sun.render();
     glutPostRedisplay();

@@ -84,9 +84,7 @@ public:
 #endif
 
 #if PRAKTIKUM_2 == 1
-    //SphereTransformations sphere = SphereTransformations(glm::vec3(-0.5f, -0.5f, sphere.zIndex));
     SphereTransformations sphere = SphereTransformations(glm::vec3(-0.5f, 0, 0));
-    //SphereTransformations sphere = SphereTransformations();
     Object sphereObject;
 
     Object sphereNormalsObject;
@@ -111,7 +109,10 @@ public:
 #endif
 
 #if PRAKTIKUM_3 == 1
-    void glmInit(const std::vector<Triangle>& tris, Object& body, SphereTransformations& sphere, ObjectBodyHandler obj, bool drawYAxisOnly = false) {
+    void glmInit(Object& body, ObjectBodyHandler obj, bool drawYAxisOnly = false) {
+        SphereTransformations sphere = obj.sphere;
+        std::vector<Triangle>& tris = sphere.getTriangles();
+
         std::vector<glm::vec3> vertices;
         std::vector<glm::vec3> colors;
         std::vector<GLushort> indices;
@@ -230,14 +231,14 @@ public:
     void initSystem() {
 
         sun.sphere.setN(3);
-        sun.sphere.setRadius(1.0f);
+        sun.sphere.setRadius(0.5f);
         sun.setSphereColor(vec3(0.9f, 0.6f, 0.1f));
         sun.setBodyRotation(true);
         sun.lineVisible = true;
         sun.sphere.renderSphere();
 
         planet1.sphere.setN(3);
-        planet1.sphere.setRadius(0.2f);
+        planet1.sphere.setRadius(0.25f);
         planet1.sphere.absolutePosition = (vec3(-2.0f, 0.0f, 0.0f));
         planet1.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
         planet1.setBodyRotation(true);
@@ -246,7 +247,7 @@ public:
         planet1.sphere.renderSphere();
 
         moon1.sphere.setN(2);
-        moon1.sphere.setRadius(0.05f);
+        moon1.sphere.setRadius(0.1f);
         moon1.sphere.absolutePosition = (vec3(-2.5f, 0.0f, 0.0f));
         moon1.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
         moon1.setBodyRotation(true);
@@ -255,7 +256,7 @@ public:
         moon1.sphere.renderSphere();
 
         planet2.sphere.setN(3);
-        planet2.sphere.setRadius(0.2f);
+        planet2.sphere.setRadius(0.25f);
         planet2.sphere.absolutePosition = (vec3(2.0f, 0.0f, 0.0f));
         planet2.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
         planet2.setBodyRotation(true);
@@ -264,7 +265,7 @@ public:
         planet2.sphere.renderSphere();
 
         moon2.sphere.setN(2);
-        moon2.sphere.setRadius(0.05f);
+        moon2.sphere.setRadius(0.1f);
         moon2.sphere.absolutePosition = (vec3(2.5f, 0.0f, 0.0f));
         moon2.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
         moon2.setBodyRotation(true);
@@ -558,7 +559,6 @@ void initNormals() {
 
     glBindVertexArray(0);
 
-    //sphereNormalsObject.model = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, -0.5f, sphere.zIndex));
     sphereObject.model = glm::translate(glm::mat4(1.0f), sphere.absolutePosition);
 
 }
@@ -615,11 +615,11 @@ bool init()
     
     sun.render();
 
-    glmInit(sun.sphere.getTriangles(), sunBody, sun.sphere, sun);
-    glmInit(planet1.sphere.getTriangles(), planet1Body, planet1.sphere, planet1);
-    glmInit(moon1.sphere.getTriangles(), moon1Body, moon1.sphere, moon1);
-    glmInit(planet2.sphere.getTriangles(), planet2Body, planet2.sphere, planet2);
-    glmInit(moon2.sphere.getTriangles(), moon2Body, moon2.sphere, moon2);
+    glmInit(sunBody, sun);
+    glmInit(planet1Body, planet1);
+    glmInit(moon1Body, moon1);
+    glmInit(planet2Body, planet2);
+    glmInit(moon2Body, moon2);
 
 #endif //Praktikum_3
     return true;
@@ -645,11 +645,11 @@ void render()
 #if PRAKTIKUM_3 == 1
     sun.render();
 
-    glmInit(sun.sphere.getTriangles(), sunBody, sun.sphere, sun);
-    glmInit(planet1.sphere.getTriangles(), planet1Body, planet1.sphere, planet1);
-    glmInit(moon1.sphere.getTriangles(), moon1Body, moon1.sphere, moon1);
-    glmInit(planet2.sphere.getTriangles(), planet2Body, planet2.sphere, planet2);
-    glmInit(moon2.sphere.getTriangles(), moon2Body, moon2.sphere, moon2);
+    glmInit(sunBody, sun);
+    glmInit(planet1Body, planet1);
+    glmInit(moon1Body, moon1);
+    glmInit(planet2Body, planet2);
+    glmInit(moon2Body, moon2);
     
 
     glmRender(sunBody, sun.sphere);

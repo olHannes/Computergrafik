@@ -107,12 +107,13 @@ void ObjectBodyHandler::renderObject() {
             //nur Monde
             /*
             1. Mond um den Planeten rotieren
-                1.1. Translation in den Ursprung (des parent planeten)
+                1.1. Translation in den "Ursprung" (=> Verschiebung des parents in den 0-Punkt & gleiche Verschiebung des Mondes)
                 1.2. Rotation um die y-Achse
                 1.3. Translation zurück
             */
-            glm::vec3 absolutePosParent = this->getParentObject()->sphere.absolutePosition;
-            translationVector = sphere.absolutePosition - absolutePosParent;
+            glm::vec3 absolutePosParent = this->getParentObject()->sphere.absolutePosition; 
+            //translationVector = sphere.absolutePosition - absolutePosParent;  ???+
+            translationVector = absolutePosParent;
             transformTranslation(translationVector);
 
             sphere.transformRotation();

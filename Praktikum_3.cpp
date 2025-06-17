@@ -3,6 +3,10 @@
 
 using namespace std;
 ObjectBodyHandler::ObjectBodyHandler()
+    : globalRotationMatrix(mat4(1.0f))
+    , bodyRotation(false)
+    , lineVisible(false)
+    , yRotationValue(0.01f)
 {
     this->sphere = SphereTransformations();
     sphere.renderSphere();
@@ -49,6 +53,13 @@ vec3 ObjectBodyHandler::getLineColor() {
 
 
 
+void ObjectBodyHandler::calcRotationMatrix() {
+    glm::mat4 identity(1.0f);
+    globalRotationMatrix = identity;
+    globalRotationMatrix = glm::rotate(globalRotationMatrix, yRotationValue, glm::vec3(0, 1, 0));
+}
+
+
 /*
 Helper Function: Translation of all Triangles
 */
@@ -79,11 +90,9 @@ Render the current sphere
 */
 void ObjectBodyHandler::renderObject() {
     //step 1: sphere creation
-
     sphere.renderSphere();
-    sphere.transformRotation();
+    sphere.transformRotation(sphere.getRotationMatrix());
 
-    return;
     // step 2: sphere (und alle children) global um den parent rotieren
     if (this->getParentObject() != nullptr) {
         //globale Rotation (alles außer die Sonne)
@@ -93,18 +102,18 @@ void ObjectBodyHandler::renderObject() {
         2. Rotation um die y-Achse
         3. Translation zurück
         */
+        calcRotationMatrix();
+
         glm::vec3 translationVector = sphere.absolutePosition;
         transformTranslation(translationVector);
 
-        sphere.transformRotation();
+        sphere.transformRotation(this->globalRotationMatrix);
 
-        translationVector = sphere.rotateTranslationVector(translationVector);
-        sphere.absolutePosition = sphere.rotateTranslationVector(sphere.absolutePosition);
+        translationVector = sphere.rotateTranslationVector(translationVector, this->globalRotationMatrix);
+        sphere.absolutePosition = sphere.rotateTranslationVector(sphere.absolutePosition, this->globalRotationMatrix);
         transformTranslation(-translationVector);
 
-
         if (this->getParentObject()->getParentObject() != nullptr) {
-            return;
             //Rotation um den this->getParentObject()
             //nur Monde
             /*
@@ -118,9 +127,9 @@ void ObjectBodyHandler::renderObject() {
             translationVector = absolutePosParent;
             transformTranslation(translationVector);
 
-            sphere.transformRotation();
-            translationVector = sphere.rotateTranslationVector(translationVector);
-            sphere.absolutePosition = sphere.rotateTranslationVector(sphere.absolutePosition);
+            sphere.transformRotation(this->globalRotationMatrix);
+            translationVector = sphere.rotateTranslationVector(translationVector, this->globalRotationMatrix);
+            sphere.absolutePosition = sphere.rotateTranslationVector(sphere.absolutePosition, this->globalRotationMatrix);
             transformTranslation(-translationVector);
         }
     }

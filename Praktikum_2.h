@@ -68,10 +68,14 @@ public:
 	}
 
 
-	void transformRotation();
-	glm::vec3 rotateTranslationVector(glm::vec3 vec);
+	void transformRotation(mat4 pRotationMatrix);
+	glm::vec3 rotateTranslationVector(glm::vec3 vec, glm::mat4 pRotationMatrix);
 	glm::vec3 absolutePosition;
 
+
+	glm::mat4 getRotationMatrix() {
+		return this->rotationMatrix;
+	}
 
 private:
 	void createInitialSphere();

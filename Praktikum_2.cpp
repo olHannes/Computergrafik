@@ -207,13 +207,13 @@ void SphereTransformations::subdivideGrid(int level) {
 
 
 //########################################################################### Transform the Sphere and coordinate system
-void SphereTransformations::transformRotation() {
+void SphereTransformations::transformRotation(mat4 pRotationMatrix) {
 	std::vector<Triangle> newTriangles;
 	
 	for (const auto& triangle : triangles) {
-		glm::vec3 v0_rotated = glm::vec3(rotationMatrix * glm::vec4(triangle.v0, 1.0f));
-		glm::vec3 v1_rotated = glm::vec3(rotationMatrix * glm::vec4(triangle.v1, 1.0f));
-		glm::vec3 v2_rotated = glm::vec3(rotationMatrix * glm::vec4(triangle.v2, 1.0f));
+		glm::vec3 v0_rotated = glm::vec3(pRotationMatrix * glm::vec4(triangle.v0, 1.0f));
+		glm::vec3 v1_rotated = glm::vec3(pRotationMatrix * glm::vec4(triangle.v1, 1.0f));
+		glm::vec3 v2_rotated = glm::vec3(pRotationMatrix * glm::vec4(triangle.v2, 1.0f));
 
 		Triangle tNew;
 		tNew.v0 = v0_rotated;
@@ -234,8 +234,8 @@ void SphereTransformations::transformRotation() {
 }
 
 
-glm::vec3 SphereTransformations::rotateTranslationVector(glm::vec3 vec) {
-	glm::vec3 rotated = glm::vec3(rotationMatrix * glm::vec4(vec, 1.0f));
+glm::vec3 SphereTransformations::rotateTranslationVector(glm::vec3 vec, glm::mat4 pRotationMatrix) {
+	glm::vec3 rotated = glm::vec3(pRotationMatrix * glm::vec4(vec, 1.0f));
 
 	return rotated;
 }

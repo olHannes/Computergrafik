@@ -32,7 +32,10 @@ public:
     void setBodyRotation(bool pRotation);
     bool getBodyRotation();
     
-    mat4 globalRotationMatrix; //rotation um die Sonne
+    mat4 globalRotationMatrix;
+    float yRotationValue;
+
+    void calcRotationMatrix();
     
 
     SphereTransformations sphere; //Sphere Objekt

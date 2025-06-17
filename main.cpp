@@ -460,7 +460,7 @@ void initQuad()
 #if PRAKTIKUM_2 == 1
 void initSphere() {
     auto& tris = sphere.renderSphere();
-    sphere.transformRotation();
+    sphere.transformRotation(sphere.getRotationMatrix());
     tris = sphere.getTriangles();
 
     std::vector<glm::vec3> vertices;

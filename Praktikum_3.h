@@ -10,7 +10,7 @@
 
 #include "Praktikum_2.h"
 
-#define PRAKTIKUM_3 1
+#define PRAKTIKUM_3 0
 
 float const globalX = 0;
 float const globalY = 0;
@@ -32,15 +32,18 @@ public:
     void setBodyRotation(bool pRotation);
     bool getBodyRotation();
 
-    /*
-    float parentDistance;
-    void setParentDistance(float pDistance) {
-        this->parentDistance = pDistance;
+    
+    mat4 globalRotationMatrix; //rotation um die den parent
+
+    float rotationSpeed = 1.0f;
+
+    void increaseSpeed() {
+        rotationSpeed += 1.5f;
     }
-    */
-    
-    mat4 globalRotationMatrix; //rotation um die Sonne
-    
+    void decreaseSpeed() {
+        rotationSpeed -= 1.5f;
+    }
+
 
     SphereTransformations sphere; //Sphere Objekt
     std::vector<glm::vec3> line; //Linie
@@ -53,7 +56,7 @@ public:
     vec3 getLineColor();
 
     vec3 sphereColor = vec3(1.0f);
-    vec3 lineColor = vec3(0.0f);
+    vec3 lineColor = vec3(1.0f);
 
 
     std::vector<ObjectBodyHandler*> childrenObjects; //Liste an Kindern

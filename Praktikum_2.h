@@ -7,7 +7,7 @@
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#define PRAKTIKUM_2 0
+#define PRAKTIKUM_2 1
 
 using namespace glm;
 

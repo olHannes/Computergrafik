@@ -109,7 +109,7 @@ public:
 #endif
 
 #if PRAKTIKUM_3 == 1
-    void glmInit(Object& body, ObjectBodyHandler obj, bool drawYAxisOnly = false) {
+    void glmInit(Object& body, ObjectBodyHandler obj, bool drawYAxisOnly = true) {
         SphereTransformations sphere = obj.sphere;
         std::vector<Triangle>& tris = sphere.getTriangles();
 
@@ -202,7 +202,8 @@ public:
     }
 
 
-    void glmRender(const Object& body, SphereTransformations& sphere, bool showYAxisOnly = false) {
+
+    void glmRender(const Object& body, SphereTransformations& sphere, bool showYAxisOnly = true) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         glm::mat4 mvp = projection * view * body.model;
@@ -218,7 +219,7 @@ public:
         // === Optional Y-Achse zeichnen ===
         if (showYAxisOnly) {
             glBindVertexArray(body.linesVAO);
-            glDrawArrays(GL_LINES, 0, 2); // Nur ein Linienpaar (Y-Achse)
+            glDrawArrays(GL_LINES, 0, 2);
             glBindVertexArray(0);
         }
 
@@ -617,9 +618,9 @@ bool init()
 
     glmInit(sunBody, sun);
     glmInit(planet1Body, planet1);
-    glmInit(moon1Body, moon1);
+    glmInit(moon1Body, moon1, false);
     glmInit(planet2Body, planet2);
-    glmInit(moon2Body, moon2);
+    glmInit(moon2Body, moon2, false);
 
 #endif //Praktikum_3
     return true;
@@ -647,16 +648,16 @@ void render()
 
     glmInit(sunBody, sun);
     glmInit(planet1Body, planet1);
-    glmInit(moon1Body, moon1);
+    glmInit(moon1Body, moon1, false);
     glmInit(planet2Body, planet2);
-    glmInit(moon2Body, moon2);
+    glmInit(moon2Body, moon2, false);
     
 
     glmRender(sunBody, sun.sphere);
     glmRender(planet1Body, planet1.sphere);
-    glmRender(moon1Body, moon1.sphere);
+    glmRender(moon1Body, moon1.sphere, false);
     glmRender(planet2Body, planet2.sphere);
-    glmRender(moon2Body, moon2.sphere);
+    glmRender(moon2Body, moon2.sphere, false);
 #endif
 }
 
@@ -755,7 +756,21 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         moon2.sphere.decreaseN();
         init();
         break;
+    case 'g':
+        break;
 
+    case 'd':
+        planet1.increaseSpeed();
+        planet2.increaseSpeed();
+        moon1.increaseSpeed();
+        moon2.increaseSpeed();
+        break;
+    case 'f':
+        planet1.decreaseSpeed();
+        planet2.decreaseSpeed();
+        moon1.decreaseSpeed();
+        moon2.decreaseSpeed();
+        break;
 #endif
 
     }
@@ -769,6 +784,18 @@ void glutKeyboard(unsigned char keycode, int x, int y)
 
 
 
+void timer(int value)
+{
+#if PRAKTIKUM_3 == 1
+    sun.render();
+#endif
+#if PRAKTIKUM_2 == 1 
+    
+    sphere.setYRotation();
+#endif
+    glutPostRedisplay();
+    glutTimerFunc(16, timer, 0);
+}
 
 
 int main(int argc, char** argv)
@@ -812,6 +839,8 @@ int main(int argc, char** argv)
     initSystem();
 #endif
 
+    glutTimerFunc(16, timer, 0);
+
 
 #if _DEBUG
     if (glDebugMessageCallback) {
@@ -834,6 +863,9 @@ int main(int argc, char** argv)
     glutReshapeFunc(glutResize);
     glutDisplayFunc(glutDisplay);
     //glutIdleFunc   (glutDisplay); // redisplay when idle
+
+    
+
 
     glutKeyboardFunc(glutKeyboard);
 

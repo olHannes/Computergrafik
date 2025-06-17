@@ -3,6 +3,8 @@
 
 using namespace std;
 ObjectBodyHandler::ObjectBodyHandler()
+    : bodyRotation(false)
+    , lineVisible (false)
 {
     this->sphere = SphereTransformations();
     sphere.renderSphere();
@@ -28,6 +30,7 @@ void ObjectBodyHandler::setBodyRotation(bool pRotation) {
 bool ObjectBodyHandler::getBodyRotation() {
     return this->bodyRotation;
 }
+
 
 
 /*

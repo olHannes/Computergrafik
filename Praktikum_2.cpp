@@ -54,17 +54,14 @@ void SphereTransformations::generate(int n) {
 //########################################################################### handle User-Input
 void SphereTransformations::increaseN() {
 	if (n < 4) n += 1;
-	renderSphere();
 }
 
 void SphereTransformations::decreaseN() {
 	if (n > 0) n -= 1;
-	renderSphere();
 }
 
 void SphereTransformations::setN(int pN) {
 	if (pN > 0 && pN < 4) this->n = pN;
-	renderSphere();
 }
 int SphereTransformations::getN() {
 	return this->n;
@@ -73,22 +70,18 @@ int SphereTransformations::getN() {
 
 void SphereTransformations::increaseRadius() {
 	if (radius < 2) radius += 0.2f;
-	renderSphere();
 }
 
 void SphereTransformations::decreaseRadius() {
 	if (radius > 0.5f)radius -= 0.2f;
-	renderSphere();
 }
 
 
 void SphereTransformations::zoomIn() {
 	zIndex += 0.1f;
-	renderSphere();
 }
 void SphereTransformations::zoomOut() {
 	zIndex -= 0.1f;
-	renderSphere();
 }
 
 

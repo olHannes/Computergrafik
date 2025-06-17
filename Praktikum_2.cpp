@@ -42,7 +42,7 @@ std::vector<glm::vec3> SphereTransformations::getCoords() {
 void SphereTransformations::generate(int n) {
 	triangles.clear();
 	createInitialSphere();
-	//createInitialCoords();
+	createInitialCoords();
 
 	if (n > 0) {
 		subdivideGrid(n);
@@ -153,15 +153,11 @@ void SphereTransformations::createInitialCoords() {
 	coords = {
 		{ 0,0,0 },
 		{ 1,0,0 },
-		{ 0,0,0 },
-		{ 0,1,0 },
+		{ 0,-1.5f * radius,0 },
+		{ 0,1.5f * radius,0 },
 		{ 0,0,0 },
 		{ 0,0,1 }
 	};
-}
-
-void SphereTransformations::createInitialCoords(const glm::vec3& startAxis, const glm::vec3& endAxis) {
-	coords = { startAxis, endAxis };
 }
 
 //########################################################################### Get the midpoint between two points

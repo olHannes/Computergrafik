@@ -166,7 +166,7 @@ public:
             std::vector<glm::vec3> coordLines = sphere.getCoords();
             if (coordLines.size() >= 2) {
                 std::vector<glm::vec3> yAxisLine = {
-                    coordLines[0], coordLines[1]
+                    coordLines[2], coordLines[3]
                 };
 
                 std::vector<glm::vec3> yAxisColor = {
@@ -232,7 +232,6 @@ public:
         sun.sphere.setN(3);
         sun.sphere.setRadius(0.5f);
         sun.setSphereColor(vec3(0.9f, 0.6f, 0.1f));
-        sun.sphere.createInitialCoords(vec3(0, 1, 0), vec3(0, -1, 0));
         sun.setBodyRotation(true);
         sun.lineVisible = true;
         sun.sphere.renderSphere();
@@ -240,7 +239,6 @@ public:
         planet1.sphere.setN(3);
         planet1.sphere.setRadius(0.25f);
         planet1.sphere.absolutePosition = (vec3(-2.0f, 0.0f, 0.0f));
-        planet1.sphere.createInitialCoords(vec3(-2.0f, 0.5f, 0.0f), vec3(-2.0f, -0.5f, 0.0f));
         planet1.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
         planet1.setBodyRotation(true);
         planet1.lineVisible = true;
@@ -259,7 +257,6 @@ public:
         planet2.sphere.setN(3);
         planet2.sphere.setRadius(0.25f);
         planet2.sphere.absolutePosition = (vec3(2.0f, 0.0f, 0.0f));
-        planet2.sphere.createInitialCoords(vec3(2.0f, 0.5f, 0.0f), vec3(2.0f, -0.5f, 0.0f));
         planet2.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
         planet2.setBodyRotation(true);
         planet2.lineVisible = true;

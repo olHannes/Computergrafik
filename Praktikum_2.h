@@ -18,6 +18,7 @@ struct Triangle {
 
 class SphereTransformations {
 public:
+	void createInitialCoords(const glm::vec3& startAxis, const glm::vec3& endAxis);
 
 	SphereTransformations(glm::vec3 pos);
 	SphereTransformations();

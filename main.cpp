@@ -161,13 +161,12 @@ public:
 
         glBindVertexArray(0);
 
-
         // === Optional: Nur Y-Achse anzeigen ===
         if (drawYAxisOnly) {
             std::vector<glm::vec3> coordLines = sphere.getCoords();
-            if (coordLines.size() >= 4) {
+            if (coordLines.size() >= 2) {
                 std::vector<glm::vec3> yAxisLine = {
-                    coordLines[2], coordLines[3]
+                    coordLines[0], coordLines[1]
                 };
 
                 std::vector<glm::vec3> yAxisColor = {
@@ -233,6 +232,7 @@ public:
         sun.sphere.setN(3);
         sun.sphere.setRadius(0.5f);
         sun.setSphereColor(vec3(0.9f, 0.6f, 0.1f));
+        sun.sphere.createInitialCoords(vec3(0, 1, 0), vec3(0, -1, 0));
         sun.setBodyRotation(true);
         sun.lineVisible = true;
         sun.sphere.renderSphere();
@@ -240,6 +240,7 @@ public:
         planet1.sphere.setN(3);
         planet1.sphere.setRadius(0.25f);
         planet1.sphere.absolutePosition = (vec3(-2.0f, 0.0f, 0.0f));
+        planet1.sphere.createInitialCoords(vec3(-2.0f, 0.5f, 0.0f), vec3(-2.0f, -0.5f, 0.0f));
         planet1.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
         planet1.setBodyRotation(true);
         planet1.lineVisible = true;
@@ -258,6 +259,7 @@ public:
         planet2.sphere.setN(3);
         planet2.sphere.setRadius(0.25f);
         planet2.sphere.absolutePosition = (vec3(2.0f, 0.0f, 0.0f));
+        planet2.sphere.createInitialCoords(vec3(2.0f, 0.5f, 0.0f), vec3(2.0f, -0.5f, 0.0f));
         planet2.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
         planet2.setBodyRotation(true);
         planet2.lineVisible = true;
@@ -615,10 +617,10 @@ bool init()
     
     sun.render();
 
-    glmInit(sunBody, sun);
-    glmInit(planet1Body, planet1);
+    glmInit(sunBody, sun, true);
+    glmInit(planet1Body, planet1, true);
     glmInit(moon1Body, moon1);
-    glmInit(planet2Body, planet2);
+    glmInit(planet2Body, planet2, true);
     glmInit(moon2Body, moon2);
 
 #endif //Praktikum_3
@@ -645,17 +647,17 @@ void render()
 #if PRAKTIKUM_3 == 1
     sun.render();
 
-    glmInit(sunBody, sun);
-    glmInit(planet1Body, planet1);
+    glmInit(sunBody, sun, true);
+    glmInit(planet1Body, planet1, true);
     glmInit(moon1Body, moon1);
-    glmInit(planet2Body, planet2);
+    glmInit(planet2Body, planet2, true);
     glmInit(moon2Body, moon2);
     
 
-    glmRender(sunBody, sun.sphere);
-    glmRender(planet1Body, planet1.sphere);
+    glmRender(sunBody, sun.sphere, true);
+    glmRender(planet1Body, planet1.sphere, true);
     glmRender(moon1Body, moon1.sphere);
-    glmRender(planet2Body, planet2.sphere);
+    glmRender(planet2Body, planet2.sphere, true);
     glmRender(moon2Body, moon2.sphere);
 #endif
 }

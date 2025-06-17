@@ -31,13 +31,6 @@ public:
 
     void setBodyRotation(bool pRotation);
     bool getBodyRotation();
-
-    /*
-    float parentDistance;
-    void setParentDistance(float pDistance) {
-        this->parentDistance = pDistance;
-    }
-    */
     
     mat4 globalRotationMatrix; //rotation um die Sonne
     
@@ -66,8 +59,6 @@ public:
     void setParentObject(ObjectBodyHandler* parent) {
         this->parentObject = parent;
     }
-
-
 
 
     void transformTranslation(glm::vec3 vec);

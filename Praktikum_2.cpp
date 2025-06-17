@@ -94,21 +94,25 @@ void SphereTransformations::zoomOut() {
 
 
 void SphereTransformations::calcRotationMatrix(float rotValue, vec3 axis) {
-	rotationMatrix = glm::rotate(rotationMatrix, rotValue, axis);
+	glm::mat4 identity(1.0f);
+	rotationMatrix = identity;
+	rotationMatrix = glm::rotate(rotationMatrix, xRotation, glm::vec3(1, 0, 0));
+	rotationMatrix = glm::rotate(rotationMatrix, yRotation, glm::vec3(0, 1, 0));
+	rotationMatrix = glm::rotate(rotationMatrix, zRotation, glm::vec3(0, 0, 1));
 }
 
-void SphereTransformations::setXRotation() {
-	this->xRotation += 0.01;
+void SphereTransformations::setXRotation(float pAngle) {
+	this->xRotation += pAngle;
 	calcRotationMatrix(xRotation, { 1,0,0 });
 }
 
-void SphereTransformations::setYRotation() {
-	this->yRotation += 0.01;
+void SphereTransformations::setYRotation(float pAngle) {
+	this->yRotation += pAngle;
 	calcRotationMatrix(yRotation, { 0,1,0 });
 }
 
-void SphereTransformations::setZRotation() {
-	this->zRotation += 0.01;
+void SphereTransformations::setZRotation(float pAngle) {
+	this->zRotation += pAngle;
 	calcRotationMatrix(zRotation, { 0,0,1 });
 }
 

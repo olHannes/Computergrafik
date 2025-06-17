@@ -770,10 +770,10 @@ void glutKeyboard(unsigned char keycode, int x, int y)
 
 void animate(int value){
 #if PRAKTIKUM_3 == 1:
-    planet1.sphere.setYRotation();
-    planet2.sphere.setYRotation();
-    moon1.sphere.setYRotation();
-    moon2.sphere.setYRotation();
+    planet1.sphere.setYRotation(0.02f);
+    planet2.sphere.setYRotation(0.02f);
+    moon1.sphere.setYRotation(0.05f);
+    moon2.sphere.setYRotation(0.05f);
 #endif
     sun.render();
     glutPostRedisplay();

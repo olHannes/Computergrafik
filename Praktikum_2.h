@@ -39,9 +39,9 @@ public:
 	void zoomIn();
 	void zoomOut();
 
-	void setXRotation();
-	void setYRotation();
-	void setZRotation();
+	void setXRotation(float pAngle = 0.1f);
+	void setYRotation(float pAngle = 0.1f);
+	void setZRotation(float pAngle=0.1f);
 	void resetRotation();
 
 	void setXRotationValue(float pValue) {

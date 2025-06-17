@@ -231,6 +231,8 @@ public:
     float speedAmplifier = 0.0f;
     float moonRotationSpeed = 0.05f;
     float planetRotationSpeed = 0.02f;
+
+    float globalPlanetRotationSpeed = 0.01f;
     
 #endif
 
@@ -791,6 +793,11 @@ void animate(int value){
     planet2.sphere.setYRotation(planetRotationSpeed * speedAmplifier);
     moon1.sphere.setYRotation(moonRotationSpeed * speedAmplifier);
     moon2.sphere.setYRotation(moonRotationSpeed * speedAmplifier);
+
+    planet1.yRotationValue = globalPlanetRotationSpeed * speedAmplifier;
+    planet2.yRotationValue = globalPlanetRotationSpeed * speedAmplifier;
+    moon1.yRotationValue = (globalPlanetRotationSpeed + 0.005) * speedAmplifier;
+    moon2.yRotationValue = (globalPlanetRotationSpeed + 0.005) * speedAmplifier;
 #endif
     sun.render();
     glutPostRedisplay();

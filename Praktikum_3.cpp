@@ -122,15 +122,21 @@ void ObjectBodyHandler::renderObject() {
                 1.2. Rotation um die y-Achse
                 1.3. Translation zurück
             */
-            glm::vec3 absolutePosParent = this->getParentObject()->sphere.absolutePosition; 
-            //translationVector = sphere.absolutePosition - absolutePosParent;  ???+
-            translationVector = absolutePosParent;
-            transformTranslation(translationVector);
+
+
+            vec3 parentPosition = this->getParentObject()->sphere.absolutePosition;
+            vec3 moonPosition = this->sphere.absolutePosition;
+            vec3 toOrigin = -parentPosition;
+            transformTranslation(toOrigin);
+            sphere.absolutePosition += toOrigin;
 
             sphere.transformRotation(this->globalRotationMatrix);
-            translationVector = sphere.rotateTranslationVector(translationVector, this->globalRotationMatrix);
             sphere.absolutePosition = sphere.rotateTranslationVector(sphere.absolutePosition, this->globalRotationMatrix);
-            transformTranslation(-translationVector);
+
+            transformTranslation(-toOrigin);
+            sphere.absolutePosition -= toOrigin;
+
+
         }
     }
 

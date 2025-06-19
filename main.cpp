@@ -106,9 +106,7 @@ public:
     Object moon1Body;
     Object moon2Body;
 
-#endif
 
-#if PRAKTIKUM_3 == 1
     void glmInit(Object& body, ObjectBodyHandler obj, bool drawYAxisOnly = false) {
         SphereTransformations sphere = obj.sphere;
         std::vector<Triangle>& tris = sphere.getTriangles();
@@ -224,17 +222,19 @@ public:
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
-#endif
+#endif //PRAKTIKUM_3
 
 
 #if PRAKTIKUM_3 == 1
+    float speedAmplifier_backup = 0.0f;
     float speedAmplifier = 0.0f;
+    bool resetAmplifier = false;
+
     float moonRotationSpeed = 0.05f;
     float planetRotationSpeed = 0.02f;
 
     float globalPlanetRotationSpeed = 0.01f;
-    
-#endif
+#endif //PRAKTIKUM_3
 
 
 #if PRAKTIKUM_3 == 1
@@ -292,7 +292,7 @@ public:
         sun.childrenObjects.push_back(&planet2);
 
     }
-#endif
+#endif //PRAKTIKUM_3
 
 
 #if DEFAULT == 1
@@ -629,7 +629,6 @@ bool init()
 #endif
 
 #if PRAKTIKUM_3 == 1
-    
     sun.render();
 
     glmInit(sunBody, sun, true);
@@ -667,7 +666,6 @@ void render()
     glmInit(moon1Body, moon1);
     glmInit(planet2Body, planet2, true);
     glmInit(moon2Body, moon2);
-    
 
     glmRender(sunBody, sun.sphere, true);
     glmRender(planet1Body, planet1.sphere, true);
@@ -754,6 +752,7 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         break;
 
 #endif //PRAKTIKUM_2
+
 #if PRAKTIKUM_3 == 1
     case '+':
         sun.sphere.increaseN();
@@ -774,15 +773,37 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         break;
 
     case 'g':
-        speedAmplifier = 0;
+        if (resetAmplifier) {
+            resetAmplifier = false;
+            speedAmplifier = speedAmplifier_backup;
+        }
+        else {
+            speedAmplifier = 0;
+            resetAmplifier = true;
+        }
         break;
     case 'f':
+        if (resetAmplifier) {
+            resetAmplifier = false;
+            speedAmplifier = speedAmplifier_backup;
+        }
+        else {
+            speedAmplifier += 0.1;
+            speedAmplifier_backup = speedAmplifier;
+        }
         speedAmplifier += 0.1;
         break;
     case 'd':
-        speedAmplifier -= 0.1;
+        if (resetAmplifier) {
+            resetAmplifier = false;
+            speedAmplifier = speedAmplifier_backup;
+        }
+        else {
+            speedAmplifier -= 0.1;
+            speedAmplifier_backup = speedAmplifier;
+        }
         break;
-#endif
+#endif //PRAKTIKUM_3
 
     }
 #if PRAKTIKUM_2 == 1
@@ -795,8 +816,8 @@ void glutKeyboard(unsigned char keycode, int x, int y)
 
 
 
-void animate(int value){
 #if PRAKTIKUM_3 == 1:
+void animate(int value){
     planet1.sphere.setYRotation(planetRotationSpeed * speedAmplifier);
     planet2.sphere.setYRotation(planetRotationSpeed * speedAmplifier);
     moon1.sphere.setYRotation(moonRotationSpeed * speedAmplifier);
@@ -806,11 +827,11 @@ void animate(int value){
     planet2.yRotationValue = globalPlanetRotationSpeed * speedAmplifier;
     moon1.yRotationValue = (globalPlanetRotationSpeed + 0.005) * speedAmplifier;
     moon2.yRotationValue = (globalPlanetRotationSpeed + 0.005) * speedAmplifier;
-#endif
     sun.render();
     glutPostRedisplay();
     glutTimerFunc(16, animate, 0);
 }
+#endif //PRAKTIKUM_3
 
 
 int main(int argc, char** argv)
@@ -877,7 +898,9 @@ int main(int argc, char** argv)
     glutDisplayFunc(glutDisplay);
     //glutIdleFunc   (glutDisplay); // redisplay when idle
 
+#if PRAKTIKUM_3 == 1:
     glutTimerFunc(16, animate, 0);
+#endif //PRAKTIKUM_3
 
     glutKeyboardFunc(glutKeyboard);
 

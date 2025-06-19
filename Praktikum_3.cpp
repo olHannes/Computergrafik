@@ -7,6 +7,7 @@ ObjectBodyHandler::ObjectBodyHandler()
     , bodyRotation(false)
     , lineVisible(false)
     , yRotationValue(0.01f)
+    , inclined(false)
 {
     this->sphere = SphereTransformations();
     sphere.renderSphere();
@@ -31,6 +32,13 @@ void ObjectBodyHandler::setBodyRotation(bool pRotation) {
 }
 bool ObjectBodyHandler::getBodyRotation() {
     return this->bodyRotation;
+}
+
+void ObjectBodyHandler::setInclinedStatus(bool pStatus) {
+    this->inclined = pStatus;
+}
+bool ObjectBodyHandler::getInclinedStatus() {
+    return this->inclined;
 }
 
 
@@ -91,10 +99,20 @@ Render the current sphere
 void ObjectBodyHandler::renderObject() {
     //step 1: sphere creation
     sphere.renderSphere();
-    sphere.transformRotation(sphere.getRotationMatrix());
+    if (this->inclined) {
+        mat4 inclination = glm::rotate(glm::mat4(1.0f), 0.78f, glm::vec3(1, 0, 0));
+        mat4 rotMat = sphere.getRotationMatrix();
+        mat4 inclinedMat = inclination * rotMat;
+        sphere.transformRotation(inclinedMat);
+    }
+    else {
+        sphere.transformRotation(sphere.getRotationMatrix());
+    }
 
     calcRotationMatrix();
 
+
+    
     // step 2: sphere (und alle children) global um den parent rotieren
     if (this->getParentObject() != nullptr) {
         //globale Rotation (alles außer die Sonne)
@@ -105,15 +123,11 @@ void ObjectBodyHandler::renderObject() {
         3. Translation zurück
         */
 
-
         glm::vec3 originalPos = sphere.absolutePosition;
-
         transformTranslation(originalPos);
-
         sphere.transformRotation(this->globalRotationMatrix);
-
         glm::vec3 rotatedPos = sphere.rotateTranslationVector(originalPos, this->globalRotationMatrix);
-        //sphere.absolutePosition = rotatedPos;
+        sphere.absolutePosition = rotatedPos;
         transformTranslation(-rotatedPos);
 
 
@@ -127,7 +141,6 @@ void ObjectBodyHandler::renderObject() {
                 1.3. Translation zurück
             */
 
-
             vec3 parentPosition = this->getParentObject()->sphere.absolutePosition;
             vec3 moonPosition = this->sphere.absolutePosition;
             vec3 toOrigin = -parentPosition;
@@ -139,6 +152,7 @@ void ObjectBodyHandler::renderObject() {
 
             transformTranslation(-toOrigin);
             sphere.absolutePosition -= toOrigin;
+
         }
     }
 }

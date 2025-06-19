@@ -25,12 +25,16 @@ public:
 
     bool lineVisible;
     bool bodyRotation;
+    bool inclined;
 
     void setLineVisible(bool pVisible);
     bool getLineVisible();
 
     void setBodyRotation(bool pRotation);
     bool getBodyRotation();
+
+    void setInclinedStatus(bool pStatus);
+    bool getInclinedStatus();
     
     mat4 globalRotationMatrix;
     float yRotationValue;

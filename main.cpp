@@ -269,6 +269,7 @@ public:
         planet2.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
         planet2.setBodyRotation(true);
         planet2.lineVisible = true;
+        planet2.setInclinedStatus(true);
         planet2.sphere.renderSphere();
 
         moon2.sphere.setN(2);
@@ -773,6 +774,7 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         break;
 
     case 'g':
+        speedAmplifier = 0;
         break;
     case 'f':
         speedAmplifier += 0.1;

@@ -39,7 +39,7 @@ public:
     mat4 globalRotationMatrix;
     float yRotationValue;
 
-    void calcRotationMatrix();
+    void calcRotationMatrix(bool pInclined = false);
     
 
     SphereTransformations sphere; //Sphere Objekt

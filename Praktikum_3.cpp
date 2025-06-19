@@ -61,9 +61,18 @@ vec3 ObjectBodyHandler::getLineColor() {
 
 
 
-void ObjectBodyHandler::calcRotationMatrix() {
+void ObjectBodyHandler::calcRotationMatrix(bool pInclined) {
     glm::mat4 identity(1.0f);
     globalRotationMatrix = identity;
+
+    if (pInclined) {
+        glm::mat4 inclination = glm::rotate(identity, 0.78f, glm::vec3(1, 0, 0));
+
+        glm::vec3 inclinedAxis = glm::vec3(inclination * glm::vec4(0, 1, 0, 0));
+
+        globalRotationMatrix = glm::rotate(identity, yRotationValue, inclinedAxis);
+    }
+    
     globalRotationMatrix = glm::rotate(globalRotationMatrix, yRotationValue, glm::vec3(0, 1, 0));
 }
 
@@ -108,6 +117,9 @@ void ObjectBodyHandler::renderObject() {
             //der drecksplanet wird um die sonne rotiert -> funktioniert schon
         }
         else {
+            if(this->getParentObject()->getInclinedStatus())
+                calcRotationMatrix(true);
+    
             // hier ist ein beschissener mond
             vec3 moonPos = this->sphere.absolutePosition;
             vec3 planetPos = this->getParentObject()->sphere.absolutePosition;
@@ -125,7 +137,11 @@ void ObjectBodyHandler::renderObject() {
             moonPos -= absPosPlanet;
             
             //-> rotiere den mond
+            mat4 inclination = glm::rotate(mat4(1.0f), 0.78f, vec3(1, 0, 0));
+            //globalRotationMatrix *= inclination;
+
             moonPos = sphere.rotateTranslationVector(moonPos, globalRotationMatrix);
+            //moonPos = sphere.rotateTranslationVector(moonPos, inclination);
 
             //-> verschiebe den mond zurück
             moonPos += absPosPlanet;
@@ -138,6 +154,10 @@ void ObjectBodyHandler::renderObject() {
     if (this->inclined) {
         glm::mat4 inclination = glm::rotate(glm::mat4(1.0f), 0.78f, glm::vec3(1, 0, 0));
         sphere.transformRotation(inclination);
+    }
+
+    if (this->bodyRotation) {
+        sphere.transformRotation(sphere.getRotationMatrix());
     }
 }
 

@@ -66,14 +66,15 @@ void ObjectBodyHandler::calcRotationMatrix(bool pInclined) {
     globalRotationMatrix = identity;
 
     if (pInclined) {
-        glm::mat4 inclination = glm::rotate(identity, 0.78f, glm::vec3(1, 0, 0));
+        glm::mat4 inclination = glm::rotate(identity, -0.78f, glm::vec3(1, 0, 0));
 
         glm::vec3 inclinedAxis = glm::vec3(inclination * glm::vec4(0, 1, 0, 0));
 
         globalRotationMatrix = glm::rotate(identity, yRotationValue, inclinedAxis);
     }
-    
-    globalRotationMatrix = glm::rotate(globalRotationMatrix, yRotationValue, glm::vec3(0, 1, 0));
+    else {
+        globalRotationMatrix = glm::rotate(globalRotationMatrix, yRotationValue, glm::vec3(0, 1, 0));
+    }
 }
 
 
@@ -137,7 +138,7 @@ void ObjectBodyHandler::renderObject() {
             moonPos -= absPosPlanet;
             
             //-> rotiere den mond
-            mat4 inclination = glm::rotate(mat4(1.0f), 0.78f, vec3(1, 0, 0));
+            mat4 inclination = glm::rotate(mat4(1.0f), -0.78f, vec3(1, 0, 0));
             //globalRotationMatrix *= inclination;
 
             moonPos = sphere.rotateTranslationVector(moonPos, globalRotationMatrix);
@@ -152,7 +153,7 @@ void ObjectBodyHandler::renderObject() {
     }
 
     if (this->inclined) {
-        glm::mat4 inclination = glm::rotate(glm::mat4(1.0f), 0.78f, glm::vec3(1, 0, 0));
+        glm::mat4 inclination = glm::rotate(glm::mat4(1.0f), -0.78f, glm::vec3(1, 0, 0));
         sphere.transformRotation(inclination);
     }
 

@@ -71,11 +71,19 @@ public:
 	void transformRotation(mat4 pRotationMatrix);
 	glm::vec3 rotateTranslationVector(glm::vec3 vec, glm::mat4 pRotationMatrix);
 	glm::vec3 absolutePosition;
+	glm::vec3 oldPosition;
 
 
 	glm::mat4 getRotationMatrix() {
 		return this->rotationMatrix;
 	}
+
+
+
+	void rotateAbsolute(mat4 pRotationMatrix) {
+		this->absolutePosition = glm::vec3(pRotationMatrix * glm::vec4(this->absolutePosition, 1.0f));
+	}
+
 
 private:
 	void createInitialSphere();
@@ -85,7 +93,6 @@ private:
 	glm::vec3 midpoint(const glm::vec3& pointA, const glm::vec3& pointB);
 
 	void calcRotationMatrix(float rotValue, vec3 axis);
-	glm::mat4 rotationMatrix;
 
 	std::vector<Triangle> triangles;
 	std::vector<glm::vec3> coords;
@@ -93,6 +100,7 @@ private:
 	int n;
 	float radius;
 public:
+	glm::mat4 rotationMatrix;
 	float xRotation;
 	float yRotation;
 	float zRotation;

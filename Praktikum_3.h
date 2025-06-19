@@ -53,7 +53,7 @@ public:
     vec3 getLineColor();
 
     vec3 sphereColor = vec3(1.0f);
-    vec3 lineColor = vec3(0.0f);
+    vec3 lineColor = vec3(1.0f);
 
 
     std::vector<ObjectBodyHandler*> childrenObjects; //Liste an Kindern
@@ -68,7 +68,7 @@ public:
     }
 
 
-    void transformTranslation(glm::vec3 vec);
+    vec3 transformTranslation(glm::vec3 translationVector, glm::vec3 pPoint);
 
     void render();
     void renderObject();

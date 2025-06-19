@@ -592,7 +592,7 @@ bool init()
     glm::vec3 eye(0.0f, 0.0f, 4.0f);
     glm::vec3 center(0.0f, 0.0f, 0.0f);
     glm::vec3 up(0.0f, 1.0f, 0.0f);
-
+    
     /*
     glm::vec3 eye(0.0f, 4.0f, 0.0f);    // Kamera über der Szene, auf Y=+4
     glm::vec3 center(0.0f, 0.0f, 0.0f); // Schaue zum Ursprung

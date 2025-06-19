@@ -1,4 +1,4 @@
-#include "Praktikum_3.h"
+ï»¿#include "Praktikum_3.h"
 #include <iostream>
 
 using namespace std;
@@ -69,16 +69,12 @@ void ObjectBodyHandler::calcRotationMatrix() {
 
 
 /*
-Helper Function: Translation of all Triangles
+Helper Function: Translation
 */
-void ObjectBodyHandler::transformTranslation(glm::vec3 vec) {
-    std::vector<Triangle> tris = sphere.getTriangles();
-    for (auto& tri : tris) {
-        tri.v0 = tri.v0 - vec;
-        tri.v1 = tri.v1 - vec;
-        tri.v2 = tri.v2 - vec;
-    }
-    sphere.setTriangles(tris);
+vec3 ObjectBodyHandler::transformTranslation(glm::vec3 translationVector, glm::vec3 pPoint) {
+    
+    vec3 temp = pPoint - translationVector;
+    return temp;
 }
 
 
@@ -97,62 +93,52 @@ void ObjectBodyHandler::render() {
 Render the current sphere 
 */
 void ObjectBodyHandler::renderObject() {
-    //step 1: sphere creation
     sphere.renderSphere();
-    if (this->inclined) {
-        mat4 inclination = glm::rotate(glm::mat4(1.0f), 0.78f, glm::vec3(1, 0, 0));
-        mat4 rotMat = sphere.getRotationMatrix();
-        mat4 inclinedMat = inclination * rotMat;
-        sphere.transformRotation(inclinedMat);
-    }
-    else {
-        sphere.transformRotation(sphere.getRotationMatrix());
-    }
-
     calcRotationMatrix();
 
 
-    
-    // step 2: sphere (und alle children) global um den parent rotieren
     if (this->getParentObject() != nullptr) {
-        //globale Rotation (alles außer die Sonne)
 
-        /*
-        1. Translation in den Ursprung (der Sonne) -> verschoben um den vektor (ursprungspunkt - absolute Koordinate)
-        2. Rotation um die y-Achse
-        3. Translation zurück
-        */
+        if (this->getParentObject()->getParentObject() == nullptr) {
+            //wir sind verfickt nochmal in einem planeten
+            glm::vec3 pos = sphere.absolutePosition;
+            sphere.oldPosition = pos;
+            pos = sphere.rotateTranslationVector(pos, globalRotationMatrix);
+            sphere.absolutePosition = pos;
+            //der drecksplanet wird um die sonne rotiert -> funktioniert schon
+        }
+        else {
+            // hier ist ein beschissener mond
+            vec3 moonPos = this->sphere.absolutePosition;
+            vec3 planetPos = this->getParentObject()->sphere.absolutePosition;
+            
+            
+            //-> verschiebe den mond wie den planeten von vorher
+            ObjectBodyHandler* planet = this->getParentObject();
+            vec3 oldPosPlanet = planet->sphere.oldPosition;
+            vec3 absPosPlanet = planet->sphere.absolutePosition;
 
-        glm::vec3 originalPos = sphere.absolutePosition;
-        transformTranslation(originalPos);
-        sphere.transformRotation(this->globalRotationMatrix);
-        glm::vec3 rotatedPos = sphere.rotateTranslationVector(originalPos, this->globalRotationMatrix);
-        sphere.absolutePosition = rotatedPos;
-        transformTranslation(-rotatedPos);
 
+            moonPos = moonPos + (absPosPlanet - oldPosPlanet);
 
-        if (this->getParentObject()->getParentObject() != nullptr) {
-            //Rotation um den this->getParentObject()
-            //nur Monde
-            /*
-            1. Mond um den Planeten rotieren
-                1.1. Translation in den "Ursprung" (=> Verschiebung des parents in den 0-Punkt & gleiche Verschiebung des Mondes)
-                1.2. Rotation um die y-Achse
-                1.3. Translation zurück
-            */
+            //-> verschiebe den planeten in 0,0,0 (gleiche translation fÃ¼r den mond)
+            moonPos -= absPosPlanet;
+            
+            //-> rotiere den mond
+            moonPos = sphere.rotateTranslationVector(moonPos, globalRotationMatrix);
 
-            vec3 parentPosition = this->getParentObject()->sphere.absolutePosition;
-            vec3 moonPosition = this->sphere.absolutePosition;
-            vec3 toOrigin = -parentPosition;
-            transformTranslation(toOrigin);
-            sphere.absolutePosition += toOrigin;
+            //-> verschiebe den mond zurÃ¼ck
+            moonPos += absPosPlanet;
 
-            sphere.transformRotation(this->globalRotationMatrix);
-            sphere.absolutePosition = sphere.rotateTranslationVector(sphere.absolutePosition, this->globalRotationMatrix);
-
-            transformTranslation(-toOrigin);
-            sphere.absolutePosition -= toOrigin;
+            this->sphere.absolutePosition = moonPos;
 
         }
     }
+
+    if (this->inclined) {
+        glm::mat4 inclination = glm::rotate(glm::mat4(1.0f), 0.78f, glm::vec3(1, 0, 0));
+        sphere.transformRotation(inclination);
+    }
 }
+
+

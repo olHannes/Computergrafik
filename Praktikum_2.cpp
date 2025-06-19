@@ -9,6 +9,7 @@ SphereTransformations::SphereTransformations(glm::vec3 pos)
 	zRotation(0.0f),
 	rotationMatrix(mat4(1.0f)),
 	absolutePosition(pos)
+	,oldPosition(pos)
 {
 	renderSphere();
 }
@@ -157,8 +158,8 @@ void SphereTransformations::createInitialCoords() {
 	coords = {
 		{ 0,0,0 },
 		{ 1,0,0 },
-		{ 0,-1.5f * radius,0 },
-		{ 0,1.5f * radius,0 },
+		{ 0,-2.0f * radius,0 },
+		{ 0,2.0f * radius,0 },
 		{ 0,0,0 },
 		{ 0,0,1 }
 	};
@@ -208,7 +209,7 @@ void SphereTransformations::subdivideGrid(int level) {
 
 //########################################################################### Transform the Sphere and coordinate system
 void SphereTransformations::transformRotation(mat4 pRotationMatrix) {
-	std::vector<Triangle> newTriangles;
+ 	std::vector<Triangle> newTriangles;
 	
 	for (const auto& triangle : triangles) {
 		glm::vec3 v0_rotated = glm::vec3(pRotationMatrix * glm::vec4(triangle.v0, 1.0f));
@@ -227,10 +228,11 @@ void SphereTransformations::transformRotation(mat4 pRotationMatrix) {
 
 	std::vector<glm::vec3> tempCoords;
 	for (const auto& point : coords) {
-		glm::vec3 point_rotated = glm::vec3(rotationMatrix * glm::vec4(point, 1.0f));
+		glm::vec3 point_rotated = glm::vec3(pRotationMatrix * glm::vec4(point, 1.0f));
 		tempCoords.push_back(point_rotated);
 	}
 	coords = std::move(tempCoords);
+
 }
 
 
@@ -259,3 +261,7 @@ std::vector<glm::vec3> SphereTransformations::generateNormalLines() {
 	
 	return lines;
 }
+
+
+
+

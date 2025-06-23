@@ -110,18 +110,15 @@ void ObjectBodyHandler::renderObject() {
     if (this->getParentObject() != nullptr) {
 
         if (this->getParentObject()->getParentObject() == nullptr) {
-            //wir sind verfickt nochmal in einem planeten
             glm::vec3 pos = sphere.absolutePosition;
             sphere.oldPosition = pos;
             pos = sphere.rotateTranslationVector(pos, globalRotationMatrix);
             sphere.absolutePosition = pos;
-            //der drecksplanet wird um die sonne rotiert -> funktioniert schon
         }
         else {
             if(this->getParentObject()->getInclinedStatus())
                 calcRotationMatrix(true);
     
-            // hier ist ein beschissener mond
             vec3 moonPos = this->sphere.absolutePosition;
             vec3 planetPos = this->getParentObject()->sphere.absolutePosition;
             
@@ -139,10 +136,8 @@ void ObjectBodyHandler::renderObject() {
             
             //-> rotiere den mond
             mat4 inclination = glm::rotate(mat4(1.0f), -0.78f, vec3(1, 0, 0));
-            //globalRotationMatrix *= inclination;
 
             moonPos = sphere.rotateTranslationVector(moonPos, globalRotationMatrix);
-            //moonPos = sphere.rotateTranslationVector(moonPos, inclination);
 
             //-> verschiebe den mond zurück
             moonPos += absPosPlanet;

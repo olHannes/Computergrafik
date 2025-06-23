@@ -15,6 +15,7 @@
 #include "Praktikum_1.h"
 #include "Praktikum_2.h"
 #include "Praktikum_3.h"
+#include "Praktikum_4.h"
 
 #define DEFAULT 0 //Flag to show Triangle and Quad (default project)
 
@@ -32,6 +33,7 @@ glm::mat4x4 projection;
 
 float zNear = 0.1f;
 float zFar = 100.0f;
+float cameraZPos = 4.0f;
 
 /*
 Struct to hold data for object rendering.
@@ -589,15 +591,10 @@ bool init()
     glEnable(GL_DEPTH_TEST);
 
     // Construct view matrix.
-    glm::vec3 eye(0.0f, 0.0f, 4.0f);
+    glm::vec3 eye(0.0f, 0.0f, cameraZPos);
     glm::vec3 center(0.0f, 0.0f, 0.0f);
     glm::vec3 up(0.0f, 1.0f, 0.0f);
     
-    /*
-    glm::vec3 eye(0.0f, 4.0f, 0.0f);    // Kamera über der Szene, auf Y=+4
-    glm::vec3 center(0.0f, 0.0f, 0.0f); // Schaue zum Ursprung
-    glm::vec3 up(0.0f, 0.0f, -1.0f);    // "Oben" zeigt jetzt in -Z Richtung
-    */
 
     view = glm::lookAt(eye, center, up);
 
@@ -805,6 +802,16 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         break;
 #endif //PRAKTIKUM_3
 
+#if PRAKTIKUM_4 == 1
+    case 'a':
+        cameraZPos -= 0.1f;
+        init();
+        break;
+    case 's':
+        cameraZPos += 0.1f;
+        init();
+        break;
+#endif //PRAKTIKUM_4
     }
 #if PRAKTIKUM_2 == 1
     initSphere();

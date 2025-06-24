@@ -19,10 +19,14 @@ Erzeugung einer Kugel durch spezielle Unterteilung von Dreiecken (je nach Auflö
 Unterscheidung und Anwendung globaler vs. lokaler Transformationen von 3D-Objekten unter Nutzung verschiedener tessellierter Kugeln (PA_2).
 Hierzu wird ein kleines Sonnensystem nachgebaut mit unterschiedlichen Verhaltensmustern.
 
+## PA_4: Beleuchtung
+...
+
 ## Ausführung  
 1. Repository klonen  
 ```bash
-git https://github.com/olHannes/Computergrafik.git
+git clone https://github.com/olHannes/Computergrafik.git
 cd Computergrafik
+git switch Praktikum3
 ```
 *Die Aufgabenblätter befinden sich im Ordner `Tasks/`*

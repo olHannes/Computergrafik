@@ -87,7 +87,7 @@ public:
 
 private:
 	void createInitialSphere();
-	void createInitialCoords();
+	void createInitialCoords(bool prak3=true);
 
 	void subdivideGrid(int level);
 	glm::vec3 midpoint(const glm::vec3& pointA, const glm::vec3& pointB);

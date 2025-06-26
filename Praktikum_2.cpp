@@ -154,14 +154,16 @@ void SphereTransformations::createInitialSphere() {
 
 
 //########################################################################### Create the initial coordinate system
-void SphereTransformations::createInitialCoords() {
+void SphereTransformations::createInitialCoords(bool prak3) {
+	float factor = prak3 ? 2*radius : 1.0f;
+
 	coords = {
-		{ 0,0,0 },
-		{ 1,0,0 },
-		{ 0,-2.0f * radius,0 },
-		{ 0,2.0f * radius,0 },
-		{ 0,0,0 },
-		{ 0,0,1 }
+		{ 0, 0, 0 },
+		{ 1, 0, 0 },
+		{ 0, -1.0f * factor, 0 },
+		{ 0,  1.0f * factor, 0 },
+		{ 0, 0, 0 },
+		{ 0, 0, 1 }
 	};
 }
 
@@ -246,7 +248,7 @@ glm::vec3 SphereTransformations::rotateTranslationVector(glm::vec3 vec, glm::mat
 //########################################################################### calc the normal lines and return them
 std::vector<glm::vec3> SphereTransformations::generateNormalLines() {
 	std::vector<glm::vec3> lines;
-	float scale = 0.2f;
+	float scale = 1.0f;
 
 	for (const auto& tri : triangles) {
 		lines.push_back(tri.v0);

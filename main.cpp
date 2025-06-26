@@ -86,7 +86,7 @@ public:
 #endif
 
 #if PRAKTIKUM_2 == 1
-    SphereTransformations sphere = SphereTransformations(glm::vec3(-0.5f, 0, 0));
+    SphereTransformations sphere = SphereTransformations();
     Object sphereObject;
 
     Object sphereNormalsObject;

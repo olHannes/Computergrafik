@@ -108,7 +108,13 @@ public:
     Object moon1Body;
     Object moon2Body;
 
+#endif //PRAKTIKUM_3
 
+#if PRAKTIKUM_4 == 1
+    bool filledObjects = false;
+#endif //PRAKTIKUM_4
+
+#if PRAKTIKUM_3 == 1
     void glmInit(Object& body, ObjectBodyHandler obj, bool drawYAxisOnly = false) {
         SphereTransformations sphere = obj.sphere;
         std::vector<Triangle>& tris = sphere.getTriangles();
@@ -202,7 +208,19 @@ public:
 
 
     void glmRender(const Object& body, SphereTransformations& sphere, bool showYAxisOnly = false) {
+#if PRAKTIKUM_4 == 1
+        if (filledObjects) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
+        else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
+#endif //PRAKTIKUM_4
+
+#if PRAKTIKUM_4 != 1
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#endif PRAKTIKUM_4
+
 
         glm::mat4 mvp = projection * view * body.model;
 
@@ -220,8 +238,6 @@ public:
             glDrawArrays(GL_LINES, 0, 2); // Nur ein Linienpaar (Y-Achse)
             glBindVertexArray(0);
         }
-
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
 #endif //PRAKTIKUM_3
@@ -810,6 +826,9 @@ void glutKeyboard(unsigned char keycode, int x, int y)
     case 's':
         cameraZPos += 0.1f;
         init();
+        break;
+    case 'k':
+        filledObjects = !filledObjects;
         break;
 #endif //PRAKTIKUM_4
     }

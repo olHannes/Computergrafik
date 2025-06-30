@@ -35,6 +35,12 @@
   <ItemGroup>
     <None Include="shader\simple.frag" />
     <None Include="shader\simple.vert" />
+    <None Include="shader\shaded.frag" />
+    <None Include="shader\shaded.vert" />
+    <None Include="shader\shadedGouraud.frag" />
+    <None Include="shader\shadedGouraud.vert" />
+    <None Include="shader\shadedPhong.frag" />
+    <None Include="shader\shadedPhong.vert" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Praktikum 1">

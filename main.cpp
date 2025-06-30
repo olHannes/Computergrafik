@@ -113,11 +113,19 @@ public:
 #if PRAKTIKUM_4 == 1
     bool filledObjects = false;
     bool showNormals = false;
+
+    unsigned  lightIndex = 0;
+    glm::vec4 lights[2] = {
+        { 0.0f, -1.0f, 0.0f, 0.0f },
+        { 0.0f,  0.0f, cameraZPos, 1.0f }
+    };
 #endif //PRAKTIKUM_4
 
 #if PRAKTIKUM_3 == 1
-    void glmInit(Object& body, ObjectBodyHandler obj, bool drawYAxisOnly = false, bool pShowNormals = false) {
-        SphereTransformations sphere = obj.sphere;
+    void glmInit(Object& body, ObjectBodyHandler& obj, bool drawYAxisOnly = false, bool pShowNormals = false) {
+        SphereTransformations& sphere = obj.sphere;
+        sphere.setLightVector(lights[lightIndex]);
+
         std::vector<Triangle>& tris = sphere.getTriangles();
 
         std::vector<glm::vec3> vertices;
@@ -230,10 +238,18 @@ public:
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 #endif PRAKTIKUM_4
 
+        glm::mat4 mv = view * body.model;
         glm::mat4 mvp = projection * view * body.model;
+        glm::mat3 nm = glm::inverseTranspose(glm::mat3(body.model));
 
-        program.use();
-        program.setUniform("mvp", mvp);
+        cg::GLSLProgram* shader = sphere.getShadedProgram();
+        shader->use();
+        shader->setUniform("modelviewMatrix", mv);
+        shader->setUniform("projectionMatrix", projection);
+        shader->setUniform("normalMatrix", nm);
+
+        //program.use();
+        //program.setUniform("mvp", mvp);
 
         // === Hauptobjekt zeichnen ===
         glBindVertexArray(body.vao);
@@ -242,11 +258,14 @@ public:
 
         // === Optional Y-Achse zeichnen ===
 
-        if (body.linesVAO != 0 ){//&& (showYAxisOnly || pShowNormals)) {
+        if (body.linesVAO != 0 && (showYAxisOnly || pShowNormals)) {
+            cg::GLSLProgram* simpleShader = sphere.getSimpleProgram();
+            simpleShader->use();
+            simpleShader->setUniform("mvp", mvp);
+
             glBindVertexArray(body.linesVAO);
 
             int numLineVertices = 0;
-
             if (showYAxisOnly) numLineVertices += 2;
             if (pShowNormals)   numLineVertices += sphere.generateNormalLines().size();
 
@@ -848,6 +867,9 @@ void glutKeyboard(unsigned char keycode, int x, int y)
     case 'k':
         filledObjects = !filledObjects;
         break;
+    case 'l':
+        lightIndex = lightIndex == 0 ? 1 : 0;
+        break;
 #endif //PRAKTIKUM_4
     }
 #if PRAKTIKUM_2 == 1
@@ -964,11 +986,6 @@ int main(int argc, char** argv)
 
     return 0;
 }
-
-
-
-
-
 
 
 

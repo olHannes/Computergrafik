@@ -1,5 +1,6 @@
 #include "Praktikum_2.h"
 
+
 //########################################################################### Constructor call (init params)
 SphereTransformations::SphereTransformations(glm::vec3 pos)
 	:n(0),
@@ -249,7 +250,7 @@ glm::vec3 SphereTransformations::rotateTranslationVector(glm::vec3 vec, glm::mat
 std::vector<glm::vec3> SphereTransformations::generateNormalLines() {
 	std::vector<glm::vec3> lines;
 	float scale = 1.0f;
-
+	
 	for (const auto& tri : triangles) {
 		lines.push_back(tri.v0);
 		lines.push_back(tri.v0 + scale * tri.v0);
@@ -267,3 +268,45 @@ std::vector<glm::vec3> SphereTransformations::generateNormalLines() {
 
 
 
+
+
+
+
+void SphereTransformations::setLightVector(const glm::vec4& v)
+{
+	programShaded.use();
+	programShaded.setUniform("light", v);
+}
+
+
+void SphereTransformations::initShader()
+{
+	initShader(programSimple, "shader/simple.vert", "shader/simple.frag");
+	//CubeSharp::initShader(programShaded, "shader/shadedGouraud.vert", "shader/shadedGouraud.frag");
+	initShader(programShaded, "shader/shadedPhong.vert", "shader/shadedPhong.frag");
+
+	programShaded.use();
+	programShaded.setUniform("light", glm::vec3(0, 0, 0));
+	programShaded.setUniform("lightI", float(1.0f));
+	programShaded.setUniform("surfKa", glm::vec3(0.1f, 0.1f, 0.1f));
+	programShaded.setUniform("surfKd", glm::vec3(0.7f, 0.1f, 0.1f));
+	programShaded.setUniform("surfKs", glm::vec3(1, 1, 1));
+	programShaded.setUniform("surfShininess", float(8.0f));
+}
+
+
+void SphereTransformations::initShader(GLSLProgram& program, const std::string& vert, const std::string& frag)
+{
+	if (!program.compileShaderFromFile(vert.c_str(), cg::GLSLShader::VERTEX))
+	{
+		throw std::runtime_error("COMPILE VERTEX: " + program.log());
+	}
+	if (!program.compileShaderFromFile(frag.c_str(), cg::GLSLShader::FRAGMENT))
+	{
+		throw std::runtime_error("COMPILE FRAGMENT: " + program.log());
+	}
+	if (!program.link())
+	{
+		throw std::runtime_error("LINK: " + program.log());
+	}
+}

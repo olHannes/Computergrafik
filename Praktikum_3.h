@@ -22,6 +22,7 @@ class ObjectBodyHandler {
 public:
 
     ObjectBodyHandler();
+    ~ObjectBodyHandler() = default;
 
     bool lineVisible;
     bool bodyRotation;

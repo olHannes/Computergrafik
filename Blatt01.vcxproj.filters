@@ -33,14 +33,30 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader\simple.frag" />
-    <None Include="shader\simple.vert" />
-    <None Include="shader\shaded.frag" />
-    <None Include="shader\shaded.vert" />
-    <None Include="shader\shadedGouraud.frag" />
-    <None Include="shader\shadedGouraud.vert" />
-    <None Include="shader\shadedPhong.frag" />
-    <None Include="shader\shadedPhong.vert" />
+    <None Include="shader\simple.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\shaded.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\shaded.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\shadedGouraud.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\shadedGouraud.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\shadedPhong.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\shadedPhong.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\simple.frag">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Praktikum 1">
@@ -54,6 +70,9 @@
     </Filter>
     <Filter Include="Praktikum 4">
       <UniqueIdentifier>{141842ac-a1e9-414c-9f57-69af0186d7c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{d03481fb-b3d0-4f4a-83f1-aeb82d7b44f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

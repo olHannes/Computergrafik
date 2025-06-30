@@ -1,15 +1,22 @@
 #pragma once
 
+#include <GL/glew.h>
+#include <GL/glut.h>
+
 #include <vector>
 #include <glm/glm.hpp>
-#include <GL/glut.h>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "GLSLProgram.h"
+#include "GLTools.h" 
+
+
 #define PRAKTIKUM_2 0
 
 using namespace glm;
+using cg::GLSLProgram;
 
 struct Triangle {
 	glm::vec3 v0, v1, v2;
@@ -20,6 +27,15 @@ class SphereTransformations {
 public:
 	SphereTransformations(glm::vec3 pos);
 	SphereTransformations();
+	
+
+	SphereTransformations(const SphereTransformations&) = delete;
+	SphereTransformations& operator=(const SphereTransformations&) = delete;
+
+	SphereTransformations(SphereTransformations&&) noexcept = default;
+	SphereTransformations& operator=(SphereTransformations&&) noexcept = default;
+
+
 
 	void generate(int n);
 	std::vector<Triangle> renderSphere();
@@ -78,11 +94,23 @@ public:
 		return this->rotationMatrix;
 	}
 
-
-
 	void rotateAbsolute(mat4 pRotationMatrix) {
 		this->absolutePosition = glm::vec3(pRotationMatrix * glm::vec4(this->absolutePosition, 1.0f));
 	}
+
+
+
+	void setLightVector(const glm::vec4& v);
+	void SphereTransformations::initShader();
+	static void initShader(GLSLProgram& program, const std::string& vert, const std::string& frag);
+
+	GLSLProgram* getShadedProgram() {
+		return &programShaded;
+	}
+	GLSLProgram* getSimpleProgram() {
+		return &programSimple;
+	}
+
 
 
 private:
@@ -99,6 +127,11 @@ private:
 
 	int n;
 	float radius;
+
+	GLSLProgram programShaded;
+	GLSLProgram programSimple;
+	
+
 public:
 	glm::mat4 rotationMatrix;
 	float xRotation;

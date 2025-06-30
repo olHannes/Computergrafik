@@ -3,13 +3,14 @@
 
 using namespace std;
 ObjectBodyHandler::ObjectBodyHandler()
-    : globalRotationMatrix(mat4(1.0f))
+    : sphere()
+    , globalRotationMatrix(mat4(1.0f))
     , bodyRotation(false)
     , lineVisible(false)
     , yRotationValue(0.01f)
     , inclined(false)
 {
-    this->sphere = SphereTransformations();
+    sphere.initShader();
     sphere.renderSphere();
 }
 

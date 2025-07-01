@@ -46,6 +46,7 @@ public:
 #if PRAKTIKUM_2 == 1 || PRAKTIKUM_3 == 1
         ,linesVAO(0), linesPositionBuffer(0), linesColorBuffer(0)
 #endif //Praktikum_2 / Praktikum_3
+        ,normalBuffer(0)
     {
     }
     inline ~Object() {
@@ -53,6 +54,7 @@ public:
         glDeleteBuffers(1, &indexBuffer);
         glDeleteBuffers(1, &colorBuffer);
         glDeleteBuffers(1, &positionBuffer);
+        glDeleteBuffers(1, &normalBuffer);
 
 #if PRAKTIKUM_2 == 1 || PRAKTIKUM_3 == 1
         glDeleteVertexArrays(1, &linesVAO);
@@ -66,6 +68,7 @@ public:
     GLuint positionBuffer;
     GLuint colorBuffer;
     GLuint indexBuffer;
+    GLuint normalBuffer;
     glm::mat4x4 model;
 
 #if PRAKTIKUM_2 == 1 || PRAKTIKUM_3 == 1
@@ -101,6 +104,7 @@ public:
     ObjectBodyHandler planet2;
     ObjectBodyHandler moon2;
 
+
     std::vector<Object> bodyList;
     Object sunBody;
     Object planet1Body;
@@ -131,9 +135,27 @@ public:
         std::vector<glm::vec3> vertices;
         std::vector<glm::vec3> colors;
         std::vector<GLushort> indices;
+        std::vector<glm::vec3> normals;
 
+        std::vector<vec3> normalLines = sphere.generateNormalLines();
         GLuint vertexIndex = 0;
+
+        if (normalLines.size() != tris.size() * 6) {
+            return;
+        }
+
+        size_t lineIndex = 0;
         for (const auto& tri : tris) {
+            
+            glm::vec3 n0 = normalize(normalLines[lineIndex + 1] - normalLines[lineIndex]);
+            glm::vec3 n1 = normalize(normalLines[lineIndex + 3] - normalLines[lineIndex + 2]);
+            glm::vec3 n2 = normalize(normalLines[lineIndex + 5] - normalLines[lineIndex + 4]);
+            lineIndex += 6;
+
+            normals.push_back(n0);
+            normals.push_back(n1);
+            normals.push_back(n2);
+
             vertices.push_back(tri.v0);
             vertices.push_back(tri.v1);
             vertices.push_back(tri.v2);
@@ -175,6 +197,17 @@ public:
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
 
         glBindVertexArray(0);
+
+        glGenBuffers(1, &body.normalBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, body.normalBuffer);
+        glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
+
+        GLuint normalLoc = glGetAttribLocation(programId, "normal");
+        if (normalLoc != GLuint(-1)) {
+            glEnableVertexAttribArray(normalLoc);
+            glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        }
+
 
         // === Optional: Nur Y-Achse anzeigen + Vertex-Normalen===
         std::vector<vec3> extraLines;
@@ -238,6 +271,7 @@ public:
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 #endif PRAKTIKUM_4
 
+
         glm::mat4 mv = view * body.model;
         glm::mat4 mvp = projection * view * body.model;
         glm::mat3 nm = glm::inverseTranspose(glm::mat3(body.model));
@@ -297,6 +331,7 @@ public:
         sun.setSphereColor(vec3(0.9f, 0.6f, 0.1f));
         sun.setBodyRotation(true);
         sun.lineVisible = true;
+        sun.sphere.initShader();
         sun.sphere.renderSphere();
 
         planet1.sphere.setN(3);
@@ -305,6 +340,7 @@ public:
         planet1.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
         planet1.setBodyRotation(true);
         planet1.lineVisible = true;
+        planet1.sphere.initShader();
         planet1.sphere.renderSphere();
 
         moon1.sphere.setN(2);
@@ -313,6 +349,7 @@ public:
         moon1.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
         moon1.setBodyRotation(true);
         moon1.lineVisible = false;
+        moon1.sphere.initShader();
         moon1.sphere.renderSphere();
 
         planet2.sphere.setN(3);
@@ -322,6 +359,7 @@ public:
         planet2.setBodyRotation(true);
         planet2.lineVisible = true;
         planet2.setInclinedStatus(true);
+        planet2.sphere.initShader();
         planet2.sphere.renderSphere();
 
         moon2.sphere.setN(2);
@@ -330,6 +368,7 @@ public:
         moon2.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
         moon2.setBodyRotation(true);
         moon2.lineVisible = false;
+        moon2.sphere.initShader();
         moon2.sphere.renderSphere();
 
         moon1.setParentObject(&planet1);

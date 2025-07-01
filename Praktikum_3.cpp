@@ -10,8 +10,8 @@ ObjectBodyHandler::ObjectBodyHandler()
     , yRotationValue(0.01f)
     , inclined(false)
 {
-    sphere.initShader();
-    sphere.renderSphere();
+    //sphere.initShader();
+    //sphere.renderSphere();
 }
 
 

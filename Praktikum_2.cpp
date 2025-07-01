@@ -12,7 +12,7 @@ SphereTransformations::SphereTransformations(glm::vec3 pos)
 	absolutePosition(pos)
 	,oldPosition(pos)
 {
-	renderSphere();
+	//renderSphere();
 }
 
 SphereTransformations::SphereTransformations()
@@ -23,7 +23,7 @@ SphereTransformations::SphereTransformations()
 	zRotation(0.0f),
 	rotationMatrix(mat4(1.0f))
 {
-	renderSphere();
+	//renderSphere();
 }
 
 

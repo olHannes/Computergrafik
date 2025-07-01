@@ -333,20 +333,16 @@ void SphereTransformations::setLightingUniforms(GLSLProgram& p)
 
 	switch (type) {
 	case SphereType::NONE:
-		// Neutral, grau
-		p.setUniform("surfKd", glm::vec3(0.5f, 0.5f, 0.5f)); // Grau
+		p.setUniform("surfKd", glm::vec3(0.5f, 0.5f, 0.5f));
 		break;
 	case SphereType::SUN:
-		// Warmes Gelb/Orange, typisch für Sonne
-		p.setUniform("surfKd", glm::vec3(1.0f, 0.8f, 0.0f)); // Sonnengelb
+		p.setUniform("surfKd", glm::vec3(1.0f, 0.8f, 0.0f));
 		break;
 	case SphereType::PLANET:
-		// Blaugrün, erinnert an Erde oder Wasserwelten
-		p.setUniform("surfKd", glm::vec3(0.2f, 0.6f, 0.7f)); // Blaugrün
+		p.setUniform("surfKd", glm::vec3(0.2f, 0.6f, 0.7f));
 		break;
 	case SphereType::MOON:
-		// Hellgrau, typisch für Mond
-		p.setUniform("surfKd", glm::vec3(0.8f, 0.8f, 0.8f)); // Hellgrau
+		p.setUniform("surfKd", glm::vec3(0.8f, 0.8f, 0.8f));
 		break;
 	}
 

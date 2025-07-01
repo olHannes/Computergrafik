@@ -46,7 +46,9 @@ public:
 #if PRAKTIKUM_2 == 1 || PRAKTIKUM_3 == 1
         ,linesVAO(0), linesPositionBuffer(0), linesColorBuffer(0)
 #endif //Praktikum_2 / Praktikum_3
+#if PRAKTIKUM_4 == 1
         ,normalBuffer(0)
+#endif //PRAKTIKUM_4
     {
     }
     inline ~Object() {
@@ -54,7 +56,10 @@ public:
         glDeleteBuffers(1, &indexBuffer);
         glDeleteBuffers(1, &colorBuffer);
         glDeleteBuffers(1, &positionBuffer);
+
+#if PRAKTIKUM_4 == 1
         glDeleteBuffers(1, &normalBuffer);
+#endif //PRAKTIKUM_4
 
 #if PRAKTIKUM_2 == 1 || PRAKTIKUM_3 == 1
         glDeleteVertexArrays(1, &linesVAO);
@@ -68,7 +73,11 @@ public:
     GLuint positionBuffer;
     GLuint colorBuffer;
     GLuint indexBuffer;
+
+#if PRAKTIKUM_4 == 1
     GLuint normalBuffer;
+#endif //Praktikum_4
+
     glm::mat4x4 model;
 
 #if PRAKTIKUM_2 == 1 || PRAKTIKUM_3 == 1
@@ -125,29 +134,35 @@ public:
     };
 #endif //PRAKTIKUM_4
 
+
+
+
+
 #if PRAKTIKUM_3 == 1
     void glmInit(Object& body, ObjectBodyHandler& obj, bool drawYAxisOnly = false, bool pShowNormals = false) {
         SphereTransformations& sphere = obj.sphere;
 
-        sphere.setLightVector(lights[lightIndex]);
-
         std::vector<Triangle>& tris = sphere.getTriangles();
-
         std::vector<glm::vec3> vertices;
         std::vector<glm::vec3> colors;
         std::vector<GLushort> indices;
+
+#if PRAKTIKUM_4 == 1
         std::vector<glm::vec3> normals;
-
+        sphere.setLightVector(lights[lightIndex]);
+        
         std::vector<vec3> normalLines = sphere.generateNormalLines();
-        GLuint vertexIndex = 0;
-
         if (normalLines.size() != tris.size() * 6) {
             return;
         }
-
         size_t lineIndex = 0;
+#endif //Praktikum_4
+
+        GLuint vertexIndex = 0;
+
         for (const auto& tri : tris) {
-            
+        
+#if PRAKTIKUM_4 == 1
             glm::vec3 n0 = normalize(normalLines[lineIndex + 1] - normalLines[lineIndex]);
             glm::vec3 n1 = normalize(normalLines[lineIndex + 3] - normalLines[lineIndex + 2]);
             glm::vec3 n2 = normalize(normalLines[lineIndex + 5] - normalLines[lineIndex + 4]);
@@ -156,6 +171,7 @@ public:
             normals.push_back(n0);
             normals.push_back(n1);
             normals.push_back(n2);
+#endif //Praktikum_4
 
             vertices.push_back(tri.v0);
             vertices.push_back(tri.v1);
@@ -170,10 +186,11 @@ public:
             indices.push_back(vertexIndex++);
         }
 
-        //GLuint programId = program.getHandle();
-        GLuint programId = sphere.getShadedProgram()->getHandle();
-        GLuint pos;
+        GLuint programId = program.getHandle();
 
+#if PRAKTIKUM_4 == 1
+        programId = sphere.getShadedProgram()->getHandle();
+#endif //Praktikum_4
 
         // === VAO für Hauptobjekt ===
         glGenVertexArrays(1, &body.vao);
@@ -182,36 +199,41 @@ public:
         glGenBuffers(1, &body.positionBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, body.positionBuffer);
         glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
-
-        pos = glGetAttribLocation(programId, "position");
-        glEnableVertexAttribArray(pos);
-        glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        GLint posLoc = glGetAttribLocation(programId, "position");
+        if (posLoc >= 0) {
+            glEnableVertexAttribArray(static_cast<GLuint>(posLoc));
+            glVertexAttribPointer(static_cast<GLuint>(posLoc), 3, GL_FLOAT, GL_FALSE, 0, 0);
+        }
 
         glGenBuffers(1, &body.colorBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, body.colorBuffer);
         glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), colors.data(), GL_STATIC_DRAW);
-        pos = glGetAttribLocation(programId, "color");
-        glEnableVertexAttribArray(pos);
-        glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        GLint colorLoc = glGetAttribLocation(programId, "color");
+        if (colorLoc >= 0) {
+            glEnableVertexAttribArray(static_cast<GLuint>(colorLoc));
+            glVertexAttribPointer(static_cast<GLuint>(colorLoc), 3, GL_FLOAT, GL_FALSE, 0, 0);
+        }
 
         glGenBuffers(1, &body.indexBuffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, body.indexBuffer);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
 
-
+#if PRAKTIKUM_4 == 1
         glGenBuffers(1, &body.normalBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, body.normalBuffer);
         glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
 
         glBindVertexArray(body.vao);
         glBindBuffer(GL_ARRAY_BUFFER, body.normalBuffer);
-        GLuint normalLoc = glGetAttribLocation(programId, "normal");
-        if (normalLoc != GLuint(-1)) {
-            glEnableVertexAttribArray(normalLoc);
-            glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        GLint normalLoc = glGetAttribLocation(programId, "normal");
+        if (normalLoc >= 0) {
+            glEnableVertexAttribArray(static_cast<GLuint>(normalLoc));
+            glVertexAttribPointer(static_cast<GLuint>(normalLoc), 3, GL_FLOAT, GL_FALSE, 0, 0);
         }
+#endif //Praktikum_4
 
         glBindVertexArray(0);
+
 
         // === Optional: Nur Y-Achse anzeigen + Vertex-Normalen===
         std::vector<vec3> extraLines;
@@ -243,23 +265,28 @@ public:
             glGenBuffers(1, &body.linesPositionBuffer);
             glBindBuffer(GL_ARRAY_BUFFER, body.linesPositionBuffer);
             glBufferData(GL_ARRAY_BUFFER, extraLines.size() * sizeof(glm::vec3), extraLines.data(), GL_STATIC_DRAW);
-            pos = glGetAttribLocation(programId, "position");
-            glEnableVertexAttribArray(pos);
-            glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+            GLint posLocLine = glGetAttribLocation(programId, "position");
+            if (posLocLine >= 0) {
+                glEnableVertexAttribArray(static_cast<GLuint>(posLocLine));
+                glVertexAttribPointer(static_cast<GLuint>(posLocLine), 3, GL_FLOAT, GL_FALSE, 0, 0);
+            }
 
             glGenBuffers(1, &body.linesColorBuffer);
             glBindBuffer(GL_ARRAY_BUFFER, body.linesColorBuffer);
             glBufferData(GL_ARRAY_BUFFER, lineColors.size() * sizeof(glm::vec3), lineColors.data(), GL_STATIC_DRAW);
-            pos = glGetAttribLocation(programId, "color");
-            glEnableVertexAttribArray(pos);
-            glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+            GLint colorLocLine = glGetAttribLocation(programId, "color");
+            if (colorLocLine >= 0) {
+                glEnableVertexAttribArray(static_cast<GLuint>(colorLocLine));
+                glVertexAttribPointer(static_cast<GLuint>(colorLocLine), 3, GL_FLOAT, GL_FALSE, 0, 0);
+            }
 
             glBindVertexArray(0);
         }
 
-        // === Modellmatrix setzen ===
         body.model = glm::translate(glm::mat4(1.0f), sphere.absolutePosition);
     }
+
+
 
     void glmRender(const Object& body, SphereTransformations& sphere, bool showYAxisOnly = false, bool pShowNormals = false) {
 #if PRAKTIKUM_4 == 1
@@ -282,22 +309,25 @@ public:
         //glm::mat3 nm = glm::inverseTranspose(glm::mat3(body.model));
         glm::mat3 nm = glm::inverseTranspose(glm::mat3(mv));
 
+
+        program.use();
+        program.setUniform("mvp", mvp);
+
+#if PRAKTIKUM_4 == 1
         cg::GLSLProgram* shader = sphere.getShadedProgram();
         shader->use();
         shader->setUniform("modelviewMatrix", mv);
         shader->setUniform("projectionMatrix", projection);
         shader->setUniform("normalMatrix", nm);
-
-        //program.use();
-        //program.setUniform("mvp", mvp);
+#endif //Praktikum_4
 
         // === Hauptobjekt zeichnen ===
         glBindVertexArray(body.vao);
         glDrawElements(GL_TRIANGLES, sphere.renderSphere().size() * 3, GL_UNSIGNED_SHORT, 0);
         glBindVertexArray(0);
 
-        // === Optional Y-Achse zeichnen ===
 
+        // === Optional Y-Achse zeichnen ===
         if (body.linesVAO != 0 && (showYAxisOnly || pShowNormals)) {
             cg::GLSLProgram* simpleShader = sphere.getSimpleProgram();
             simpleShader->use();
@@ -313,7 +343,6 @@ public:
             glBindVertexArray(0);
         }
     }
-
 #endif //PRAKTIKUM_3
 
 
@@ -337,8 +366,10 @@ public:
         sun.setSphereColor(vec3(0.9f, 0.6f, 0.1f));
         sun.setBodyRotation(true);
         sun.lineVisible = true;
+#if PRAKTIKUM_4 == 1
         sun.sphere.setType(SphereType::SUN);
         sun.sphere.initShader();
+#endif //Praktikum_4
         sun.sphere.renderSphere();
 
         planet1.sphere.setN(3);
@@ -347,8 +378,10 @@ public:
         planet1.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
         planet1.setBodyRotation(true);
         planet1.lineVisible = true;
+#if PRAKTIKUM_4 == 1
         planet1.sphere.setType(SphereType::PLANET);
         planet1.sphere.initShader();
+#endif //Praktikum_4
         planet1.sphere.renderSphere();
 
         moon1.sphere.setN(2);
@@ -357,8 +390,10 @@ public:
         moon1.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
         moon1.setBodyRotation(true);
         moon1.lineVisible = false;
+#if PRAKTIKUM_4 == 1
         moon1.sphere.setType(SphereType::MOON);
         moon1.sphere.initShader();
+#endif //Praktikum_4
         moon1.sphere.renderSphere();
 
         planet2.sphere.setN(3);
@@ -368,8 +403,10 @@ public:
         planet2.setBodyRotation(true);
         planet2.lineVisible = true;
         planet2.setInclinedStatus(true);
+#if PRAKTIKUM_4 == 1
         planet2.sphere.setType(SphereType::PLANET);
         planet2.sphere.initShader();
+#endif //Praktikum_4
         planet2.sphere.renderSphere();
 
         moon2.sphere.setN(2);
@@ -378,8 +415,10 @@ public:
         moon2.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
         moon2.setBodyRotation(true);
         moon2.lineVisible = false;
+#if PRAKTIKUM_4 == 1
         moon2.sphere.setType(SphereType::MOON);
         moon2.sphere.initShader();
+#endif //Praktikum_4
         moon2.sphere.renderSphere();
 
         moon1.setParentObject(&planet1);

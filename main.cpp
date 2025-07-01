@@ -120,7 +120,7 @@ public:
 
     unsigned  lightIndex = 0;
     glm::vec4 lights[2] = {
-        { 0.0f, -1.0f, 0.0f, 0.0f },
+        { 0.0f, 1.0f, 0.0f, 0.0f },
         { 0.0f,  0.0f, cameraZPos, 1.0f }
     };
 #endif //PRAKTIKUM_4

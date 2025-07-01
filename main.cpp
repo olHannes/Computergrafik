@@ -128,6 +128,7 @@ public:
 #if PRAKTIKUM_3 == 1
     void glmInit(Object& body, ObjectBodyHandler& obj, bool drawYAxisOnly = false, bool pShowNormals = false) {
         SphereTransformations& sphere = obj.sphere;
+
         sphere.setLightVector(lights[lightIndex]);
 
         std::vector<Triangle>& tris = sphere.getTriangles();
@@ -169,7 +170,8 @@ public:
             indices.push_back(vertexIndex++);
         }
 
-        GLuint programId = program.getHandle();
+        //GLuint programId = program.getHandle();
+        GLuint programId = sphere.getShadedProgram()->getHandle();
         GLuint pos;
 
 
@@ -196,18 +198,20 @@ public:
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, body.indexBuffer);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
 
-        glBindVertexArray(0);
 
         glGenBuffers(1, &body.normalBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, body.normalBuffer);
         glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
 
+        glBindVertexArray(body.vao);
+        glBindBuffer(GL_ARRAY_BUFFER, body.normalBuffer);
         GLuint normalLoc = glGetAttribLocation(programId, "normal");
         if (normalLoc != GLuint(-1)) {
             glEnableVertexAttribArray(normalLoc);
             glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
         }
 
+        glBindVertexArray(0);
 
         // === Optional: Nur Y-Achse anzeigen + Vertex-Normalen===
         std::vector<vec3> extraLines;
@@ -264,6 +268,7 @@ public:
         }
         else {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
         }
 #endif //PRAKTIKUM_4
 
@@ -274,7 +279,8 @@ public:
 
         glm::mat4 mv = view * body.model;
         glm::mat4 mvp = projection * view * body.model;
-        glm::mat3 nm = glm::inverseTranspose(glm::mat3(body.model));
+        //glm::mat3 nm = glm::inverseTranspose(glm::mat3(body.model));
+        glm::mat3 nm = glm::inverseTranspose(glm::mat3(mv));
 
         cg::GLSLProgram* shader = sphere.getShadedProgram();
         shader->use();
@@ -909,6 +915,13 @@ void glutKeyboard(unsigned char keycode, int x, int y)
     case 'l':
         lightIndex = lightIndex == 0 ? 1 : 0;
         break;
+    case 'c':
+        sun.sphere.toggleShader();
+        planet1.sphere.toggleShader();
+        planet2.sphere.toggleShader();
+        moon1.sphere.toggleShader();
+        moon2.sphere.toggleShader();
+        break;
 #endif //PRAKTIKUM_4
     }
 #if PRAKTIKUM_2 == 1
@@ -933,6 +946,7 @@ void animate(int value){
     moon1.yRotationValue = (globalPlanetRotationSpeed + 0.05) * speedAmplifier;
     moon2.yRotationValue = (globalPlanetRotationSpeed + 0.05) * speedAmplifier;
     sun.render();
+
     glutPostRedisplay();
     glutTimerFunc(16, animate, 0);
 }
@@ -1025,7 +1039,3 @@ int main(int argc, char** argv)
 
     return 0;
 }
-
-
-
-

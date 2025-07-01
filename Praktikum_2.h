@@ -102,16 +102,15 @@ public:
 
 	void setLightVector(const glm::vec4& v);
 	void SphereTransformations::initShader();
+	void SphereTransformations::setLightingUniforms(GLSLProgram& p);
 	static void initShader(GLSLProgram& program, const std::string& vert, const std::string& frag);
 
-	GLSLProgram* getShadedProgram() {
-		return &programShaded;
-	}
-	GLSLProgram* getSimpleProgram() {
-		return &programSimple;
-	}
+	GLSLProgram* getShadedProgram();
+	GLSLProgram* getSimpleProgram();
 
-
+	void toggleShader() {
+		useGouraudShader = useGouraudShader ? false : true;
+	}
 
 private:
 	void createInitialSphere();
@@ -128,9 +127,12 @@ private:
 	int n;
 	float radius;
 
-	GLSLProgram programShaded;
+	GLSLProgram programShadedPhong;
+	GLSLProgram programShadedGouraud;
 	GLSLProgram programSimple;
 	
+	bool useGouraudShader;
+	vec4 currentLightVec;
 
 public:
 	glm::mat4 rotationMatrix;

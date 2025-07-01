@@ -3,25 +3,27 @@
 
 //########################################################################### Constructor call (init params)
 SphereTransformations::SphereTransformations(glm::vec3 pos)
-	:n(0),
-	radius(1.0f),
-	xRotation(0.0f),
-	yRotation(0.0f),
-	zRotation(0.0f),
-	rotationMatrix(mat4(1.0f)),
-	absolutePosition(pos)
-	,oldPosition(pos)
+	:n(0)
+	, radius(1.0f)
+	, xRotation(0.0f)
+	, yRotation(0.0f)
+	, zRotation(0.0f)
+	, rotationMatrix(mat4(1.0f))
+	, absolutePosition(pos)
+	, oldPosition(pos)
+	, useGouraudShader(true)
 {
 	//renderSphere();
 }
 
 SphereTransformations::SphereTransformations()
-	:n(0),
-	radius(1.0f),
-	xRotation(0.0f),
-	yRotation(0.0f),
-	zRotation(0.0f),
-	rotationMatrix(mat4(1.0f))
+	:n(0)
+	, radius(1.0f)
+	, xRotation(0.0f)
+	, yRotation(0.0f)
+	, zRotation(0.0f)
+	, rotationMatrix(mat4(1.0f))
+	, useGouraudShader(true)
 {
 	//renderSphere();
 }
@@ -274,24 +276,24 @@ std::vector<glm::vec3> SphereTransformations::generateNormalLines() {
 
 void SphereTransformations::setLightVector(const glm::vec4& v)
 {
-	programShaded.use();
-	programShaded.setUniform("light", v);
+	currentLightVec = v;
+	programShadedPhong.use();
+	programShadedPhong.setUniform("light", v);
+
+	programShadedGouraud.use();
+	programShadedGouraud.setUniform("light", v);
 }
+
 
 
 void SphereTransformations::initShader()
 {
 	initShader(programSimple, "shader/simple.vert", "shader/simple.frag");
-	//CubeSharp::initShader(programShaded, "shader/shadedGouraud.vert", "shader/shadedGouraud.frag");
-	initShader(programShaded, "shader/shadedPhong.vert", "shader/shadedPhong.frag");
+	initShader(programShadedPhong, "shader/shadedPhong.vert", "shader/shadedPhong.frag");
+	initShader(programShadedGouraud, "shader/shadedGouraud.vert", "shader/shadedGouraud.frag");
 
-	programShaded.use();
-	programShaded.setUniform("light", glm::vec3(0, 0, 0));
-	programShaded.setUniform("lightI", float(1.0f));
-	programShaded.setUniform("surfKa", glm::vec3(0.1f, 0.1f, 0.1f));
-	programShaded.setUniform("surfKd", glm::vec3(0.7f, 0.1f, 0.1f));
-	programShaded.setUniform("surfKs", glm::vec3(1, 1, 1));
-	programShaded.setUniform("surfShininess", float(8.0f));
+	setLightingUniforms(programShadedPhong);
+	setLightingUniforms(programShadedGouraud);
 }
 
 
@@ -309,4 +311,26 @@ void SphereTransformations::initShader(GLSLProgram& program, const std::string& 
 	{
 		throw std::runtime_error("LINK: " + program.log());
 	}
+}
+
+
+GLSLProgram* SphereTransformations::getShadedProgram() {
+	if (useGouraudShader) {
+		return &programShadedGouraud;
+	}
+	return &programShadedPhong;
+}
+GLSLProgram* SphereTransformations::getSimpleProgram() {
+	return &programSimple;
+}
+
+void SphereTransformations::setLightingUniforms(GLSLProgram& p)
+{
+	p.use();
+	p.setUniform("light", currentLightVec);
+	p.setUniform("lightI", 1.0f);
+	p.setUniform("surfKa", glm::vec3(0.1f));
+	p.setUniform("surfKd", glm::vec3(0.7f, 0.1f, 0.1f));
+	p.setUniform("surfKs", glm::vec3(1.0f));
+	p.setUniform("surfShininess", 8.0f);
 }

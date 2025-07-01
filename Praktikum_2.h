@@ -22,6 +22,13 @@ struct Triangle {
 	glm::vec3 v0, v1, v2;
 };
 
+enum SphereType {
+	NONE,
+	SUN,
+	PLANET,
+	MOON
+};
+
 
 class SphereTransformations {
 public:
@@ -112,6 +119,10 @@ public:
 		useGouraudShader = useGouraudShader ? false : true;
 	}
 
+	void setType(SphereType pType) {
+		this->type = pType;
+	}
+
 private:
 	void createInitialSphere();
 	void createInitialCoords(bool prak3=true);
@@ -133,6 +144,8 @@ private:
 	
 	bool useGouraudShader;
 	vec4 currentLightVec;
+
+	SphereType type;
 
 public:
 	glm::mat4 rotationMatrix;

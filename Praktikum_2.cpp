@@ -12,9 +12,8 @@ SphereTransformations::SphereTransformations(glm::vec3 pos)
 	, absolutePosition(pos)
 	, oldPosition(pos)
 	, useGouraudShader(true)
-{
-	//renderSphere();
-}
+	, type(SphereType::NONE)
+{}
 
 SphereTransformations::SphereTransformations()
 	:n(0)
@@ -24,9 +23,8 @@ SphereTransformations::SphereTransformations()
 	, zRotation(0.0f)
 	, rotationMatrix(mat4(1.0f))
 	, useGouraudShader(true)
-{
-	//renderSphere();
-}
+	, type(SphereType::NONE)
+{}
 
 
 //########################################################################### render Sphere -> create Triangles and return them
@@ -57,12 +55,12 @@ void SphereTransformations::generate(int n) {
 
 //########################################################################### handle User-Input
 void SphereTransformations::increaseN() {
-	if (n < 4) n += 1;
+	if (n < 6) n += 1;
 	renderSphere();
 }
 
 void SphereTransformations::decreaseN() {
-	if (n > 0) n -= 1;
+	if (n > 1) n -= 1;
 	renderSphere();
 }
 
@@ -330,7 +328,26 @@ void SphereTransformations::setLightingUniforms(GLSLProgram& p)
 	p.setUniform("light", currentLightVec);
 	p.setUniform("lightI", 1.0f);
 	p.setUniform("surfKa", glm::vec3(0.1f));
-	p.setUniform("surfKd", glm::vec3(0.7f, 0.1f, 0.1f));
 	p.setUniform("surfKs", glm::vec3(1.0f));
 	p.setUniform("surfShininess", 8.0f);
+
+	switch (type) {
+	case SphereType::NONE:
+		// Neutral, grau
+		p.setUniform("surfKd", glm::vec3(0.5f, 0.5f, 0.5f)); // Grau
+		break;
+	case SphereType::SUN:
+		// Warmes Gelb/Orange, typisch für Sonne
+		p.setUniform("surfKd", glm::vec3(1.0f, 0.8f, 0.0f)); // Sonnengelb
+		break;
+	case SphereType::PLANET:
+		// Blaugrün, erinnert an Erde oder Wasserwelten
+		p.setUniform("surfKd", glm::vec3(0.2f, 0.6f, 0.7f)); // Blaugrün
+		break;
+	case SphereType::MOON:
+		// Hellgrau, typisch für Mond
+		p.setUniform("surfKd", glm::vec3(0.8f, 0.8f, 0.8f)); // Hellgrau
+		break;
+	}
+
 }

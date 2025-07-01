@@ -337,6 +337,7 @@ public:
         sun.setSphereColor(vec3(0.9f, 0.6f, 0.1f));
         sun.setBodyRotation(true);
         sun.lineVisible = true;
+        sun.sphere.setType(SphereType::SUN);
         sun.sphere.initShader();
         sun.sphere.renderSphere();
 
@@ -346,6 +347,7 @@ public:
         planet1.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
         planet1.setBodyRotation(true);
         planet1.lineVisible = true;
+        planet1.sphere.setType(SphereType::PLANET);
         planet1.sphere.initShader();
         planet1.sphere.renderSphere();
 
@@ -355,6 +357,7 @@ public:
         moon1.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
         moon1.setBodyRotation(true);
         moon1.lineVisible = false;
+        moon1.sphere.setType(SphereType::MOON);
         moon1.sphere.initShader();
         moon1.sphere.renderSphere();
 
@@ -365,6 +368,7 @@ public:
         planet2.setBodyRotation(true);
         planet2.lineVisible = true;
         planet2.setInclinedStatus(true);
+        planet2.sphere.setType(SphereType::PLANET);
         planet2.sphere.initShader();
         planet2.sphere.renderSphere();
 
@@ -374,6 +378,7 @@ public:
         moon2.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
         moon2.setBodyRotation(true);
         moon2.lineVisible = false;
+        moon2.sphere.setType(SphereType::MOON);
         moon2.sphere.initShader();
         moon2.sphere.renderSphere();
 

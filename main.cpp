@@ -151,7 +151,7 @@ public:
         std::vector<glm::vec3> normals;
         sphere.setLightVector(lights[lightIndex]);
         
-        std::vector<vec3> normalLines = sphere.generateNormalLines();
+        std::vector<vec3> normalLines = sphere.generateNormalLines(sphere.getShaderType());
         if (normalLines.size() != tris.size() * 6) {
             return;
         }
@@ -251,7 +251,7 @@ public:
         }
 
         if (pShowNormals) {
-            std::vector<vec3> normals = sphere.generateNormalLines();
+            std::vector<vec3> normals = sphere.generateNormalLines(sphere.getShaderType());
             extraLines.insert(extraLines.end(), normals.begin(), normals.end());
 
             lineColors.insert(lineColors.end(), normals.size(), vec3(1.0f, 0.0f, 1.0f));
@@ -337,7 +337,7 @@ public:
 
             int numLineVertices = 0;
             if (showYAxisOnly) numLineVertices += 2;
-            if (pShowNormals)   numLineVertices += sphere.generateNormalLines().size();
+            if (pShowNormals)   numLineVertices += sphere.generateNormalLines(false).size();
 
             glDrawArrays(GL_LINES, 0, numLineVertices);
             glBindVertexArray(0);
@@ -1025,7 +1025,7 @@ int main(int argc, char** argv)
 
 
 
-    glutCreateWindow("Aufgabenblatt 01");
+    glutCreateWindow("Aufgabenblatt 04");
     glutID = glutGetWindow();
 
     // GLEW: Load opengl extensions

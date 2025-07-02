@@ -247,26 +247,40 @@ glm::vec3 SphereTransformations::rotateTranslationVector(glm::vec3 vec, glm::mat
 
 
 //########################################################################### calc the normal lines and return them
-std::vector<glm::vec3> SphereTransformations::generateNormalLines() {
+std::vector<glm::vec3> SphereTransformations::generateNormalLines(bool faceNormals) {
 	std::vector<glm::vec3> lines;
 	float scale = 1.0f;
 	
-	for (const auto& tri : triangles) {
-		lines.push_back(tri.v0);
-		lines.push_back(tri.v0 + scale * tri.v0);
+	if (faceNormals) {
+		for (const auto& tri : triangles) {
+			glm::vec3 x = tri.v1 - tri.v0;
+			glm::vec3 y = tri.v2 - tri.v0;
+			glm::vec3 normal = glm::normalize(glm::cross(y, x));
 
-		lines.push_back(tri.v1);
-		lines.push_back(tri.v1 + scale * tri.v1);
+			lines.push_back(tri.v0);
+			lines.push_back(tri.v0 + scale * normal);
 
-		lines.push_back(tri.v2);
-		lines.push_back(tri.v2 + scale * tri.v2);
+			lines.push_back(tri.v1);
+			lines.push_back(tri.v1 + scale * normal);
+
+			lines.push_back(tri.v2);
+			lines.push_back(tri.v2 + scale * normal);
+		}
 	}
-	
+	else {
+		for (const auto& tri : triangles) {
+			lines.push_back(tri.v0);
+			lines.push_back(tri.v0 + scale * tri.v0);
+
+			lines.push_back(tri.v1);
+			lines.push_back(tri.v1 + scale * tri.v1);
+
+			lines.push_back(tri.v2);
+			lines.push_back(tri.v2 + scale * tri.v2);
+		}
+	}
 	return lines;
 }
-
-
-
 
 
 

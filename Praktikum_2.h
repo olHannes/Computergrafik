@@ -77,7 +77,7 @@ public:
 		this->zRotation = pValue;
 	}
 
-	std::vector<glm::vec3> generateNormalLines();
+	std::vector<glm::vec3> generateNormalLines(bool faceNormals);
 	std::vector<glm::vec3> getCoords();
 
 	float zIndex;
@@ -117,6 +117,10 @@ public:
 
 	void toggleShader() {
 		useGouraudShader = useGouraudShader ? false : true;
+	}
+
+	bool getShaderType() {
+		return useGouraudShader;
 	}
 
 	void setType(SphereType pType) {

@@ -33,10 +33,10 @@ public:
 
     std::vector<int>& getTriangleIndices();
 
-    void setColor(const glm::vec3& color);
-    glm::vec3 getColor() const;
+    void setColor(glm::vec3& pColor);
+    glm::vec3 getColor();
 
-    void computeBoundingBox(glm::vec3& minOut, glm::vec3& maxOut) const;
+    void computeBoundingBox(glm::vec3& minOut, glm::vec3& maxOut);
 
 private:
     std::vector<Vertex> vertices;
@@ -45,7 +45,7 @@ private:
 
     std::vector<int> triangleIndices;
 
-    glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+    glm::vec3 color;
 
-    void triangulateFace(const Face& face, std::vector<int>& outIndices) const;
+    void triangulateFace(const Face& face, std::vector<int>& outIndices);
 };

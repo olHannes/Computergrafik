@@ -119,7 +119,7 @@ public:
 		useGouraudShader = useGouraudShader ? false : true;
 	}
 
-	bool getShaderType() {
+	bool getUseGouraudShader() {
 		return useGouraudShader;
 	}
 

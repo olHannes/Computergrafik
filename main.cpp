@@ -151,7 +151,7 @@ public:
         std::vector<glm::vec3> normals;
         sphere.setLightVector(lights[lightIndex]);
         
-        std::vector<vec3> normalLines = sphere.generateNormalLines(sphere.getShaderType());
+        std::vector<vec3> normalLines = sphere.generateNormalLines(sphere.getUseGouraudShader());
         if (normalLines.size() != tris.size() * 6) {
             return;
         }
@@ -251,7 +251,7 @@ public:
         }
 
         if (pShowNormals) {
-            std::vector<vec3> normals = sphere.generateNormalLines(sphere.getShaderType());
+            std::vector<vec3> normals = sphere.generateNormalLines(sphere.getUseGouraudShader());
             extraLines.insert(extraLines.end(), normals.begin(), normals.end());
 
             lineColors.insert(lineColors.end(), normals.size(), vec3(1.0f, 0.0f, 1.0f));
@@ -329,9 +329,6 @@ public:
 
         // === Optional Y-Achse zeichnen ===
         if (body.linesVAO != 0 && (showYAxisOnly || pShowNormals)) {
-            cg::GLSLProgram* simpleShader = sphere.getSimpleProgram();
-            simpleShader->use();
-            simpleShader->setUniform("mvp", mvp);
 
             glBindVertexArray(body.linesVAO);
 

@@ -21,11 +21,11 @@ std::vector<Normal>& PolygonMesh::getNormals() {
 }
 
 
-
+/*
 std::vector<int>& PolygonMesh::getTriangleIndices() {
 	return {0};
 }
-
+*/
 
 
 
@@ -44,7 +44,7 @@ void PolygonMesh::triangulateFace(const Face& face, std::vector<int>& outIndices
 }
 
 
-void PolygonMesh::fitToScene(float targetSize = 1.0f) {
+void PolygonMesh::fitToScene(float targetSize) {
 
 }
 

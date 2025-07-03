@@ -375,6 +375,10 @@ public:
     float globalPlanetRotationSpeed = 0.01f;
 #endif //PRAKTIKUM_3
 
+#if PRAKTIKUM_4 == 1
+	float modelRotationSpeed = 0.03f;
+    float globalModelRotationSpeed = 0.01f;
+#endif //PRAKTIKUM_4
 
 #if PRAKTIKUM_3 == 1
     void initSystem() {
@@ -451,7 +455,7 @@ public:
         sun.childrenObjects.push_back(&planet2);
 
 #if PRAKTIKUM_4 == 1
-        if (model.loadOBJ("models/cube-tex.obj")) {
+        if (model.loadOBJ("models/footship_selection_centered.obj")) {
             model.triangulate();
             std::cout << "Model loaded successfully." << std::endl;
         }
@@ -1033,11 +1037,13 @@ void animate(int value){
     planet2.sphere.setYRotation(planetRotationSpeed * speedAmplifier);
     moon1.sphere.setYRotation(moonRotationSpeed * speedAmplifier);
     moon2.sphere.setYRotation(moonRotationSpeed * speedAmplifier);
+    model.objHandle.sphere.setYRotation(modelRotationSpeed * -speedAmplifier);
 
     planet1.yRotationValue = globalPlanetRotationSpeed * speedAmplifier;
     planet2.yRotationValue = globalPlanetRotationSpeed * speedAmplifier;
     moon1.yRotationValue = (globalPlanetRotationSpeed + 0.05) * speedAmplifier;
     moon2.yRotationValue = (globalPlanetRotationSpeed + 0.05) * speedAmplifier;
+    model.objHandle.yRotationValue = globalModelRotationSpeed * -speedAmplifier;
     sun.render();
 
     glutPostRedisplay();

@@ -1071,7 +1071,7 @@ int main(int argc, char** argv)
     }
 
     PolygonMesh model;
-    if (model.loadOBJ("C:/Users/U0127624/Downloads/footship_selection.obj")) {
+    if (model.loadOBJ("models/footship_selection.obj")) {
         std::cout << "Model loaded successfully." << std::endl;
         std::cout << "Number of vertices: " << model.getVertices().size() << std::endl;
         std::cout << "Number of faces: " << model.getFaces().size() << std::endl;

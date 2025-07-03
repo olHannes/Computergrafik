@@ -341,14 +341,7 @@ public:
 
         // === Hauptobjekt zeichnen ===
         glBindVertexArray(body.vao);
-
-        if (sphere.getType() == SphereType::NONE) {
-            glDrawElements(GL_TRIANGLES, sphere.getTriangles().size() * 3, GL_UNSIGNED_SHORT, 0);
-        }
-        else {
-            glDrawElements(GL_TRIANGLES, sphere.renderSphere().size() * 3, GL_UNSIGNED_SHORT, 0);
-        }
-
+        glDrawElements(GL_TRIANGLES, sphere.getTriangles().size() * 3, GL_UNSIGNED_SHORT, 0);
         glBindVertexArray(0);
 
 
@@ -359,7 +352,14 @@ public:
 
             int numLineVertices = 0;
             if (showYAxisOnly) numLineVertices += 2;
-            if (pShowNormals)   numLineVertices += sphere.generateNormalLines(false).size();
+            if (pShowNormals) {
+                if (sphere.getType() == SphereType::NONE) {
+                    numLineVertices += model.getNormals().size();
+                }
+                else {
+                    numLineVertices += sphere.generateNormalLines(false).size();
+                }
+            }
 
             glDrawArrays(GL_LINES, 0, numLineVertices);
             glBindVertexArray(0);

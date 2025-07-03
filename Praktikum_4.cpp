@@ -19,6 +19,9 @@ std::vector<Vertex>& PolygonMesh::getVertices() {
 std::vector<Normal>& PolygonMesh::getNormals() {
 	return normals;
 }
+std::vector<Face>& PolygonMesh::getFaces() {
+	return faces;
+}
 
 
 /*
@@ -31,8 +34,37 @@ std::vector<int>& PolygonMesh::getTriangleIndices() {
 
 
 bool PolygonMesh::loadOBJ(const std::string& filename) {
-	return false;
-}
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            std::cerr << "Error opening file: " << filename << std::endl;
+            return false;
+        }
+
+        std::string line;
+        while (std::getline(file, line)) {
+            std::istringstream iss(line);
+            std::string type;
+            iss >> type;
+
+            if (type == "v") {
+                float x, y, z;
+                iss >> x >> y >> z;
+                vertices.emplace_back(x, y, z);
+            }
+            else if (type == "f") {
+                Face face;
+                int index;
+                while (iss >> index) {
+                    // OBJ indiziert ab 1, C++ ab 0
+                    face.vertexIndices.push_back(index - 1);
+                }
+                faces.push_back(face);
+            }
+        }
+        file.close();
+        return true;
+    }
+
 
 
 void PolygonMesh::triangulate() {

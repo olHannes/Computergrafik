@@ -16,7 +16,6 @@
 #include "Praktikum_2.h"
 #include "Praktikum_3.h"
 #include "Praktikum_4.h"
-#include "ObjModel.h"
 
 #define DEFAULT 0 //Flag to show Triangle and Quad (default project)
 
@@ -1071,20 +1070,20 @@ int main(int argc, char** argv)
         return -2;
     }
 
-    OBJModel model;
-    if (model.load("C:/Users/mittwald/Downloads/footship_selection.obj")) {
+    PolygonMesh model;
+    if (model.loadOBJ("C:/Users/mittwald/Downloads/footship_selection.obj")) {
         std::cout << "Model loaded successfully." << std::endl;
-        std::cout << "Number of vertices: " << model.vertices.size() << std::endl;
-        std::cout << "Number of faces: " << model.faces.size() << std::endl;
+        std::cout << "Number of vertices: " << model.getVertices().size() << std::endl;
+        std::cout << "Number of faces: " << model.getFaces().size() << std::endl;
 
         // Zugriff auf Eckpunkte und Flächen
-        for (const auto& vertex : model.vertices) {
-            std::cout << "Vertex: " << vertex.x << ", " << vertex.y << ", " << vertex.z << std::endl;
+        for (const auto& vertex : model.getVertices() ){
+            std::cout << "Vertex: " << vertex.position.x << ", " << vertex.position.y << ", " << vertex.position.z << std::endl;
         }
 
-        for (const auto& face : model.faces) {
+        for (const auto& face : model.getFaces()) {
             std::cout << "Face: ";
-            for (int index : face.indices) {
+            for (int index : face.vertexIndices) {
                 std::cout << index << " ";
             }
             std::cout << std::endl;

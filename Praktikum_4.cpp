@@ -191,9 +191,9 @@ void PolygonMesh::convertFaceToTriangleAndNormal() {
     for (auto& pFace : faces) {
         Triangle newTri;
 
-        newTri.v0 = vertices[pFace.vertexIndices[0]].position;
+        newTri.v0 = vertices[pFace.vertexIndices[2]].position;
         newTri.v1 = vertices[pFace.vertexIndices[1]].position;
-        newTri.v2 = vertices[pFace.vertexIndices[2]].position;
+        newTri.v2 = vertices[pFace.vertexIndices[0]].position;
         pTriangles.push_back(newTri);
 
 

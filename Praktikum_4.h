@@ -61,10 +61,8 @@ public:
 
     BoundingBox computeBoundingBox();
 
-    //convert to Sphere
     void convertFaceToTriangleAndNormal();
     void convertNormals();
-    //
 
     ObjectBodyHandler objHandle;
     std::vector<glm::vec3> sphereObjNormalLines;
@@ -78,5 +76,4 @@ private:
     glm::vec3 color;
 
     void triangulateFace(const Face& face, std::vector<Face>& outFaces);
-
 };

@@ -58,8 +58,8 @@ bool PolygonMesh::loadOBJ(const std::string& filename) {
                     std::istringstream tokenStream(token);
                     int vIdx, tIdx, nIdx;
                     tokenStream >> vIdx >> tIdx >> nIdx;
-                    face.vertexIndices.push_back(vIdx);
-                    face.normalIndices.push_back(nIdx);
+                    face.vertexIndices.push_back(vIdx -1);
+                    face.normalIndices.push_back(nIdx -1);
                 }
                 faces.push_back(face);
             }
@@ -202,7 +202,7 @@ void PolygonMesh::convertNormals() {
         tempNormals.push_back(this->sphereObjNormalLines[k]);
         k++;
 
-        tempNormals.push_back(this->objHandle.sphere.getTriangles()[i].v1);
+        tempNormals.push_back(this->objHandle.sphere.getTriangles()[i].v2);
         tempNormals.push_back(this->sphereObjNormalLines[k]);
         k++;
     }

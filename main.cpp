@@ -460,7 +460,7 @@ public:
         }
 
         model.objHandle.sphere.renderSphere();
-        model.objHandle.sphere.absolutePosition = (vec3(2.5f, 0.2f, 0.0f));
+        model.objHandle.sphere.absolutePosition = (vec3(0.0f, -0.25f, 1.0f));
         model.objHandle.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
         model.objHandle.setBodyRotation(false);
         model.objHandle.lineVisible = false;
@@ -1010,6 +1010,7 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         planet2.sphere.toggleShader();
         moon1.sphere.toggleShader();
         moon2.sphere.toggleShader();
+        model.objHandle.sphere.toggleShader();
         break;
 #endif //PRAKTIKUM_4
     }

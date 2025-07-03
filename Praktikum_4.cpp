@@ -71,16 +71,23 @@ bool PolygonMesh::loadOBJ(const std::string& filename) {
 
 
 void PolygonMesh::triangulate() {
-    triangleIndices.clear();
+    std::vector<Face> newFaces;
 
     for (const Face& face : faces) {
-        triangulateFace(face, triangleIndices);
+        triangulateFace(face, newFaces);
     }
+
+    faces = std::move(newFaces);
 }
 
-void PolygonMesh::triangulateFace(const Face& face, std::vector<int>& outIndices) {
-    const size_t vertexCount = face.vertexIndices.size();
+void PolygonMesh::triangulateFace(const Face& face, std::vector<Face>& outFaces) {
+    size_t vertexCount = face.vertexIndices.size();
     if (vertexCount < 3) return;
+
+    if (vertexCount == 3) {
+        outFaces.push_back(face);
+        return;
+    }
 
     glm::vec3 center(0.0f);
     for (int idx : face.vertexIndices) {
@@ -91,15 +98,33 @@ void PolygonMesh::triangulateFace(const Face& face, std::vector<int>& outIndices
     vertices.emplace_back(center.x, center.y, center.z);
     int centerIndex = static_cast<int>(vertices.size()) - 1;
 
+    if (!face.normalIndices.empty()) {
+        glm::vec3 avgNormal(0.0f);
+        for (int nIdx : face.normalIndices) {
+            avgNormal += normals[nIdx].direction;
+        }
+        avgNormal = glm::normalize(avgNormal);
+        normals.emplace_back(avgNormal.x, avgNormal.y, avgNormal.z);
+    }
+    int centerNormalIndex = normals.empty() ? -1 : static_cast<int>(normals.size()) - 1;
+
     for (size_t i = 0; i < vertexCount; ++i) {
         int v0 = face.vertexIndices[i];
         int v1 = face.vertexIndices[(i + 1) % vertexCount];
 
-        outIndices.push_back(centerIndex);
-        outIndices.push_back(v0);
-        outIndices.push_back(v1);
+        Face triangle;
+        triangle.vertexIndices = { centerIndex, v0, v1 };
+
+        if (!face.normalIndices.empty() && centerNormalIndex != -1) {
+            int n0 = face.normalIndices[i];
+            int n1 = face.normalIndices[(i + 1) % vertexCount];
+            triangle.normalIndices = { centerNormalIndex, n0, n1 };
+        }
+
+        outFaces.push_back(triangle);
     }
 }
+
 
 
 

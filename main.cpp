@@ -261,7 +261,11 @@ public:
         if (pShowNormals) {
             std::vector<glm::vec3> normals;
             if (sphere.getType() == SphereType::NONE) {
-                model.getNormals();
+                std::vector<Normal> model_normals = model.getNormals();
+
+                for (const auto& normal : model_normals) {
+                    normals.push_back(normal.direction);
+                }
             }
             else {
                 normals = sphere.generateNormalLines(sphere.getUseGouraudShader());
@@ -818,7 +822,7 @@ bool init()
     glmInit(moon2Body, moon2, false, showNormals);
 
 #if PRAKTIKUM_4 == 1
-    glmInit(modelBody, model.objHandle, false, false);
+    glmInit(modelBody, model.objHandle, false, showNormals);
 #endif //Praktikum_4
 #endif //Praktikum_3
     return true;
@@ -857,8 +861,8 @@ void render()
     glmRender(moon2Body, moon2.sphere, false, showNormals);
 
 #if PRAKTIKUM_4 == 1
-    glmInit(modelBody, model.objHandle, false, false);
-    glmRender(modelBody, model.objHandle.sphere, false, false);
+    glmInit(modelBody, model.objHandle, false, showNormals);
+    glmRender(modelBody, model.objHandle.sphere, false, showNormals);
 #endif //Praktikum_4
 #endif //Praktikum_3
 }

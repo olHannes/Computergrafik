@@ -30,6 +30,15 @@ struct Face {
     std::vector<int> normalIndices;
 };
 
+
+struct BoundingBox {
+    int xMin;
+    int xMax;
+    int yMin;
+    int yMax;
+};
+
+
 class PolygonMesh {
 public:
     PolygonMesh();
@@ -49,7 +58,7 @@ public:
     void setColor(glm::vec3& pColor);
     glm::vec3 getColor();
 
-    void computeBoundingBox(glm::vec3& minOut, glm::vec3& maxOut);
+    BoundingBox computeBoundingBox();
 
 private:
     std::vector<Vertex> vertices;

@@ -214,25 +214,3 @@ void PolygonMesh::convertFaceToTriangleAndNormal() {
     fitToScene();
 }
 
-
-void PolygonMesh::convertNormals() {
-    std::vector<glm::vec3> tempNormals;
-
-    int k = 0;
-    for (int i = 0; i < this->objHandle.sphere.getTriangles().size(); i++) {
-        
-        tempNormals.push_back(this->objHandle.sphere.getTriangles()[i].v0);
-        tempNormals.push_back(this->sphereObjNormalLines[k]);
-        k++;
-
-        tempNormals.push_back(this->objHandle.sphere.getTriangles()[i].v1);
-        tempNormals.push_back(this->sphereObjNormalLines[k]);
-        k++;
-
-        tempNormals.push_back(this->objHandle.sphere.getTriangles()[i].v2);
-        tempNormals.push_back(this->sphereObjNormalLines[k]);
-        k++;
-    }
-}
-
-

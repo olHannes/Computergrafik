@@ -55,7 +55,6 @@ public:
     std::vector<glm::vec3> computeBoundingBox();
 
     void convertFaceToTriangleAndNormal();
-    void convertNormals();
 
     ObjectBodyHandler objHandle;
     std::vector<glm::vec3> sphereObjNormalLines;

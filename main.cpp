@@ -145,12 +145,8 @@ public:
     void glmInit(Object& body, ObjectBodyHandler& obj, bool drawYAxisOnly = false, bool pShowNormals = false) {
         SphereTransformations& sphere = obj.sphere;
 
-        if (obj.sphere.getType() == SphereType::NONE) {
-            std::cout << "Ich bin eine Biene";
-        }
-
         if (sphere.getType() == SphereType::NONE) {
-            //model.convertFaceToTriangleAndNormal();
+            model.convertFaceToTriangleAndNormal();
         }
 
         std::vector<Triangle>& tris = sphere.getTriangles();
@@ -463,6 +459,7 @@ public:
             std::cerr << "Failed to load model." << std::endl;
         }
 
+        model.objHandle.sphere.renderSphere();
         model.objHandle.sphere.absolutePosition = (vec3(2.5f, 0.2f, 0.0f));
         model.objHandle.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
         model.objHandle.setBodyRotation(false);

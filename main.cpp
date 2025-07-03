@@ -465,8 +465,8 @@ public:
 
         model.objHandle.sphere.renderSphere();
         model.objHandle.sphere.absolutePosition = (vec3(0.0f, 0.0f, 2.0f));
-        model.objHandle.setSphereColor(vec3(0.0f, 0.2f, 0.9f));
-        model.objHandle.setBodyRotation(false);
+        model.objHandle.setSphereColor(vec3(0.6f, 0.0f, 0.8f));
+        model.objHandle.setBodyRotation(true);
         model.objHandle.lineVisible = false;
         model.objHandle.sphere.setType(SphereType::NONE);
         model.objHandle.setParentObject(&sun);
@@ -1043,7 +1043,7 @@ void animate(int value){
     planet2.yRotationValue = globalPlanetRotationSpeed * speedAmplifier;
     moon1.yRotationValue = (globalPlanetRotationSpeed + 0.05) * speedAmplifier;
     moon2.yRotationValue = (globalPlanetRotationSpeed + 0.05) * speedAmplifier;
-    model.objHandle.yRotationValue = globalModelRotationSpeed * -speedAmplifier;
+    model.objHandle.yRotationValue = (globalModelRotationSpeed + 0.05) * speedAmplifier;
     sun.render();
 
     glutPostRedisplay();

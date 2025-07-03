@@ -348,7 +348,7 @@ void SphereTransformations::setLightingUniforms(GLSLProgram& p)
 
 	switch (type) {
 	case SphereType::NONE:
-		p.setUniform("surfKd", glm::vec3(1.0f, 0.8f, 0.3f));
+		p.setUniform("surfKd", glm::vec3(0.6f, 0.0f, 0.8f));
 		break;
 	case SphereType::SUN:
 		p.setUniform("surfKd", glm::vec3(1.0f, 0.8f, 0.0f));

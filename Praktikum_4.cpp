@@ -17,7 +17,7 @@ std::vector<Vertex>& PolygonMesh::getVertices() {
 	return vertices;
 }
 std::vector<Normal>& PolygonMesh::getNormals() {
-	return normals;
+    return normals;
 }
 std::vector<Face>& PolygonMesh::getFaces() {
 	return faces;
@@ -146,6 +146,12 @@ void PolygonMesh::fitToScene(float targetSize) {
         scaledTriangles.push_back(newTri);
     }
 
+    std::vector<glm::vec3> tempNormals;
+    for (auto& norm : sphereObjNormalLines) {
+        tempNormals.push_back(norm * targetSize);
+    }
+
+    sphereObjNormalLines = tempNormals;
     objHandle.sphere.setTriangles(scaledTriangles);
 }
 
@@ -188,8 +194,6 @@ std::vector<glm::vec3> PolygonMesh::computeBoundingBox() {
 
 
 
-
-
 void PolygonMesh::convertFaceToTriangleAndNormal() {
     std::vector<Triangle> pTriangles;
     std::vector<glm::vec3> pNormalLines;
@@ -203,8 +207,13 @@ void PolygonMesh::convertFaceToTriangleAndNormal() {
         pTriangles.push_back(newTri);
 
 
+        pNormalLines.push_back(vertices[pFace.vertexIndices[0]].position);
         pNormalLines.push_back (normals[pFace.normalIndices[0]].direction);
+        
+        pNormalLines.push_back(vertices[pFace.vertexIndices[1]].position);
         pNormalLines.push_back (normals[pFace.normalIndices[1]].direction);
+
+        pNormalLines.push_back(vertices[pFace.vertexIndices[2]].position);
         pNormalLines.push_back (normals[pFace.normalIndices[2]].direction);
     }
 

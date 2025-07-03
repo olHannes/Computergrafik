@@ -262,10 +262,10 @@ public:
         if (pShowNormals) {
             std::vector<glm::vec3> normals;
             if (sphere.getType() == SphereType::NONE) {
-                std::vector<Normal> model_normals = model.getNormals();
 
-                for (const auto& normal : model_normals) {
-                    normals.push_back(normal.direction);
+                std::vector<glm::vec3> modelNormals = model.sphereObjNormalLines;
+                for (auto& x : modelNormals) {
+                    normals.push_back(x);
                 }
             }
             else {

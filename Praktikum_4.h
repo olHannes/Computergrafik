@@ -58,6 +58,7 @@ public:
 
     ObjectBodyHandler objHandle;
     std::vector<glm::vec3> sphereObjNormalLines;
+
 private:
     std::vector<Vertex> vertices;
     std::vector<Normal> normals;

@@ -29,6 +29,7 @@ std::vector<int>& PolygonMesh::getTriangleIndices() {
 }
 
 bool PolygonMesh::loadOBJ(const std::string& filename) {
+    bool hasNormals = false;
         std::ifstream file(filename);
         if (!file.is_open()) {
             std::cerr << "Error opening file: " << filename << std::endl;
@@ -46,6 +47,7 @@ bool PolygonMesh::loadOBJ(const std::string& filename) {
                 iss >> x >> y >> z;
                 vertices.emplace_back(x, y, z);
             } else if (type == "vn") {
+                hasNormals = true;
                 Normal normal;
                 float x, y, z;
                 iss >> x >> y >> z;
@@ -62,9 +64,14 @@ bool PolygonMesh::loadOBJ(const std::string& filename) {
                     face.normalIndices.push_back(nIdx -1);
                 }
                 faces.push_back(face);
+                if (face.normalIndices.size() != 0) hasNormals = true;
             }
         }
         file.close();
+        if (!hasNormals) {
+            std::cout << "Model hat keine Normalen";
+        }
+       
         return true;
     }
 

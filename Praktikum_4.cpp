@@ -129,11 +129,19 @@ void PolygonMesh::triangulateFace(const Face& face, std::vector<Face>& outFaces)
 
 
 void PolygonMesh::fitToScene(float targetSize) {
-    std::vector<glm::vec3> triangles;
-    for (auto& tri : objHandle.sphere.getTriangles()) {
-        
+    std::vector<Triangle> scaledTriangles;
+
+    for (const auto& tri : objHandle.sphere.getTriangles()) {
+        Triangle newTri;
+        newTri.v0 = tri.v0 * targetSize;
+        newTri.v1 = tri.v1 * targetSize;
+        newTri.v2 = tri.v2 * targetSize;
+        scaledTriangles.push_back(newTri);
     }
+
+    objHandle.sphere.setTriangles(scaledTriangles);
 }
+
 
 BoundingBox PolygonMesh::computeBoundingBox() {
     if (vertices.empty())
@@ -188,6 +196,8 @@ void PolygonMesh::convertFaceToTriangleAndNormal() {
 
     this->objHandle.sphere.setTriangles(pTriangles);
     this->sphereObjNormalLines = pNormalLines;
+
+    fitToScene();
 }
 
 

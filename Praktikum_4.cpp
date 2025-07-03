@@ -24,14 +24,9 @@ std::vector<Face>& PolygonMesh::getFaces() {
 }
 
 
-/*
 std::vector<int>& PolygonMesh::getTriangleIndices() {
-	return {0};
+    return triangleIndices;
 }
-*/
-
-
-
 
 bool PolygonMesh::loadOBJ(const std::string& filename) {
         std::ifstream file(filename);

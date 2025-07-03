@@ -54,7 +54,7 @@ bool PolygonMesh::loadOBJ(const std::string& filename) {
                 Face face;
                 std::string token;
                 while (iss >> token) {
-                    std::replace(token.begin(), token.end(), '/', ' '); // Ersetze / durch Leerzeichen
+                    std::replace(token.begin(), token.end(), '/', ' ');
                     std::istringstream tokenStream(token);
                     int vIdx, tIdx, nIdx;
                     tokenStream >> vIdx >> tIdx >> nIdx;

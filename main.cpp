@@ -1076,18 +1076,23 @@ int main(int argc, char** argv)
         std::cout << "Number of vertices: " << model.getVertices().size() << std::endl;
         std::cout << "Number of faces: " << model.getFaces().size() << std::endl;
 
-        // Zugriff auf Eckpunkte und Flächen
+        // test output
+        /*
         for (const auto& vertex : model.getVertices() ){
             std::cout << "Vertex: " << vertex.position.x << ", " << vertex.position.y << ", " << vertex.position.z << std::endl;
         }
 
         for (const auto& face : model.getFaces()) {
-            std::cout << "Face: ";
+            std::cout << "Face: \n vertex-indices: ";
             for (int index : face.vertexIndices) {
                 std::cout << index << " ";
             }
+            std::cout << "\nnormals: ";
+            for (int index : face.normalIndices) {
+                std::cout << index << " ";
+            }
             std::cout << std::endl;
-        }
+        }*/
 
     }
     else {

@@ -50,13 +50,21 @@ bool PolygonMesh::loadOBJ(const std::string& filename) {
                 float x, y, z;
                 iss >> x >> y >> z;
                 vertices.emplace_back(x, y, z);
-            }
-            else if (type == "f") {
+            } else if (type == "vn") {
+                Normal normal;
+                float x, y, z;
+                iss >> x >> y >> z;
+                normals.emplace_back(x, y, z);
+            } else if (type == "f") {
                 Face face;
-                int index;
-                while (iss >> index) {
-                    // OBJ indiziert ab 1, C++ ab 0
-                    face.vertexIndices.push_back(index - 1);
+                std::string token;
+                while (iss >> token) {
+                    std::replace(token.begin(), token.end(), '/', ' '); // Ersetze / durch Leerzeichen
+                    std::istringstream tokenStream(token);
+                    int vIdx, tIdx, nIdx;
+                    tokenStream >> vIdx >> tIdx >> nIdx;
+                    face.vertexIndices.push_back(vIdx);
+                    face.normalIndices.push_back(nIdx);
                 }
                 faces.push_back(face);
             }

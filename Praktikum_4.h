@@ -48,7 +48,7 @@ public:
 
     void triangulate();
 
-    void fitToScene(float targetSize = 1.0f);
+    void fitToScene(float targetSize = 0.2f);
 
     std::vector<Vertex>& getVertices();
     std::vector<Normal>& getNormals();

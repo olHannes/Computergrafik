@@ -22,6 +22,13 @@ struct Triangle {
 	glm::vec3 v0, v1, v2;
 };
 
+enum SphereType {
+	NONE,
+	SUN,
+	PLANET,
+	MOON
+};
+
 
 class SphereTransformations {
 public:
@@ -70,7 +77,7 @@ public:
 		this->zRotation = pValue;
 	}
 
-	std::vector<glm::vec3> generateNormalLines();
+	std::vector<glm::vec3> generateNormalLines(bool faceNormals);
 	std::vector<glm::vec3> getCoords();
 
 	float zIndex;
@@ -102,16 +109,23 @@ public:
 
 	void setLightVector(const glm::vec4& v);
 	void SphereTransformations::initShader();
+	void SphereTransformations::setLightingUniforms(GLSLProgram& p);
 	static void initShader(GLSLProgram& program, const std::string& vert, const std::string& frag);
 
-	GLSLProgram* getShadedProgram() {
-		return &programShaded;
-	}
-	GLSLProgram* getSimpleProgram() {
-		return &programSimple;
+	GLSLProgram* getShadedProgram();
+	GLSLProgram* getSimpleProgram();
+
+	void toggleShader() {
+		useGouraudShader = useGouraudShader ? false : true;
 	}
 
+	bool getUseGouraudShader() {
+		return useGouraudShader;
+	}
 
+	void setType(SphereType pType) {
+		this->type = pType;
+	}
 
 private:
 	void createInitialSphere();
@@ -128,9 +142,14 @@ private:
 	int n;
 	float radius;
 
-	GLSLProgram programShaded;
+	GLSLProgram programShadedPhong;
+	GLSLProgram programShadedGouraud;
 	GLSLProgram programSimple;
 	
+	bool useGouraudShader;
+	vec4 currentLightVec;
+
+	SphereType type;
 
 public:
 	glm::mat4 rotationMatrix;

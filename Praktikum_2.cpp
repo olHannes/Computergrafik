@@ -3,28 +3,28 @@
 
 //########################################################################### Constructor call (init params)
 SphereTransformations::SphereTransformations(glm::vec3 pos)
-	:n(0),
-	radius(1.0f),
-	xRotation(0.0f),
-	yRotation(0.0f),
-	zRotation(0.0f),
-	rotationMatrix(mat4(1.0f)),
-	absolutePosition(pos)
-	,oldPosition(pos)
-{
-	//renderSphere();
-}
+	:n(0)
+	, radius(1.0f)
+	, xRotation(0.0f)
+	, yRotation(0.0f)
+	, zRotation(0.0f)
+	, rotationMatrix(mat4(1.0f))
+	, absolutePosition(pos)
+	, oldPosition(pos)
+	, useGouraudShader(true)
+	, type(SphereType::NONE)
+{}
 
 SphereTransformations::SphereTransformations()
-	:n(0),
-	radius(1.0f),
-	xRotation(0.0f),
-	yRotation(0.0f),
-	zRotation(0.0f),
-	rotationMatrix(mat4(1.0f))
-{
-	//renderSphere();
-}
+	:n(0)
+	, radius(1.0f)
+	, xRotation(0.0f)
+	, yRotation(0.0f)
+	, zRotation(0.0f)
+	, rotationMatrix(mat4(1.0f))
+	, useGouraudShader(true)
+	, type(SphereType::NONE)
+{}
 
 
 //########################################################################### render Sphere -> create Triangles and return them
@@ -55,12 +55,12 @@ void SphereTransformations::generate(int n) {
 
 //########################################################################### handle User-Input
 void SphereTransformations::increaseN() {
-	if (n < 4) n += 1;
+	if (n < 6) n += 1;
 	renderSphere();
 }
 
 void SphereTransformations::decreaseN() {
-	if (n > 0) n -= 1;
+	if (n > 1) n -= 1;
 	renderSphere();
 }
 
@@ -247,21 +247,38 @@ glm::vec3 SphereTransformations::rotateTranslationVector(glm::vec3 vec, glm::mat
 
 
 //########################################################################### calc the normal lines and return them
-std::vector<glm::vec3> SphereTransformations::generateNormalLines() {
+std::vector<glm::vec3> SphereTransformations::generateNormalLines(bool faceNormals) {
 	std::vector<glm::vec3> lines;
 	float scale = 1.0f;
 	
-	for (const auto& tri : triangles) {
-		lines.push_back(tri.v0);
-		lines.push_back(tri.v0 + scale * tri.v0);
+	if (faceNormals) {
+		for (const auto& tri : triangles) {
+			glm::vec3 x = tri.v1 - tri.v0;
+			glm::vec3 y = tri.v2 - tri.v0;
+			glm::vec3 normal = glm::normalize(glm::cross(y, x));
 
-		lines.push_back(tri.v1);
-		lines.push_back(tri.v1 + scale * tri.v1);
+			lines.push_back(tri.v0);
+			lines.push_back(tri.v0 + scale * normal);
 
-		lines.push_back(tri.v2);
-		lines.push_back(tri.v2 + scale * tri.v2);
+			lines.push_back(tri.v1);
+			lines.push_back(tri.v1 + scale * normal);
+
+			lines.push_back(tri.v2);
+			lines.push_back(tri.v2 + scale * normal);
+		}
 	}
-	
+	else {
+		for (const auto& tri : triangles) {
+			lines.push_back(tri.v0);
+			lines.push_back(tri.v0 + scale * tri.v0);
+
+			lines.push_back(tri.v1);
+			lines.push_back(tri.v1 + scale * tri.v1);
+
+			lines.push_back(tri.v2);
+			lines.push_back(tri.v2 + scale * tri.v2);
+		}
+	}
 	return lines;
 }
 
@@ -269,29 +286,26 @@ std::vector<glm::vec3> SphereTransformations::generateNormalLines() {
 
 
 
-
-
-
 void SphereTransformations::setLightVector(const glm::vec4& v)
 {
-	programShaded.use();
-	programShaded.setUniform("light", v);
+	currentLightVec = v;
+	programShadedPhong.use();
+	programShadedPhong.setUniform("light", v);
+
+	programShadedGouraud.use();
+	programShadedGouraud.setUniform("light", v);
 }
+
 
 
 void SphereTransformations::initShader()
 {
 	initShader(programSimple, "shader/simple.vert", "shader/simple.frag");
-	//CubeSharp::initShader(programShaded, "shader/shadedGouraud.vert", "shader/shadedGouraud.frag");
-	initShader(programShaded, "shader/shadedPhong.vert", "shader/shadedPhong.frag");
+	initShader(programShadedPhong, "shader/shadedPhong.vert", "shader/shadedPhong.frag");
+	initShader(programShadedGouraud, "shader/shadedGouraud.vert", "shader/shadedGouraud.frag");
 
-	programShaded.use();
-	programShaded.setUniform("light", glm::vec3(0, 0, 0));
-	programShaded.setUniform("lightI", float(1.0f));
-	programShaded.setUniform("surfKa", glm::vec3(0.1f, 0.1f, 0.1f));
-	programShaded.setUniform("surfKd", glm::vec3(0.7f, 0.1f, 0.1f));
-	programShaded.setUniform("surfKs", glm::vec3(1, 1, 1));
-	programShaded.setUniform("surfShininess", float(8.0f));
+	setLightingUniforms(programShadedPhong);
+	setLightingUniforms(programShadedGouraud);
 }
 
 
@@ -309,4 +323,41 @@ void SphereTransformations::initShader(GLSLProgram& program, const std::string& 
 	{
 		throw std::runtime_error("LINK: " + program.log());
 	}
+}
+
+
+GLSLProgram* SphereTransformations::getShadedProgram() {
+	if (useGouraudShader) {
+		return &programShadedGouraud;
+	}
+	return &programShadedPhong;
+}
+GLSLProgram* SphereTransformations::getSimpleProgram() {
+	return &programSimple;
+}
+
+void SphereTransformations::setLightingUniforms(GLSLProgram& p)
+{
+	p.use();
+	p.setUniform("light", currentLightVec);
+	p.setUniform("lightI", 1.0f);
+	p.setUniform("surfKa", glm::vec3(0.1f));
+	p.setUniform("surfKs", glm::vec3(1.0f));
+	p.setUniform("surfShininess", 8.0f);
+
+	switch (type) {
+	case SphereType::NONE:
+		p.setUniform("surfKd", glm::vec3(0.5f, 0.5f, 0.5f));
+		break;
+	case SphereType::SUN:
+		p.setUniform("surfKd", glm::vec3(1.0f, 0.8f, 0.0f));
+		break;
+	case SphereType::PLANET:
+		p.setUniform("surfKd", glm::vec3(0.2f, 0.6f, 0.7f));
+		break;
+	case SphereType::MOON:
+		p.setUniform("surfKd", glm::vec3(0.8f, 0.8f, 0.8f));
+		break;
+	}
+
 }

@@ -451,7 +451,7 @@ public:
         sun.childrenObjects.push_back(&planet2);
 
 #if PRAKTIKUM_4 == 1
-        if (model.loadOBJ("models/footship_selection.obj")) {
+        if (model.loadOBJ("models/cube-tex.obj")) {
             model.triangulate();
             std::cout << "Model loaded successfully." << std::endl;
         }
@@ -460,13 +460,16 @@ public:
         }
 
         model.objHandle.sphere.renderSphere();
-        model.objHandle.sphere.absolutePosition = (vec3(0.0f, -0.25f, 1.0f));
-        model.objHandle.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
+        model.objHandle.sphere.absolutePosition = (vec3(0.0f, 0.0f, 2.0f));
+        model.objHandle.setSphereColor(vec3(0.0f, 0.2f, 0.9f));
         model.objHandle.setBodyRotation(false);
         model.objHandle.lineVisible = false;
         model.objHandle.sphere.setType(SphereType::NONE);
+        model.objHandle.setParentObject(&sun);
         model.objHandle.sphere.initShader();
         model.convertFaceToTriangleAndNormal();
+
+        sun.childrenObjects.push_back(&model.objHandle);
 #endif //Praktikum_4
 
     }

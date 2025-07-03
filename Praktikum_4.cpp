@@ -129,7 +129,10 @@ void PolygonMesh::triangulateFace(const Face& face, std::vector<Face>& outFaces)
 
 
 void PolygonMesh::fitToScene(float targetSize) {
-
+    std::vector<glm::vec3> triangles;
+    for (auto& tri : objHandle.sphere.getTriangles()) {
+        
+    }
 }
 
 BoundingBox PolygonMesh::computeBoundingBox() {

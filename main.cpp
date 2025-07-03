@@ -400,7 +400,7 @@ public:
 
         planet1.sphere.setN(3);
         planet1.sphere.setRadius(0.25f);
-        planet1.sphere.absolutePosition = (vec3(-2.0f, 0.0f, 0.0f));
+        planet1.sphere.absolutePosition = (vec3(-3.0f, 0.0f, 0.0f));
         planet1.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
         planet1.setBodyRotation(true);
         planet1.lineVisible = true;
@@ -412,7 +412,7 @@ public:
 
         moon1.sphere.setN(2);
         moon1.sphere.setRadius(0.1f);
-        moon1.sphere.absolutePosition = (vec3(-2.5f, 0.0f, 0.0f));
+        moon1.sphere.absolutePosition = (vec3(-3.5f, 0.0f, 0.0f));
         moon1.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
         moon1.setBodyRotation(true);
         moon1.lineVisible = false;
@@ -424,7 +424,7 @@ public:
 
         planet2.sphere.setN(3);
         planet2.sphere.setRadius(0.25f);
-        planet2.sphere.absolutePosition = (vec3(2.0f, 0.0f, 0.0f));
+        planet2.sphere.absolutePosition = (vec3(3.0f, 0.0f, 0.0f));
         planet2.setSphereColor(vec3(0.2f, 0.2f, 0.8f));
         planet2.setBodyRotation(true);
         planet2.lineVisible = true;
@@ -437,7 +437,7 @@ public:
 
         moon2.sphere.setN(2);
         moon2.sphere.setRadius(0.1f);
-        moon2.sphere.absolutePosition = (vec3(2.5f, 0.2f, 0.0f));
+        moon2.sphere.absolutePosition = (vec3(3.5f, 0.2f, 0.0f));
         moon2.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
         moon2.setBodyRotation(true);
         moon2.lineVisible = false;
@@ -468,7 +468,7 @@ public:
         }
 
         model.objHandle.sphere.renderSphere();
-        model.objHandle.sphere.absolutePosition = (vec3(0.0f, 0.0f, 2.0f));
+        model.objHandle.sphere.absolutePosition = (vec3(0.0f, 0.0f, 1.5f));
         model.objHandle.setSphereColor(vec3(0.6f, 0.0f, 0.8f));
         model.objHandle.setBodyRotation(true);
         model.objHandle.lineVisible = false;

@@ -24,14 +24,9 @@ std::vector<Face>& PolygonMesh::getFaces() {
 }
 
 
-/*
 std::vector<int>& PolygonMesh::getTriangleIndices() {
-	return {0};
+    return triangleIndices;
 }
-*/
-
-
-
 
 bool PolygonMesh::loadOBJ(const std::string& filename) {
         std::ifstream file(filename);
@@ -76,19 +71,66 @@ bool PolygonMesh::loadOBJ(const std::string& filename) {
 
 
 void PolygonMesh::triangulate() {
+    triangleIndices.clear();
 
+    for (const Face& face : faces) {
+        triangulateFace(face, triangleIndices);
+    }
 }
 
 void PolygonMesh::triangulateFace(const Face& face, std::vector<int>& outIndices) {
+    const size_t vertexCount = face.vertexIndices.size();
+    if (vertexCount < 3) return;
 
+    glm::vec3 center(0.0f);
+    for (int idx : face.vertexIndices) {
+        center += vertices[idx].position;
+    }
+    center /= static_cast<float>(vertexCount);
+
+    vertices.emplace_back(center.x, center.y, center.z);
+    int centerIndex = static_cast<int>(vertices.size()) - 1;
+
+    for (size_t i = 0; i < vertexCount; ++i) {
+        int v0 = face.vertexIndices[i];
+        int v1 = face.vertexIndices[(i + 1) % vertexCount];
+
+        outIndices.push_back(centerIndex);
+        outIndices.push_back(v0);
+        outIndices.push_back(v1);
+    }
 }
+
 
 
 void PolygonMesh::fitToScene(float targetSize) {
 
 }
 
-void PolygonMesh::computeBoundingBox(glm::vec3& minOut, glm::vec3& maxOut) {
+BoundingBox PolygonMesh::computeBoundingBox() {
+    if (vertices.empty())
+        throw std::runtime_error("Vertices are empty");
 
+    BoundingBox pBox;
+    pBox.xMin = 0;
+    pBox.xMax = 0;
+    pBox.yMin = 0;
+    pBox.yMax = 0;
+
+    for (size_t i = 1; i < vertices.size(); ++i) {
+        if (vertices[i].position.x < vertices[pBox.xMin].position.x) {
+            pBox.xMin = i;
+        }
+        if (vertices[i].position.x > vertices[pBox.xMax].position.x) {
+            pBox.xMax = i;
+        }
+        if (vertices[i].position.y < vertices[pBox.yMin].position.y) {
+            pBox.yMin = i;
+        }
+        if (vertices[i].position.y > vertices[pBox.yMax].position.y) {
+            pBox.yMax = i;
+        }
+    }
+    return pBox;
 }
 

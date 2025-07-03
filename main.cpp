@@ -1071,7 +1071,7 @@ int main(int argc, char** argv)
     }
 
     PolygonMesh model;
-    if (model.loadOBJ("C:/Users/mittwald/Downloads/footship_selection.obj")) {
+    if (model.loadOBJ("models/footship_selection.obj")) {
         std::cout << "Model loaded successfully." << std::endl;
         std::cout << "Number of vertices: " << model.getVertices().size() << std::endl;
         std::cout << "Number of faces: " << model.getFaces().size() << std::endl;
@@ -1093,6 +1093,19 @@ int main(int argc, char** argv)
             }
             std::cout << std::endl;
         }*/
+
+		model.triangulate();
+
+        std::vector<int>& tris = model.getTriangleIndices();
+        std::cout << "Triangulierte Dreiecke: " << tris.size() / 3 << std::endl;
+
+        for (size_t i = 0; i < tris.size(); i += 3) {
+            std::cout << "Triangle " << i / 3 << ": "
+                << tris[i] << ", "
+                << tris[i + 1] << ", "
+                << tris[i + 2] << std::endl;
+        }
+
 
     }
     else {

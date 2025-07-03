@@ -11,6 +11,8 @@
 
 #include "GLSLProgram.h"    
 #include "GLTools.h"
+#include <glm/gtx/string_cast.hpp>
+
 
 #include "Praktikum_1.h"
 #include "Praktikum_2.h"
@@ -279,10 +281,7 @@ public:
 #if PRAKTIKUM_4 == 1
         if (obj.sphere.getType()==SphereType::NONE && showBoundingBox) {
             std::vector<glm::vec3> boundingVertices = model.computeBoundingBox();
-            glm::vec3 offset = model.objHandle.sphere.absolutePosition;
-            for (auto& v : boundingVertices) {
-                //v += offset;
-            }
+
 
             int edges[12][2] = {
                 {0,1}, {1,3}, {3,2}, {2,0},
@@ -371,7 +370,8 @@ public:
 
 
         // === Optional Y-Achse zeichnen ===
-        if (body.linesVAO != 0 && (showYAxisOnly || pShowNormals)) {
+        if (body.linesVAO != 0 && (showYAxisOnly || pShowNormals || showBoundingBox)) {
+
 
             glBindVertexArray(body.linesVAO);
 
@@ -379,7 +379,7 @@ public:
             if (showYAxisOnly) numLineVertices += 2;
             if (pShowNormals) {
                 if (sphere.getType() == SphereType::NONE) {
-                    numLineVertices += model.getNormals().size();
+                    numLineVertices += model.sphereObjNormalLines.size();
                 }
                 else {
                     numLineVertices += sphere.generateNormalLines(false).size();

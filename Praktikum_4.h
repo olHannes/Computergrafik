@@ -69,5 +69,5 @@ private:
 
     glm::vec3 color;
 
-    void triangulateFace(const Face& face, std::vector<int>& outIndices);
+    void triangulateFace(const Face& face, std::vector<Face>& outFaces);
 };

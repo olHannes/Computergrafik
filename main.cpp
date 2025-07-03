@@ -126,6 +126,7 @@ public:
 #if PRAKTIKUM_4 == 1
     bool filledObjects = false;
     bool showNormals = false;
+    bool showBoundingBox = false;
 
     unsigned  lightIndex = 0;
     glm::vec4 lights[2] = {
@@ -275,6 +276,30 @@ public:
             lineColors.insert(lineColors.end(), normals.size(), vec3(1.0f, 0.0f, 1.0f));
         }
 
+#if PRAKTIKUM_4 == 1
+        if (obj.sphere.getType()==SphereType::NONE && showBoundingBox) {
+            std::vector<glm::vec3> boundingVertices = model.computeBoundingBox();
+            glm::vec3 offset = model.objHandle.sphere.absolutePosition;
+            for (auto& v : boundingVertices) {
+                //v += offset;
+            }
+
+            int edges[12][2] = {
+                {0,1}, {1,3}, {3,2}, {2,0},
+                {4,5}, {5,7}, {7,6}, {6,4},
+                {0,4}, {1,5}, {2,6}, {3,7}
+            };
+
+            for (int i = 0; i < 12; ++i) {
+                extraLines.push_back(boundingVertices[edges[i][0]]);
+                extraLines.push_back(boundingVertices[edges[i][1]]);
+
+                lineColors.push_back(glm::vec3(0.0f, 1.0f, 1.0f));
+                lineColors.push_back(glm::vec3(0.0f, 1.0f, 1.0f));
+            }
+        }
+#endif //Praktikum_4
+
         if (!extraLines.empty()) {
 
             glGenVertexArrays(1, &body.linesVAO);
@@ -360,6 +385,11 @@ public:
                     numLineVertices += sphere.generateNormalLines(false).size();
                 }
             }
+#if PRAKTIKUM_4 == 1
+            if (showBoundingBox) {
+                numLineVertices += 12 * 2;
+            }
+#endif //Praktikum_4
 
             glDrawArrays(GL_LINES, 0, numLineVertices);
             glBindVertexArray(0);
@@ -1022,6 +1052,9 @@ void glutKeyboard(unsigned char keycode, int x, int y)
         moon1.sphere.toggleShader();
         moon2.sphere.toggleShader();
         model.objHandle.sphere.toggleShader();
+        break;
+    case 'b':
+        showBoundingBox = !showBoundingBox;
         break;
 #endif //PRAKTIKUM_4
     }

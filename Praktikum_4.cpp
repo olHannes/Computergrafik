@@ -151,16 +151,22 @@ void PolygonMesh::fitToScene(float targetSize) {
 
 
 std::vector<glm::vec3> PolygonMesh::computeBoundingBox() {
-    if (vertices.empty())
-        throw std::runtime_error("Vertices are empty");
+    const std::vector<Triangle>& triangles = objHandle.sphere.getTriangles();
+    if (triangles.empty())
+        throw std::runtime_error("No triangles available");
 
-    glm::vec3 min = vertices[0].position;
-    glm::vec3 max = vertices[0].position;
+    glm::vec3 min = triangles[0].v0;
+    glm::vec3 max = triangles[0].v0;
 
-    for (size_t i = 1; i < vertices.size(); ++i) {
-        glm::vec3 pos = vertices[i].position;
-        min = glm::min(min, pos);
-        max = glm::max(max, pos);
+    auto updateMinMax = [&](const glm::vec3& v) {
+        min = glm::min(min, v);
+        max = glm::max(max, v);
+        };
+
+    for (const auto& tri : triangles) {
+        updateMinMax(tri.v0);
+        updateMinMax(tri.v1);
+        updateMinMax(tri.v2);
     }
 
     std::vector<glm::vec3> boundingBoxCorners;

@@ -150,7 +150,7 @@ public:
         }
 
         if (sphere.getType() == SphereType::NONE) {
-            model.convertFaceToTriangleAndNormal();
+            //model.convertFaceToTriangleAndNormal();
         }
 
         std::vector<Triangle>& tris = sphere.getTriangles();
@@ -341,7 +341,14 @@ public:
 
         // === Hauptobjekt zeichnen ===
         glBindVertexArray(body.vao);
-        glDrawElements(GL_TRIANGLES, sphere.renderSphere().size() * 3, GL_UNSIGNED_SHORT, 0);
+
+        if (sphere.getType() == SphereType::NONE) {
+            glDrawElements(GL_TRIANGLES, sphere.getTriangles().size() * 3, GL_UNSIGNED_SHORT, 0);
+        }
+        else {
+            glDrawElements(GL_TRIANGLES, sphere.renderSphere().size() * 3, GL_UNSIGNED_SHORT, 0);
+        }
+
         glBindVertexArray(0);
 
 

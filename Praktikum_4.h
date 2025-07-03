@@ -32,13 +32,6 @@ struct Face {
 };
 
 
-struct BoundingBox {
-    int xMin;
-    int xMax;
-    int yMin;
-    int yMax;
-};
-
 
 class PolygonMesh {
 public:
@@ -59,7 +52,7 @@ public:
     void setColor(glm::vec3& pColor);
     glm::vec3 getColor();
 
-    BoundingBox computeBoundingBox();
+    std::vector<glm::vec3> computeBoundingBox();
 
     void convertFaceToTriangleAndNormal();
     void convertNormals();

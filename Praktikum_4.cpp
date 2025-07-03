@@ -143,32 +143,33 @@ void PolygonMesh::fitToScene(float targetSize) {
 }
 
 
-BoundingBox PolygonMesh::computeBoundingBox() {
+std::vector<glm::vec3> PolygonMesh::computeBoundingBox() {
     if (vertices.empty())
         throw std::runtime_error("Vertices are empty");
 
-    BoundingBox pBox;
-    pBox.xMin = 0;
-    pBox.xMax = 0;
-    pBox.yMin = 0;
-    pBox.yMax = 0;
+    glm::vec3 min = vertices[0].position;
+    glm::vec3 max = vertices[0].position;
 
     for (size_t i = 1; i < vertices.size(); ++i) {
-        if (vertices[i].position.x < vertices[pBox.xMin].position.x) {
-            pBox.xMin = i;
-        }
-        if (vertices[i].position.x > vertices[pBox.xMax].position.x) {
-            pBox.xMax = i;
-        }
-        if (vertices[i].position.y < vertices[pBox.yMin].position.y) {
-            pBox.yMin = i;
-        }
-        if (vertices[i].position.y > vertices[pBox.yMax].position.y) {
-            pBox.yMax = i;
-        }
+        glm::vec3 pos = vertices[i].position;
+        min = glm::min(min, pos);
+        max = glm::max(max, pos);
     }
-    return pBox;
+
+    std::vector<glm::vec3> boundingBoxCorners;
+
+    boundingBoxCorners.push_back(glm::vec3(min.x, min.y, min.z));
+    boundingBoxCorners.push_back(glm::vec3(max.x, min.y, min.z));
+    boundingBoxCorners.push_back(glm::vec3(min.x, max.y, min.z));
+    boundingBoxCorners.push_back(glm::vec3(max.x, max.y, min.z));
+    boundingBoxCorners.push_back(glm::vec3(min.x, min.y, max.z));
+    boundingBoxCorners.push_back(glm::vec3(max.x, min.y, max.z));
+    boundingBoxCorners.push_back(glm::vec3(min.x, max.y, max.z));
+    boundingBoxCorners.push_back(glm::vec3(max.x, max.y, max.z));
+
+    return boundingBoxCorners;
 }
+
 
 
 

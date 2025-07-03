@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include "Praktikum_3.h"
 
 #define PRAKTIKUM_4 1
 struct Vertex {
@@ -60,6 +61,13 @@ public:
 
     BoundingBox computeBoundingBox();
 
+    //convert to Sphere
+    void convertFaceToTriangleAndNormal();
+    void convertNormals();
+    //
+
+    ObjectBodyHandler objHandle;
+    std::vector<glm::vec3> sphereObjNormalLines;
 private:
     std::vector<Vertex> vertices;
     std::vector<Normal> normals;
@@ -70,4 +78,5 @@ private:
     glm::vec3 color;
 
     void triangulateFace(const Face& face, std::vector<int>& outIndices);
+
 };

@@ -134,3 +134,53 @@ BoundingBox PolygonMesh::computeBoundingBox() {
     return pBox;
 }
 
+
+
+
+
+
+
+void PolygonMesh::convertFaceToTriangleAndNormal() {
+    std::vector<Triangle> pTriangles;
+    std::vector<glm::vec3> pNormalLines;
+
+    for (auto& pFace : faces) {
+        Triangle newTri;
+
+        newTri.v0 = vertices[pFace.vertexIndices[0]].position;
+        newTri.v1 = vertices[pFace.vertexIndices[1]].position;
+        newTri.v2 = vertices[pFace.vertexIndices[2]].position;
+        pTriangles.push_back(newTri);
+
+
+        pNormalLines.push_back (normals[pFace.normalIndices[0]].direction);
+        pNormalLines.push_back (normals[pFace.normalIndices[1]].direction);
+        pNormalLines.push_back (normals[pFace.normalIndices[2]].direction);
+    }
+
+    this->objHandle.sphere.setTriangles(pTriangles);
+    this->sphereObjNormalLines = pNormalLines;
+}
+
+
+void PolygonMesh::convertNormals() {
+    std::vector<glm::vec3> tempNormals;
+
+    int k = 0;
+    for (int i = 0; i < this->objHandle.sphere.getTriangles().size(); i++) {
+        
+        tempNormals.push_back(this->objHandle.sphere.getTriangles()[i].v0);
+        tempNormals.push_back(this->sphereObjNormalLines[k]);
+        k++;
+
+        tempNormals.push_back(this->objHandle.sphere.getTriangles()[i].v1);
+        tempNormals.push_back(this->sphereObjNormalLines[k]);
+        k++;
+
+        tempNormals.push_back(this->objHandle.sphere.getTriangles()[i].v1);
+        tempNormals.push_back(this->sphereObjNormalLines[k]);
+        k++;
+    }
+}
+
+

@@ -127,6 +127,11 @@ public:
 		this->type = pType;
 	}
 
+	SphereType getType() {
+		return this->type;
+	}
+
+
 private:
 	void createInitialSphere();
 	void createInitialCoords(bool prak3=true);

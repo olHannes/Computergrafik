@@ -257,6 +257,7 @@ std::vector<glm::vec3> SphereTransformations::generateNormalLines(bool faceNorma
 			glm::vec3 y = tri.v2 - tri.v0;
 			glm::vec3 normal = glm::normalize(glm::cross(y, x));
 
+
 			lines.push_back(tri.v0);
 			lines.push_back(tri.v0 + scale * normal);
 
@@ -347,7 +348,7 @@ void SphereTransformations::setLightingUniforms(GLSLProgram& p)
 
 	switch (type) {
 	case SphereType::NONE:
-		p.setUniform("surfKd", glm::vec3(0.5f, 0.5f, 0.5f));
+		p.setUniform("surfKd", glm::vec3(1.0f, 0.8f, 0.3f));
 		break;
 	case SphereType::SUN:
 		p.setUniform("surfKd", glm::vec3(1.0f, 0.8f, 0.0f));

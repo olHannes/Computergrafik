@@ -133,6 +133,7 @@ public:
         { 0.0f,  0.0f, cameraZPos, 1.0f }
     };
 
+    Object modelBody;
     PolygonMesh model;
 #endif //PRAKTIKUM_4
 
@@ -144,7 +145,16 @@ public:
     void glmInit(Object& body, ObjectBodyHandler& obj, bool drawYAxisOnly = false, bool pShowNormals = false) {
         SphereTransformations& sphere = obj.sphere;
 
+        if (obj.sphere.getType() == SphereType::NONE) {
+            std::cout << "Ich bin eine Biene";
+        }
+
+        if (sphere.getType() == SphereType::NONE) {
+            model.convertFaceToTriangleAndNormal();
+        }
+
         std::vector<Triangle>& tris = sphere.getTriangles();
+
         std::vector<glm::vec3> vertices;
         std::vector<glm::vec3> colors;
         std::vector<GLushort> indices;
@@ -253,7 +263,13 @@ public:
         }
 
         if (pShowNormals) {
-            std::vector<vec3> normals = sphere.generateNormalLines(sphere.getUseGouraudShader());
+            std::vector<glm::vec3> normals;
+            if (sphere.getType() == SphereType::NONE) {
+                model.getNormals();
+            }
+            else {
+                normals = sphere.generateNormalLines(sphere.getUseGouraudShader());
+            }
             extraLines.insert(extraLines.end(), normals.begin(), normals.end());
 
             lineColors.insert(lineColors.end(), normals.size(), vec3(1.0f, 0.0f, 1.0f));
@@ -439,7 +455,16 @@ public:
         else {
             std::cerr << "Failed to load model." << std::endl;
         }
+
+        model.objHandle.sphere.absolutePosition = (vec3(2.5f, 0.2f, 0.0f));
+        model.objHandle.setSphereColor(vec3(0.4f, 0.8f, 0.9f));
+        model.objHandle.setBodyRotation(false);
+        model.objHandle.lineVisible = false;
+        model.objHandle.sphere.setType(SphereType::NONE);
+        model.objHandle.sphere.initShader();
+        model.convertFaceToTriangleAndNormal();
 #endif //Praktikum_4
+
     }
 #endif //PRAKTIKUM_3
 
@@ -781,6 +806,9 @@ bool init()
     glmInit(planet2Body, planet2, true, showNormals);
     glmInit(moon2Body, moon2, false, showNormals);
 
+#if PRAKTIKUM_4 == 1
+    glmInit(modelBody, model.objHandle, false, false);
+#endif //Praktikum_4
 #endif //Praktikum_3
     return true;
 }
@@ -816,7 +844,12 @@ void render()
     glmRender(moon1Body, moon1.sphere, false, showNormals);
     glmRender(planet2Body, planet2.sphere, true, showNormals);
     glmRender(moon2Body, moon2.sphere, false, showNormals);
-#endif
+
+#if PRAKTIKUM_4 == 1
+    glmInit(modelBody, model.objHandle, false, false);
+    glmRender(modelBody, model.objHandle.sphere, false, false);
+#endif //Praktikum_4
+#endif //Praktikum_3
 }
 
 void glutDisplay()

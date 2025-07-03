@@ -68,12 +68,36 @@ bool PolygonMesh::loadOBJ(const std::string& filename) {
 
 
 void PolygonMesh::triangulate() {
+    triangleIndices.clear();
 
+    for (const Face& face : faces) {
+        triangulateFace(face, triangleIndices);
+    }
 }
 
 void PolygonMesh::triangulateFace(const Face& face, std::vector<int>& outIndices) {
+    const size_t vertexCount = face.vertexIndices.size();
+    if (vertexCount < 3) return;
 
+    glm::vec3 center(0.0f);
+    for (int idx : face.vertexIndices) {
+        center += vertices[idx].position;
+    }
+    center /= static_cast<float>(vertexCount);
+
+    vertices.emplace_back(center.x, center.y, center.z);
+    int centerIndex = static_cast<int>(vertices.size()) - 1;
+
+    for (size_t i = 0; i < vertexCount; ++i) {
+        int v0 = face.vertexIndices[i];
+        int v1 = face.vertexIndices[(i + 1) % vertexCount];
+
+        outIndices.push_back(centerIndex);
+        outIndices.push_back(v0);
+        outIndices.push_back(v1);
+    }
 }
+
 
 
 void PolygonMesh::fitToScene(float targetSize) {

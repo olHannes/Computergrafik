@@ -132,6 +132,8 @@ public:
         { 0.0f, 1.0f, 0.0f, 0.0f },
         { 0.0f,  0.0f, cameraZPos, 1.0f }
     };
+
+    PolygonMesh model;
 #endif //PRAKTIKUM_4
 
 
@@ -429,6 +431,15 @@ public:
         sun.childrenObjects.push_back(&planet1);
         sun.childrenObjects.push_back(&planet2);
 
+#if PRAKTIKUM_4 == 1
+        if (model.loadOBJ("models/footship_selection.obj")) {
+            model.triangulate();
+            std::cout << "Model loaded successfully." << std::endl;
+        }
+        else {
+            std::cerr << "Failed to load model." << std::endl;
+        }
+#endif //Praktikum_4
     }
 #endif //PRAKTIKUM_3
 
@@ -1070,52 +1081,7 @@ int main(int argc, char** argv)
         return -2;
     }
 
-    PolygonMesh model;
-    if (model.loadOBJ("models/footship_selection.obj")) {
-        std::cout << "Model loaded successfully." << std::endl;
-        std::cout << "Number of vertices: " << model.getVertices().size() << std::endl;
-        std::cout << "Number of faces: " << model.getFaces().size() << std::endl;
-
-        // test output
-        
-        for (const auto& vertex : model.getVertices() ){
-            std::cout << "Vertex: " << vertex.position.x << ", " << vertex.position.y << ", " << vertex.position.z << std::endl;
-        }
-
-        for (const auto& face : model.getFaces()) {
-            std::cout << "Face: \n vertex-indices: ";
-            for (int index : face.vertexIndices) {
-                std::cout << index << " ";
-            }
-            std::cout << "\nnormals: ";
-            for (int index : face.normalIndices) {
-                std::cout << index << " ";
-            }
-            std::cout << std::endl;
-        }
-
-		model.triangulate();
-
-        std::cout << "Number of vertices: " << model.getVertices().size() << std::endl;
-        std::cout << "Number of faces: " << model.getFaces().size() << std::endl;
-
-        for (const auto& face : model.getFaces()) {
-            std::cout << "Face: \n vertex-indices: ";
-            for (int index : face.vertexIndices) {
-                std::cout << index << " ";
-            }
-            std::cout << "\nnormals: ";
-            for (int index : face.normalIndices) {
-                std::cout << index << " ";
-            }
-            std::cout << std::endl;
-        }
-
-
-    }
-    else {
-        std::cerr << "Failed to load model." << std::endl;
-    }
+   
 
     // GLUT: Loop until the user closes the window
     // rendering & event handling
